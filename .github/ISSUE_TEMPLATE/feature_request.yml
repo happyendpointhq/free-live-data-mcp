@@ -1,0 +1,14 @@
+name: Example or improvement
+description: Suggest a useful workflow or catalog improvement
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What task should this help someone complete?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed workflow or improvement
+      description: Include public documentation links where useful.

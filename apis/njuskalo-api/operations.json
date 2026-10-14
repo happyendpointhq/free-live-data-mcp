@@ -1,0 +1,1320 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-suggestions",
+    "method": "GET",
+    "path": "/search-suggestions",
+    "summary": "/search-suggestions",
+    "description": "Search typeahead suggestions.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "term",
+        "in": "query",
+        "required": true,
+        "description": "A partial search term (Croatian) to get suggestions for.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A partial search term (Croatian) to get suggestions for.",
+          "example": "stan"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "term": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A partial search term (Croatian) to get suggestions for.",
+          "example": "stan"
+        }
+      },
+      "required": [
+        "term"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search",
+    "method": "GET",
+    "path": "/search",
+    "summary": "/search",
+    "description": "Search listings with free-text + filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Free-text search term (Croatian). e.g. `stan zagreb` (apartment Zagreb), `kuća split`, `poslovni prostor`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text search term (Croatian). e.g. `stan zagreb` (apartment Zagreb), `kuća split`, `poslovni prostor`.",
+          "example": "stan zagreb"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (EUR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (EUR)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (EUR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (EUR)."
+        }
+      },
+      {
+        "name": "payProtect",
+        "in": "query",
+        "required": false,
+        "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "withImages",
+        "in": "query",
+        "required": false,
+        "description": "Only show listings that have at least one image. `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only show listings that have at least one image. `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "titleOnly",
+        "in": "query",
+        "required": false,
+        "description": "Match the `query` against the ad **title only**, ignoring the description. `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Match the `query` against the ad **title only**, ignoring the description. `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order: `relevance` (default), `new` (newest first), `old` (oldest first), `cheap` (price ascending), `expensive` (price descending).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "old",
+            "new",
+            "expensive",
+            "cheap"
+          ],
+          "description": "Sort order: `relevance` (default), `new` (newest first), `old` (oldest first), `cheap` (price ascending), `expensive` (price descending).",
+          "example": "new"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (number of results to skip).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text search term (Croatian). e.g. `stan zagreb` (apartment Zagreb), `kuća split`, `poslovni prostor`.",
+          "example": "stan zagreb"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (EUR)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (EUR)."
+        },
+        "payProtect": {
+          "type": "boolean",
+          "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+          "example": ""
+        },
+        "withImages": {
+          "type": "boolean",
+          "description": "Only show listings that have at least one image. `true`/`false`.",
+          "example": ""
+        },
+        "titleOnly": {
+          "type": "boolean",
+          "description": "Match the `query` against the ad **title only**, ignoring the description. `true`/`false`.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "old",
+            "new",
+            "expensive",
+            "cheap"
+          ],
+          "description": "Sort order: `relevance` (default), `new` (newest first), `old` (oldest first), `cheap` (price ascending), `expensive` (price descending).",
+          "example": "new"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-count",
+    "method": "GET",
+    "path": "/search-count",
+    "summary": "/search-count",
+    "description": "Count listings matching a filter.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Free-text search term (Croatian). e.g. `stan zagreb` (apartment Zagreb), `kuća split`, `poslovni prostor`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text search term (Croatian). e.g. `stan zagreb` (apartment Zagreb), `kuća split`, `poslovni prostor`.",
+          "example": "stan zagreb"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (EUR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (EUR)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (EUR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (EUR)."
+        }
+      },
+      {
+        "name": "payProtect",
+        "in": "query",
+        "required": false,
+        "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "withImages",
+        "in": "query",
+        "required": false,
+        "description": "Only show listings that have at least one image. `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only show listings that have at least one image. `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "titleOnly",
+        "in": "query",
+        "required": false,
+        "description": "Match the `query` against the ad **title only**, ignoring the description. `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Match the `query` against the ad **title only**, ignoring the description. `true`/`false`.",
+          "example": ""
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text search term (Croatian). e.g. `stan zagreb` (apartment Zagreb), `kuća split`, `poslovni prostor`.",
+          "example": "stan zagreb"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (EUR)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (EUR)."
+        },
+        "payProtect": {
+          "type": "boolean",
+          "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+          "example": ""
+        },
+        "withImages": {
+          "type": "boolean",
+          "description": "Only show listings that have at least one image. `true`/`false`.",
+          "example": ""
+        },
+        "titleOnly": {
+          "type": "boolean",
+          "description": "Match the `query` against the ad **title only**, ignoring the description. `true`/`false`.",
+          "example": ""
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-category",
+    "method": "GET",
+    "path": "/search-by-category",
+    "summary": "/search-by-category",
+    "description": "Browse & filter listings within a category (the category/location workhorse).",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "mainCategoryId",
+        "in": "query",
+        "required": true,
+        "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+        "schema": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": false,
+        "description": "Leaf category id for `/browse` (must be a **leaf**  -  `isLeaf:true` in `/category-navigation`; intermediate categories return no results). e.g. `9580` = apartment sales, `10920` = apartment rentals, `15037` = Google Pixel phones. Note: full-text `/search` does **not** support category filtering  -  use `/browse` to scope by category.",
+        "schema": {
+          "type": "integer",
+          "description": "Leaf category id for `/browse` (must be a **leaf**  -  `isLeaf:true` in `/category-navigation`; intermediate categories return no results). e.g. `9580` = apartment sales, `10920` = apartment rentals, `15037` = Google Pixel phones. Note: full-text `/search` does **not** support category filtering  -  use `/browse` to scope by category.",
+          "example": 9580,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "locationId",
+        "in": "query",
+        "required": false,
+        "description": "Restrict to a county (level-0 location) id  -  get ids from the `locations` facet of `/search-aggregations`. e.g. `1154` = Istarska, `1150` = Bjelovarsko-bilogorska. (Available on `/browse`.)",
+        "schema": {
+          "type": "integer",
+          "description": "Restrict to a county (level-0 location) id  -  get ids from the `locations` facet of `/search-aggregations`. e.g. `1154` = Istarska, `1150` = Bjelovarsko-bilogorska. (Available on `/browse`.)",
+          "example": 1154,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (EUR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (EUR)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (EUR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (EUR)."
+        }
+      },
+      {
+        "name": "payProtect",
+        "in": "query",
+        "required": false,
+        "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "withImages",
+        "in": "query",
+        "required": false,
+        "description": "Only show listings that have at least one image. `true`/`false`.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only show listings that have at least one image. `true`/`false`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order: `relevance` (default), `new` (newest first), `old` (oldest first), `cheap` (price ascending), `expensive` (price descending).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "old",
+            "new",
+            "expensive",
+            "cheap"
+          ],
+          "description": "Sort order: `relevance` (default), `new` (newest first), `old` (oldest first), `cheap` (price ascending), `expensive` (price descending).",
+          "example": "new"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (number of results to skip).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "mainCategoryId": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        },
+        "categoryId": {
+          "type": "integer",
+          "description": "Leaf category id for `/browse` (must be a **leaf**  -  `isLeaf:true` in `/category-navigation`; intermediate categories return no results). e.g. `9580` = apartment sales, `10920` = apartment rentals, `15037` = Google Pixel phones. Note: full-text `/search` does **not** support category filtering  -  use `/browse` to scope by category.",
+          "example": 9580,
+          "exclusiveMinimum": 0
+        },
+        "locationId": {
+          "type": "integer",
+          "description": "Restrict to a county (level-0 location) id  -  get ids from the `locations` facet of `/search-aggregations`. e.g. `1154` = Istarska, `1150` = Bjelovarsko-bilogorska. (Available on `/browse`.)",
+          "example": 1154,
+          "exclusiveMinimum": 0
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (EUR)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (EUR)."
+        },
+        "payProtect": {
+          "type": "boolean",
+          "description": "Only show PayProtect listings (Njuškalo online-payment / buyer-protection escrow). `true`/`false`.",
+          "example": ""
+        },
+        "withImages": {
+          "type": "boolean",
+          "description": "Only show listings that have at least one image. `true`/`false`.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "old",
+            "new",
+            "expensive",
+            "cheap"
+          ],
+          "description": "Sort order: `relevance` (default), `new` (newest first), `old` (oldest first), `cheap` (price ascending), `expensive` (price descending).",
+          "example": "new"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      },
+      "required": [
+        "mainCategoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_latest",
+    "method": "GET",
+    "path": "/latest",
+    "summary": "/latest",
+    "description": "Newest listings on the marketplace.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "mainCategoryId",
+        "in": "query",
+        "required": false,
+        "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+        "schema": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "mainCategoryId": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-listings",
+    "method": "GET",
+    "path": "/similar-listings",
+    "summary": "/similar-listings",
+    "description": "Listings similar to a given ad.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "classifiedId",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+          "example": 50604078,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "classifiedId": {
+          "type": "integer",
+          "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+          "example": 50604078,
+          "exclusiveMinimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      },
+      "required": [
+        "classifiedId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details",
+    "method": "GET",
+    "path": "/listing-details",
+    "summary": "/listing-details",
+    "description": "Full single-listing detail by id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+          "example": 50604078,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+          "example": 50604078,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details-by-url",
+    "method": "GET",
+    "path": "/listing-details-by-url",
+    "summary": "/listing-details-by-url",
+    "description": "Full listing detail from a listing URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A Njuškalo ad URL. The ad id is extracted from the URL and the full detail is returned.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A Njuškalo ad URL. The ad id is extracted from the URL and the full detail is returned.",
+          "example": "https://www.njuskalo.hr/nekretnine/stan-zagreb-remetinec-oglas-50604078"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A Njuškalo ad URL. The ad id is extracted from the URL and the full detail is returned.",
+          "example": "https://www.njuskalo.hr/nekretnine/stan-zagreb-remetinec-oglas-50604078"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-overview",
+    "method": "GET",
+    "path": "/listing-overview",
+    "summary": "/listing-overview",
+    "description": "Bundle: detail + similar + seller in one call.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+          "example": 50604078,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Numeric Njuškalo ad id (the number at the end of an ad URL, after `-oglas-`; or from `/search`).",
+          "example": 50604078,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_parse-url",
+    "method": "GET",
+    "path": "/parse-url",
+    "summary": "/parse-url",
+    "description": "Parse any Njuškalo URL into kind + id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "Any Njuškalo URL. Resolved instantly to `{kind, id, slug}`  -  `kind` is `listing`, `user`, or `unknown`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Any Njuškalo URL. Resolved instantly to `{kind, id, slug}`  -  `kind` is `listing`, `user`, or `unknown`.",
+          "example": "https://www.njuskalo.hr/nekretnine/stan-zagreb-remetinec-oglas-50604078"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Any Njuškalo URL. Resolved instantly to `{kind, id, slug}`  -  `kind` is `listing`, `user`, or `unknown`.",
+          "example": "https://www.njuskalo.hr/nekretnine/stan-zagreb-remetinec-oglas-50604078"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_category-navigation",
+    "method": "GET",
+    "path": "/category-navigation",
+    "summary": "/category-navigation",
+    "description": "Sub-category navigation tree.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "mainCategoryId",
+        "in": "query",
+        "required": true,
+        "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+        "schema": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "mainCategoryId": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "mainCategoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_category-detail",
+    "method": "GET",
+    "path": "/category-detail",
+    "summary": "/category-detail",
+    "description": "Look up categories by id.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryIds",
+        "in": "query",
+        "required": true,
+        "description": "One or more category ids, comma-separated (e.g. `1` or `9580,10920`). Get ids from /category-navigation.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One or more category ids, comma-separated (e.g. `1` or `9580,10920`). Get ids from /category-navigation.",
+          "example": "1"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryIds": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One or more category ids, comma-separated (e.g. `1` or `9580,10920`). Get ids from /category-navigation.",
+          "example": "1"
+        }
+      },
+      "required": [
+        "categoryIds"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_filter-options",
+    "method": "GET",
+    "path": "/filter-options",
+    "summary": "/filter-options",
+    "description": "Available filters/values for a category.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "mainCategoryId",
+        "in": "query",
+        "required": true,
+        "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+        "schema": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "mainCategoryId": {
+          "type": "integer",
+          "description": "Top-level category id (get the tree from `/category-navigation`). `1` = Nekretnine (real estate), `1148` = motorcycles, `3` = computers/IT, `9643` = mobile phones.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "mainCategoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_recommended-categories",
+    "method": "GET",
+    "path": "/recommended-categories",
+    "summary": "/recommended-categories",
+    "description": "Recommended categories with sample ads.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_trending-categories",
+    "method": "GET",
+    "path": "/trending-categories",
+    "summary": "/trending-categories",
+    "description": "Currently trending categories.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_popular-brands",
+    "method": "GET",
+    "path": "/popular-brands",
+    "summary": "/popular-brands",
+    "description": "Popular marketplace brands.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_geocode",
+    "method": "GET",
+    "path": "/geocode",
+    "summary": "/geocode",
+    "description": "Address/locality autocomplete.",
+    "tags": [
+      "Geo"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "address",
+        "in": "query",
+        "required": true,
+        "description": "A free-text address or place name to autocomplete.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A free-text address or place name to autocomplete.",
+          "example": "Zagreb"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A free-text address or place name to autocomplete.",
+          "example": "Zagreb"
+        }
+      },
+      "required": [
+        "address"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_reverse-geocode",
+    "method": "GET",
+    "path": "/reverse-geocode",
+    "summary": "/reverse-geocode",
+    "description": "Coordinates → locality hierarchy.",
+    "tags": [
+      "Geo"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "lat",
+        "in": "query",
+        "required": false,
+        "description": "Latitude.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude.",
+          "example": 45.8131
+        }
+      },
+      {
+        "name": "lng",
+        "in": "query",
+        "required": false,
+        "description": "Longitude.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude.",
+          "example": 15.9779
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude.",
+          "example": 45.8131
+        },
+        "lng": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude.",
+          "example": 15.9779
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_seller-profile",
+    "method": "GET",
+    "path": "/seller-profile",
+    "summary": "/seller-profile",
+    "description": "Public seller/store profile + ratings.",
+    "tags": [
+      "Seller"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "userId",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Njuškalo advertiser/user id (the `ownerId` from `/listing-details`, or a `user` id from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Njuškalo advertiser/user id (the `ownerId` from `/listing-details`, or a `user` id from `/search`).",
+          "example": 961813,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer",
+          "description": "Numeric Njuškalo advertiser/user id (the `ownerId` from `/listing-details`, or a `user` id from `/search`).",
+          "example": 961813,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "userId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_seller-reviews",
+    "method": "GET",
+    "path": "/seller-reviews",
+    "summary": "/seller-reviews",
+    "description": "Public buyer reviews for a seller.",
+    "tags": [
+      "Seller"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "sellerId",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Njuškalo advertiser/user id (the `ownerId` from `/listing-details`, or a `user` id from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Njuškalo advertiser/user id (the `ownerId` from `/listing-details`, or a `user` id from `/search`).",
+          "example": 961813,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (number of results to skip).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sellerId": {
+          "type": "integer",
+          "description": "Numeric Njuškalo advertiser/user id (the `ownerId` from `/listing-details`, or a `user` id from `/search`).",
+          "example": 961813,
+          "exclusiveMinimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of results to return (1 - 100).",
+          "example": 25
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      },
+      "required": [
+        "sellerId"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

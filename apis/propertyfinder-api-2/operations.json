@@ -1,0 +1,62 @@
+[
+  {
+    "id": "get_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "/health",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-search",
+    "method": "GET",
+    "path": "/search-by-url",
+    "summary": "Get properties by search URL",
+    "description": "Pass a PropertyFinder search URL and receive structured property listings. All filters already applied in the URL (location, category, sort, page, etc.) are respected.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "- Full PropertyFinder search URL\n- Must start with `https://www.propertyfinder.ae/en/search`\n- E.g.: `https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr`\n- For page 2: `https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr&page=2`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "format": "uri",
+          "description": "- Full PropertyFinder search URL\n- Must start with `https://www.propertyfinder.ae/en/search`\n- E.g.: `https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr`\n- For page 2: `https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr&page=2`",
+          "example": "https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "format": "uri",
+          "description": "- Full PropertyFinder search URL\n- Must start with `https://www.propertyfinder.ae/en/search`\n- E.g.: `https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr`\n- For page 2: `https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr&page=2`",
+          "example": "https://www.propertyfinder.ae/en/search?l=50&c=1&t=1&bdr[]=0&bdr[]=1&bdr[]=2&bdr[]=3&btr[]=1&btr[]=2&btr[]=3&fu=0&ob=mr"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

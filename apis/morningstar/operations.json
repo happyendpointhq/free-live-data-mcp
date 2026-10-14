@@ -1,0 +1,1215 @@
+[
+  {
+    "id": "_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "Health check endpoint",
+    "description": "Returns the health status of the Morningstar API service.",
+    "tags": [
+      "Morningstar API"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Auto-Complete",
+    "method": "GET",
+    "path": "/auto-complete",
+    "summary": "Search for companies, funds, or ETFs",
+    "description": "Auto-complete search for entities.",
+    "tags": [
+      "Stock Price & News"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "required": true,
+        "description": "Search query for companies, funds, or ETFs.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search query for companies, funds, or ETFs.",
+          "example": "apple"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "q": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search query for companies, funds, or ETFs.",
+          "example": "apple"
+        }
+      },
+      "required": [
+        "q"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Stock_Details",
+    "method": "GET",
+    "path": "/stock/details",
+    "summary": "Get stock details",
+    "description": "Get detailed stock information (quote).",
+    "tags": [
+      "Stock Price & News"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "ticker",
+        "in": "query",
+        "required": true,
+        "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+        "schema": {
+          "type": "string",
+          "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+          "example": "AAPL"
+        }
+      },
+      {
+        "name": "exchange",
+        "in": "query",
+        "required": true,
+        "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+        "schema": {
+          "type": "string",
+          "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+          "example": "xnas"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ticker": {
+          "type": "string",
+          "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+          "example": "AAPL"
+        },
+        "exchange": {
+          "type": "string",
+          "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+          "example": "xnas"
+        }
+      },
+      "required": [
+        "ticker",
+        "exchange"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Market_Data",
+    "method": "GET",
+    "path": "/market/data",
+    "summary": "Get market data (commodities, currencies, indexes)",
+    "description": "Retrieve items for a specific market type.",
+    "tags": [
+      "Market Overview"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "type",
+        "in": "query",
+        "required": true,
+        "description": "Type of market data to retrieve.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "commodities",
+            "currencies",
+            "indexes"
+          ],
+          "description": "Type of market data to retrieve.",
+          "example": "commodities"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "commodities",
+            "currencies",
+            "indexes"
+          ],
+          "description": "Type of market data to retrieve.",
+          "example": "commodities"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Market_Movers",
+    "method": "GET",
+    "path": "/market/movers",
+    "summary": "Get market movers",
+    "description": "Get top market movers.",
+    "tags": [
+      "Market Overview"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Calendar",
+    "method": "GET",
+    "path": "/market/calendar",
+    "summary": "Get market calendar",
+    "description": "Get market calendar events like earnings, IPOs, etc.",
+    "tags": [
+      "Market Overview"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Category of calendar events.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "earnings",
+            "economic-releases",
+            "ipos",
+            "splits"
+          ],
+          "default": "earnings",
+          "description": "Category of calendar events.",
+          "example": "earnings"
+        }
+      },
+      {
+        "name": "date",
+        "in": "query",
+        "required": false,
+        "description": "Date for events (YYYY-MM-DD).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Date for events (YYYY-MM-DD).",
+          "example": "2026-01-05"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "earnings",
+            "economic-releases",
+            "ipos",
+            "splits"
+          ],
+          "default": "earnings",
+          "description": "Category of calendar events.",
+          "example": "earnings"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Date for events (YYYY-MM-DD).",
+          "example": "2026-01-05"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Sector_Performance",
+    "method": "GET",
+    "path": "/market/sectors",
+    "summary": "Get sector performance",
+    "description": "Get performance chart data for a specific sector.",
+    "tags": [
+      "Market Overview"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "sector",
+        "in": "query",
+        "required": true,
+        "description": "Sectors",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "basic-materials",
+            "communication-services",
+            "consumer-cyclical",
+            "consumer-defensive",
+            "energy",
+            "financial-services",
+            "healthcare",
+            "industrials",
+            "real-estate",
+            "technology",
+            "utilities"
+          ],
+          "description": "Sectors",
+          "example": "technology"
+        }
+      },
+      {
+        "name": "interval",
+        "in": "query",
+        "required": false,
+        "description": "Time interval for performance chart.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "3m",
+            "6m",
+            "ytd",
+            "1y",
+            "3y",
+            "5y",
+            "10y"
+          ],
+          "default": "1y",
+          "description": "Time interval for performance chart.",
+          "example": "1y"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sector": {
+          "type": "string",
+          "enum": [
+            "basic-materials",
+            "communication-services",
+            "consumer-cyclical",
+            "consumer-defensive",
+            "energy",
+            "financial-services",
+            "healthcare",
+            "industrials",
+            "real-estate",
+            "technology",
+            "utilities"
+          ],
+          "description": "Sectors",
+          "example": "technology"
+        },
+        "interval": {
+          "type": "string",
+          "enum": [
+            "3m",
+            "6m",
+            "ytd",
+            "1y",
+            "3y",
+            "5y",
+            "10y"
+          ],
+          "default": "1y",
+          "description": "Time interval for performance chart.",
+          "example": "1y"
+        }
+      },
+      "required": [
+        "sector"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Real_Time_Data",
+    "method": "GET",
+    "path": "/stock/real-time",
+    "summary": "Get real-time stock data",
+    "description": "Get real-time quotes/data (also used for mini-chart).",
+    "tags": [
+      "Stock Price & News"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Stock_Chart",
+    "method": "GET",
+    "path": "/stock/chart",
+    "summary": "Get stock chart data",
+    "description": "Get time-series data for stock charts.",
+    "tags": [
+      "Stock Price & News"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "ticker",
+        "in": "query",
+        "required": true,
+        "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+        "schema": {
+          "type": "string",
+          "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+          "example": "AAPL"
+        }
+      },
+      {
+        "name": "exchange",
+        "in": "query",
+        "required": true,
+        "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+        "schema": {
+          "type": "string",
+          "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+          "example": "xnas"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ticker": {
+          "type": "string",
+          "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+          "example": "AAPL"
+        },
+        "exchange": {
+          "type": "string",
+          "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+          "example": "xnas"
+        }
+      },
+      "required": [
+        "ticker",
+        "exchange"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Stock_News",
+    "method": "GET",
+    "path": "/stock/news",
+    "summary": "Get stock news",
+    "description": "Get news related to a specific stock.",
+    "tags": [
+      "Stock Price & News"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "ticker",
+        "in": "query",
+        "required": true,
+        "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+        "schema": {
+          "type": "string",
+          "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+          "example": "AAPL"
+        }
+      },
+      {
+        "name": "exchange",
+        "in": "query",
+        "required": true,
+        "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+        "schema": {
+          "type": "string",
+          "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+          "example": "xnas"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ticker": {
+          "type": "string",
+          "description": "Stock ticker symbol (e.g., 'AAPL', 'NVIDIA').",
+          "example": "AAPL"
+        },
+        "exchange": {
+          "type": "string",
+          "description": "Exchange code (e.g., 'xnas' for NASDAQ, 'xnys' for NYSE, 'pinx' for OTC markets).",
+          "example": "xnas"
+        }
+      },
+      "required": [
+        "ticker",
+        "exchange"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "News_Details",
+    "method": "GET",
+    "path": "/news/details",
+    "summary": "Get news details",
+    "description": "Get detailed content of a news article.",
+    "tags": [
+      "Stock Price & News"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "websiteURL",
+        "in": "query",
+        "required": true,
+        "description": "News article URL path.",
+        "schema": {
+          "type": "string",
+          "description": "News article URL path.",
+          "example": "/news/dow-jones/202512222600/apple-fined-115-million-in-italy-over-app-tracking-policy-update"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "websiteURL": {
+          "type": "string",
+          "description": "News article URL path.",
+          "example": "/news/dow-jones/202512222600/apple-fined-115-million-in-italy-over-app-tracking-policy-update"
+        }
+      },
+      "required": [
+        "websiteURL"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Fair_Value",
+    "method": "GET",
+    "path": "/stock/fair-value",
+    "summary": "Get fair value chart data",
+    "description": "Get fair value analysis data.",
+    "tags": [
+      "Financials & Valuation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Data type: 'chart' or 'table'.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "chart",
+            "table"
+          ],
+          "default": "chart",
+          "description": "Data type: 'chart' or 'table'.",
+          "example": "chart"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "chart",
+            "table"
+          ],
+          "default": "chart",
+          "description": "Data type: 'chart' or 'table'.",
+          "example": "chart"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Sustainability",
+    "method": "GET",
+    "path": "/stock/sustainability",
+    "summary": "Get sustainability data",
+    "description": "Get ESG risk ratings and breakdown.",
+    "tags": [
+      "Corporate & ESG"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Type of sustainability data.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "assessment",
+            "breakdown"
+          ],
+          "default": "assessment",
+          "description": "Type of sustainability data.",
+          "example": "assessment"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "assessment",
+            "breakdown"
+          ],
+          "default": "assessment",
+          "description": "Type of sustainability data.",
+          "example": "assessment"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Trailing_Return",
+    "method": "GET",
+    "path": "/stock/trailing-return",
+    "summary": "Get trailing returns",
+    "description": "Get trailing total returns data.",
+    "tags": [
+      "Financials & Valuation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Data type: 'day', 'month', or 'quarter'.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "day",
+            "month",
+            "quarter"
+          ],
+          "default": "day",
+          "description": "Data type: 'day', 'month', or 'quarter'.",
+          "example": "day"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "day",
+            "month",
+            "quarter"
+          ],
+          "default": "day",
+          "description": "Data type: 'day', 'month', or 'quarter'.",
+          "example": "day"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Key_Metrics",
+    "method": "GET",
+    "path": "/stock/key-metrics",
+    "summary": "Get key metrics",
+    "description": "Get financial summary, growth, profitability, health, or cash flow metrics.",
+    "tags": [
+      "Financials & Valuation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": true,
+        "description": "Category of key metrics.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "summary",
+            "growth",
+            "profitability",
+            "health",
+            "cashFlow"
+          ],
+          "description": "Category of key metrics.",
+          "example": "summary"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "summary",
+            "growth",
+            "profitability",
+            "health",
+            "cashFlow"
+          ],
+          "description": "Category of key metrics.",
+          "example": "summary"
+        }
+      },
+      "required": [
+        "performanceId",
+        "category"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Financials",
+    "method": "GET",
+    "path": "/stock/financials",
+    "summary": "Get financials",
+    "description": "Get income statement, balance sheet, or cash flow details.",
+    "tags": [
+      "Financials & Valuation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "view",
+        "in": "query",
+        "required": true,
+        "description": "Financial view.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "incomeStatement",
+            "balanceSheet",
+            "cashFlow"
+          ],
+          "description": "Financial view.",
+          "example": "incomeStatement"
+        }
+      },
+      {
+        "name": "dataType",
+        "in": "query",
+        "required": false,
+        "description": "Data type: 'annual' or 'quarterly'.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "annual",
+            "quarterly"
+          ],
+          "default": "annual",
+          "description": "Data type: 'annual' or 'quarterly'.",
+          "example": "annual"
+        }
+      },
+      {
+        "name": "reportType",
+        "in": "query",
+        "required": false,
+        "description": "Report type: 'original' (As Originally Reported) or 'restated'.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "original",
+            "restated"
+          ],
+          "default": "original",
+          "description": "Report type: 'original' (As Originally Reported) or 'restated'.",
+          "example": "original"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "incomeStatement",
+            "balanceSheet",
+            "cashFlow"
+          ],
+          "description": "Financial view.",
+          "example": "incomeStatement"
+        },
+        "dataType": {
+          "type": "string",
+          "enum": [
+            "annual",
+            "quarterly"
+          ],
+          "default": "annual",
+          "description": "Data type: 'annual' or 'quarterly'.",
+          "example": "annual"
+        },
+        "reportType": {
+          "type": "string",
+          "enum": [
+            "original",
+            "restated"
+          ],
+          "default": "original",
+          "description": "Report type: 'original' (As Originally Reported) or 'restated'.",
+          "example": "original"
+        }
+      },
+      "required": [
+        "performanceId",
+        "view"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Earning_Transcript",
+    "method": "GET",
+    "path": "/stock/earning-transcript",
+    "summary": "Get earning call transcript",
+    "description": "Get earnings call transcript data.",
+    "tags": [
+      "Corporate & ESG"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Valuations",
+    "method": "GET",
+    "path": "/stock/valuations",
+    "summary": "Get valuations",
+    "description": "Get valuation data.",
+    "tags": [
+      "Financials & Valuation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Dividends",
+    "method": "GET",
+    "path": "/stock/dividends",
+    "summary": "Get dividends/splits",
+    "description": "Get dividends or stock splits history.",
+    "tags": [
+      "Financials & Valuation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Data type: 'dividends' or 'splits'.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "dividends",
+            "splits"
+          ],
+          "default": "dividends",
+          "description": "Data type: 'dividends' or 'splits'.",
+          "example": "dividends"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "dividends",
+            "splits"
+          ],
+          "default": "dividends",
+          "description": "Data type: 'dividends' or 'splits'.",
+          "example": "dividends"
+        }
+      },
+      "required": [
+        "performanceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Ownership",
+    "method": "GET",
+    "path": "/stock/ownership",
+    "summary": "Get ownership data",
+    "description": "Get major/concentrated ownership or buying/selling activity.",
+    "tags": [
+      "Corporate & ESG"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": true,
+        "description": "Ownership type.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "major",
+            "concentrated",
+            "buying",
+            "selling"
+          ],
+          "description": "Ownership type.",
+          "example": "major"
+        }
+      },
+      {
+        "name": "holderType",
+        "in": "query",
+        "required": false,
+        "description": "Holder type.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "mutualfund",
+            "institution"
+          ],
+          "default": "mutualfund",
+          "description": "Holder type.",
+          "example": "mutualfund"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "major",
+            "concentrated",
+            "buying",
+            "selling"
+          ],
+          "description": "Ownership type.",
+          "example": "major"
+        },
+        "holderType": {
+          "type": "string",
+          "enum": [
+            "mutualfund",
+            "institution"
+          ],
+          "default": "mutualfund",
+          "description": "Holder type.",
+          "example": "mutualfund"
+        }
+      },
+      "required": [
+        "performanceId",
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Executive",
+    "method": "GET",
+    "path": "/stock/executive",
+    "summary": "Get executive/insider data",
+    "description": "Get key executives, board of directors, or transaction history.",
+    "tags": [
+      "Corporate & ESG"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "performanceId",
+        "in": "query",
+        "required": true,
+        "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        }
+      },
+      {
+        "name": "profile",
+        "in": "query",
+        "required": true,
+        "description": "Executive/Insider profile type.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "transactionChart",
+            "keyExecutives",
+            "transactionHistory",
+            "boardOfDirectors"
+          ],
+          "description": "Executive/Insider profile type.",
+          "example": "keyExecutives"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "performanceId": {
+          "type": "string",
+          "description": "The unique Morningstar identifier (e.g., '0P000000GY' for Apple, '0P000003RE' for NVIDIA). You can find this ID using the `/auto-complete` endpoint.",
+          "example": "0P000000GY"
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "transactionChart",
+            "keyExecutives",
+            "transactionHistory",
+            "boardOfDirectors"
+          ],
+          "description": "Executive/Insider profile type.",
+          "example": "keyExecutives"
+        }
+      },
+      "required": [
+        "performanceId",
+        "profile"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

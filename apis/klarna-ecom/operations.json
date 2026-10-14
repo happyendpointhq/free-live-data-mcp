@@ -1,0 +1,2293 @@
+[
+  {
+    "id": "_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "Health check endpoint",
+    "description": "Returns the health status of the Klarna API service.",
+    "tags": [
+      "Klarna API"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_stores",
+    "method": "GET",
+    "path": "/stores",
+    "summary": "Search Klarna partner stores",
+    "description": "Search for stores on Klarna with filters like cashback, categories, Klarna integration, etc.",
+    "tags": [
+      "Stores"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code. See documentation for supported regions.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code. See documentation for supported regions.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categories",
+        "in": "query",
+        "required": false,
+        "description": "Filter stores by category (e.g., 'travel', 'fashion')",
+        "schema": {
+          "type": "string",
+          "description": "Filter stores by category (e.g., 'travel', 'fashion')",
+          "example": "travel"
+        }
+      },
+      {
+        "name": "cashback",
+        "in": "query",
+        "required": false,
+        "description": "Filter stores that offer cashback",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Filter stores that offer cashback",
+          "example": false
+        }
+      },
+      {
+        "name": "klarnaatcheckout",
+        "in": "query",
+        "required": false,
+        "description": "Filter stores with Klarna at checkout. Note: If true, shopintheklarnaapp should be false",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Filter stores with Klarna at checkout. Note: If true, shopintheklarnaapp should be false",
+          "example": false
+        }
+      },
+      {
+        "name": "shopintheklarnaapp",
+        "in": "query",
+        "required": false,
+        "description": "Filter stores available in Klarna app. Note: If true, klarnaatcheckout should be false",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Filter stores available in Klarna app. Note: If true, klarnaatcheckout should be false",
+          "example": false
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination",
+          "example": 0
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of stores per page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 24,
+          "description": "Number of stores per page",
+          "example": 24
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code. See documentation for supported regions.",
+          "example": "usa"
+        },
+        "categories": {
+          "type": "string",
+          "description": "Filter stores by category (e.g., 'travel', 'fashion')",
+          "example": "travel"
+        },
+        "cashback": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Filter stores that offer cashback",
+          "example": false
+        },
+        "klarnaatcheckout": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Filter stores with Klarna at checkout. Note: If true, shopintheklarnaapp should be false",
+          "example": false
+        },
+        "shopintheklarnaapp": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false,
+          "description": "Filter stores available in Klarna app. Note: If true, klarnaatcheckout should be false",
+          "example": false
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination",
+          "example": 0
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 24,
+          "description": "Number of stores per page",
+          "example": 24
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_store-page",
+    "method": "GET",
+    "path": "/store-page",
+    "summary": "Get store page products",
+    "description": "Get products from a specific store with sorting and filtering options.",
+    "tags": [
+      "Stores"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code. See documentation for supported regions.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code. See documentation for supported regions.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "storeID",
+        "in": "query",
+        "required": true,
+        "description": "Store ID (UUID format, get from stores endpoint)",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Store ID (UUID format, get from stores endpoint)",
+          "example": "09f4d635-0452-4f63-9455-c45420d95669"
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "Sort type for results",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "POPULARITY",
+            "PRICE_ASC",
+            "PRICE_DESC",
+            "TREND",
+            "NAME",
+            "RATING",
+            "PRICE_DROP"
+          ],
+          "default": "POPULARITY",
+          "description": "Sort type for results",
+          "example": "POPULARITY"
+        }
+      },
+      {
+        "name": "priceRange",
+        "in": "query",
+        "required": false,
+        "description": "Price range filter (format: min-max, e.g., '50-500' for $50-$500, or '50-' for $50+)",
+        "schema": {
+          "type": "string",
+          "description": "Price range filter (format: min-max, e.g., '50-500' for $50-$500, or '50-' for $50+)",
+          "example": "50-500"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination",
+          "example": 0
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of products per page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of products per page",
+          "example": 25
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code. See documentation for supported regions.",
+          "example": "usa"
+        },
+        "storeID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Store ID (UUID format, get from stores endpoint)",
+          "example": "09f4d635-0452-4f63-9455-c45420d95669"
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "POPULARITY",
+            "PRICE_ASC",
+            "PRICE_DESC",
+            "TREND",
+            "NAME",
+            "RATING",
+            "PRICE_DROP"
+          ],
+          "default": "POPULARITY",
+          "description": "Sort type for results",
+          "example": "POPULARITY"
+        },
+        "priceRange": {
+          "type": "string",
+          "description": "Price range filter (format: min-max, e.g., '50-500' for $50-$500, or '50-' for $50+)",
+          "example": "50-500"
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination",
+          "example": 0
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25,
+          "description": "Number of products per page",
+          "example": 25
+        }
+      },
+      "required": [
+        "storeID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_store-page-filters",
+    "method": "GET",
+    "path": "/store-page-filters",
+    "summary": "Get store page filters",
+    "description": "Get available filters for a specific store page.",
+    "tags": [
+      "Stores"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code. See documentation for supported regions.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code. See documentation for supported regions.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "storeID",
+        "in": "query",
+        "required": true,
+        "description": "Store ID (UUID format, get from stores endpoint)",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Store ID (UUID format, get from stores endpoint)",
+          "example": "09f4d635-0452-4f63-9455-c45420d95669"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code. See documentation for supported regions.",
+          "example": "usa"
+        },
+        "storeID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Store ID (UUID format, get from stores endpoint)",
+          "example": "09f4d635-0452-4f63-9455-c45420d95669"
+        }
+      },
+      "required": [
+        "storeID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_keyword-suggestion",
+    "method": "GET",
+    "path": "/keyword-suggestion",
+    "summary": "Get keyword suggestions",
+    "description": "Get search keyword suggestions for auto-complete functionality.",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "Keyword to get suggestions for",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Keyword to get suggestions for",
+          "example": "headphone"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Keyword to get suggestions for",
+          "example": "headphone"
+        }
+      },
+      "required": [
+        "keyword"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-search",
+    "method": "GET",
+    "path": "/product-search",
+    "summary": "Search products by keyword",
+    "description": "Search for products on Klarna using keywords.",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search query for products",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search query for products",
+          "example": "headphone"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search query for products",
+          "example": "headphone"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-category",
+    "method": "GET",
+    "path": "/search-by-category",
+    "summary": "Search products by category",
+    "description": "Search for products within a specific category with sorting, filtering, and pagination.",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "- Category ID (e.g., 'cl94', 't3').\n- Get categoryID from \"/top-level-categories\" or \"/sub-categories\" endpoint.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Category ID (e.g., 'cl94', 't3').\n- Get categoryID from \"/top-level-categories\" or \"/sub-categories\" endpoint.",
+          "example": "cl94"
+        }
+      },
+      {
+        "name": "categoryPathID",
+        "in": "query",
+        "required": false,
+        "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+        "schema": {
+          "type": "string",
+          "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+          "example": "100003567-100014541"
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "Sort type for results",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "POPULARITY",
+            "PRICE_ASC",
+            "PRICE_DESC",
+            "TREND",
+            "NAME",
+            "RATING",
+            "PRICE_DROP"
+          ],
+          "default": "POPULARITY",
+          "description": "Sort type for results",
+          "example": "POPULARITY"
+        }
+      },
+      {
+        "name": "priceRange",
+        "in": "query",
+        "required": false,
+        "description": "Price range filter (format: min-max, e.g., '50-500' for $50-$500, or '50-' for $50+)",
+        "schema": {
+          "type": "string",
+          "description": "Price range filter (format: min-max, e.g., '50-500' for $50-$500, or '50-' for $50+)",
+          "example": "50-500"
+        }
+      },
+      {
+        "name": "filter",
+        "in": "query",
+        "required": false,
+        "description": "Additional filter (format: keyID-valueID). Get filter values from category-filters endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "Additional filter (format: keyID-valueID). Get filter values from category-filters endpoint.",
+          "example": "100003567-100014541"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (use for 2nd page onwards)",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Offset for pagination (use for 2nd page onwards)",
+          "example": 0
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of products per page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 48,
+          "description": "Number of products per page",
+          "example": 48
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Category ID (e.g., 'cl94', 't3').\n- Get categoryID from \"/top-level-categories\" or \"/sub-categories\" endpoint.",
+          "example": "cl94"
+        },
+        "categoryPathID": {
+          "type": "string",
+          "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+          "example": "100003567-100014541"
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "POPULARITY",
+            "PRICE_ASC",
+            "PRICE_DESC",
+            "TREND",
+            "NAME",
+            "RATING",
+            "PRICE_DROP"
+          ],
+          "default": "POPULARITY",
+          "description": "Sort type for results",
+          "example": "POPULARITY"
+        },
+        "priceRange": {
+          "type": "string",
+          "description": "Price range filter (format: min-max, e.g., '50-500' for $50-$500, or '50-' for $50+)",
+          "example": "50-500"
+        },
+        "filter": {
+          "type": "string",
+          "description": "Additional filter (format: keyID-valueID). Get filter values from category-filters endpoint.",
+          "example": "100003567-100014541"
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Offset for pagination (use for 2nd page onwards)",
+          "example": 0
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 48,
+          "description": "Number of products per page",
+          "example": 48
+        }
+      },
+      "required": [
+        "categoryID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_compare-products",
+    "method": "GET",
+    "path": "/compare-products",
+    "summary": "Compare two products",
+    "description": "Compare two products side by side.",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID1",
+        "in": "query",
+        "required": true,
+        "description": "First product ID to compare",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "First product ID to compare",
+          "example": "3331931645"
+        }
+      },
+      {
+        "name": "productID2",
+        "in": "query",
+        "required": true,
+        "description": "Second product ID to compare",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Second product ID to compare",
+          "example": "3216399795"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID1": {
+          "type": "string",
+          "minLength": 1,
+          "description": "First product ID to compare",
+          "example": "3331931645"
+        },
+        "productID2": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Second product ID to compare",
+          "example": "3216399795"
+        }
+      },
+      "required": [
+        "productID1",
+        "productID2"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-details",
+    "method": "GET",
+    "path": "/product-details",
+    "summary": "Get product details",
+    "description": "Get detailed product information including specifications and pricing.",
+    "tags": [
+      "Product Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3216399795"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "Category ID (e.g., 'cl94', 't3')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3216399795"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        }
+      },
+      "required": [
+        "productID",
+        "categoryID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-page-details",
+    "method": "GET",
+    "path": "/product-page-details",
+    "summary": "Get product page details (offers)",
+    "description": "Get product offers and merchant information.",
+    "tags": [
+      "Product Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3216399795"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3216399795"
+        }
+      },
+      "required": [
+        "productID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_price-history",
+    "method": "GET",
+    "path": "/price-history",
+    "summary": "Get product price history",
+    "description": "Get historical price data for a product over different time intervals.",
+    "tags": [
+      "Product Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3216399795"
+        }
+      },
+      {
+        "name": "interval",
+        "in": "query",
+        "required": false,
+        "description": "Time interval for price history",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ONE_MONTH",
+            "THREE_MONTHS",
+            "INFINITE_DAYS"
+          ],
+          "default": "THREE_MONTHS",
+          "description": "Time interval for price history",
+          "example": "THREE_MONTHS"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3216399795"
+        },
+        "interval": {
+          "type": "string",
+          "enum": [
+            "ONE_MONTH",
+            "THREE_MONTHS",
+            "INFINITE_DAYS"
+          ],
+          "default": "THREE_MONTHS",
+          "description": "Time interval for price history",
+          "example": "THREE_MONTHS"
+        }
+      },
+      "required": [
+        "productID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-group",
+    "method": "GET",
+    "path": "/product-group",
+    "summary": "Get product group",
+    "description": "Get product group information for a category and product.",
+    "tags": [
+      "Product Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "Category ID (e.g., 'cl94', 't3')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3332000035"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3332000035"
+        }
+      },
+      "required": [
+        "categoryID",
+        "productID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-reviews-overview",
+    "method": "GET",
+    "path": "/product-reviews-overview",
+    "summary": "Get product reviews overview",
+    "description": "Get an overview of product reviews including both professional and user reviews.",
+    "tags": [
+      "Product Reviews"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3207919327"
+        }
+      },
+      {
+        "name": "proReviewsLimit",
+        "in": "query",
+        "required": false,
+        "description": "Limit for professional reviews",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 3,
+          "description": "Limit for professional reviews",
+          "example": 3
+        }
+      },
+      {
+        "name": "userReviewsLimit",
+        "in": "query",
+        "required": false,
+        "description": "Limit for user reviews",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Limit for user reviews",
+          "example": 10
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3207919327"
+        },
+        "proReviewsLimit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 3,
+          "description": "Limit for professional reviews",
+          "example": 3
+        },
+        "userReviewsLimit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Limit for user reviews",
+          "example": 10
+        }
+      },
+      "required": [
+        "productID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-pro-reviews",
+    "method": "GET",
+    "path": "/product-pro-reviews",
+    "summary": "Get professional product reviews",
+    "description": "Get professional/expert reviews for a product with pagination support.",
+    "tags": [
+      "Product Reviews"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3207919327"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of reviews per page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Number of reviews per page",
+          "example": 5
+        }
+      },
+      {
+        "name": "nextBatchId",
+        "in": "query",
+        "required": false,
+        "description": "Pagination offset ID from previous response (nextBatchId field). Don't send for first page.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Pagination offset ID from previous response (nextBatchId field). Don't send for first page.",
+          "example": 10
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3207919327"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Number of reviews per page",
+          "example": 5
+        },
+        "nextBatchId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Pagination offset ID from previous response (nextBatchId field). Don't send for first page.",
+          "example": 10
+        }
+      },
+      "required": [
+        "productID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-user-reviews",
+    "method": "GET",
+    "path": "/product-user-reviews",
+    "summary": "Get user product reviews",
+    "description": "Get user reviews for a product with pagination support.",
+    "tags": [
+      "Product Reviews"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "productID",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3207919327"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of reviews per page",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Number of reviews per page",
+          "example": 5
+        }
+      },
+      {
+        "name": "nextBatchId",
+        "in": "query",
+        "required": false,
+        "description": "Pagination offset ID from previous response (nextBatchId field). Don't send for first page.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Pagination offset ID from previous response (nextBatchId field). Don't send for first page.",
+          "example": 5
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "productID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "3207919327"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Number of reviews per page",
+          "example": 5
+        },
+        "nextBatchId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Pagination offset ID from previous response (nextBatchId field). Don't send for first page.",
+          "example": 5
+        }
+      },
+      "required": [
+        "productID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_top-level-categories",
+    "method": "GET",
+    "path": "/top-level-categories",
+    "summary": "Get top level categories",
+    "description": "Get the main category navigation menu.",
+    "tags": [
+      "Categories"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_sub-categories",
+    "method": "GET",
+    "path": "/sub-categories",
+    "summary": "Get sub-categories",
+    "description": "Get sub-categories for a specific category.",
+    "tags": [
+      "Categories"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "- Category ID (e.g., 't1', 't182').\n- Get categoryID from\"/top-level-categories\" endpoint.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Category ID (e.g., 't1', 't182').\n- Get categoryID from\"/top-level-categories\" endpoint.",
+          "example": "t1"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Category ID (e.g., 't1', 't182').\n- Get categoryID from\"/top-level-categories\" endpoint.",
+          "example": "t1"
+        }
+      },
+      "required": [
+        "categoryID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_category-filters",
+    "method": "GET",
+    "path": "/category-filters",
+    "summary": "Get category filters",
+    "description": "Get available filters for a specific category.",
+    "tags": [
+      "Categories"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "Category ID (e.g., 'cl94', 't3')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        }
+      },
+      {
+        "name": "categoryPathID",
+        "in": "query",
+        "required": false,
+        "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+        "schema": {
+          "type": "string",
+          "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+          "example": "100003567-100014541"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        },
+        "categoryPathID": {
+          "type": "string",
+          "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+          "example": "100003567-100014541"
+        }
+      },
+      "required": [
+        "categoryID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_popular-keywords",
+    "method": "GET",
+    "path": "/popular-keywords",
+    "summary": "Get popular search keywords for category",
+    "description": "Get popular search keywords for a specific category.",
+    "tags": [
+      "Categories"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "- Category ID (e.g., 't1', 't182').\n- Get categoryID from\"/top-level-categories\" endpoint.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Category ID (e.g., 't1', 't182').\n- Get categoryID from\"/top-level-categories\" endpoint.",
+          "example": "t1"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Category ID (e.g., 't1', 't182').\n- Get categoryID from\"/top-level-categories\" endpoint.",
+          "example": "t1"
+        }
+      },
+      "required": [
+        "categoryID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_category-guiding-content",
+    "method": "GET",
+    "path": "/category-guiding-content",
+    "summary": "Get category guiding content",
+    "description": "Get guiding content for a specific category.",
+    "tags": [
+      "Categories"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "The country/region code for product search. Only specific regions are supported.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        }
+      },
+      {
+        "name": "categoryID",
+        "in": "query",
+        "required": true,
+        "description": "Category ID (e.g., 'cl94', 't3')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        }
+      },
+      {
+        "name": "categoryPathID",
+        "in": "query",
+        "required": false,
+        "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+        "schema": {
+          "type": "string",
+          "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+          "example": "100003567-100014541"
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of guiding content items to return",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 4,
+          "description": "Number of guiding content items to return",
+          "example": 4
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "usa",
+            "austria",
+            "denmark",
+            "finland",
+            "france",
+            "germany",
+            "ireland",
+            "italy",
+            "netherlands",
+            "norway",
+            "spain",
+            "sweden",
+            "uk"
+          ],
+          "default": "usa",
+          "description": "The country/region code for product search. Only specific regions are supported.",
+          "example": "usa"
+        },
+        "categoryID": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID (e.g., 'cl94', 't3')",
+          "example": "cl94"
+        },
+        "categoryPathID": {
+          "type": "string",
+          "description": "Category path ID for sub-category filtering (format: keyID-valueID)",
+          "example": "100003567-100014541"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 4,
+          "description": "Number of guiding content items to return",
+          "example": 4
+        }
+      },
+      "required": [
+        "categoryID"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

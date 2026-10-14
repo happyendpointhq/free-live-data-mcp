@@ -1,0 +1,1838 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_advance-search",
+    "method": "GET",
+    "path": "/advance-search",
+    "summary": "/advance-search",
+    "description": "Search US auction / foreclosure / bank-owned listings with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "Free-text search (address, city, ZIP, neighborhood). Honored on its own.",
+        "schema": {
+          "type": "string",
+          "description": "Free-text search (address, city, ZIP, neighborhood). Honored on its own.",
+          "example": "Austin, TX"
+        }
+      },
+      {
+        "name": "state",
+        "in": "query",
+        "required": false,
+        "description": "2-letter US state code, e.g. CA, TX, FL.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "2-letter US state code, e.g. CA, TX, FL.",
+          "example": "TX"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City name, e.g. Miami.",
+        "schema": {
+          "type": "string",
+          "description": "City name, e.g. Miami.",
+          "example": ""
+        }
+      },
+      {
+        "name": "county",
+        "in": "query",
+        "required": false,
+        "description": "County name, e.g. Travis.",
+        "schema": {
+          "type": "string",
+          "description": "County name, e.g. Travis.",
+          "example": ""
+        }
+      },
+      {
+        "name": "zip",
+        "in": "query",
+        "required": false,
+        "description": "5-digit ZIP code, e.g. 33134.",
+        "schema": {
+          "type": "string",
+          "description": "5-digit ZIP code, e.g. 33134.",
+          "example": ""
+        }
+      },
+      {
+        "name": "beds_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bedrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bedrooms."
+        }
+      },
+      {
+        "name": "beds_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bedrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bedrooms."
+        }
+      },
+      {
+        "name": "baths_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bathrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bathrooms."
+        }
+      },
+      {
+        "name": "baths_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bathrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bathrooms."
+        }
+      },
+      {
+        "name": "sqft_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum living area (sq ft).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum living area (sq ft)."
+        }
+      },
+      {
+        "name": "sqft_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum living area (sq ft).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum living area (sq ft)."
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price / starting bid (USD).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price / starting bid (USD)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price / starting bid (USD).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price / starting bid (USD)."
+        }
+      },
+      {
+        "name": "occupancy",
+        "in": "query",
+        "required": false,
+        "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+          "example": "VACANT"
+        }
+      },
+      {
+        "name": "auction_format",
+        "in": "query",
+        "required": false,
+        "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "online",
+            "live"
+          ],
+          "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+          "example": "online"
+        }
+      },
+      {
+        "name": "financing_available",
+        "in": "query",
+        "required": false,
+        "description": "Only listings where financing is available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings where financing is available.",
+          "example": false
+        }
+      },
+      {
+        "name": "interior_access",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with interior access available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with interior access available.",
+          "example": false
+        }
+      },
+      {
+        "name": "broker_coop",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with broker co-op available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with broker co-op available.",
+          "example": false
+        }
+      },
+      {
+        "name": "hide_ending_soon",
+        "in": "query",
+        "required": false,
+        "description": "Hide auctions that are ending soon.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Hide auctions that are ending soon.",
+          "example": false
+        }
+      },
+      {
+        "name": "marketing_tags",
+        "in": "query",
+        "required": false,
+        "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "seller_code",
+        "in": "query",
+        "required": false,
+        "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+        "schema": {
+          "type": "string",
+          "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+          "example": ""
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "product_type",
+        "in": "query",
+        "required": false,
+        "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: recommended, recommended_desc, newest, auction_date, address, beds, baths, sqft, valuation, distance.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "recommended_desc",
+            "newest",
+            "auction_date",
+            "address",
+            "beds",
+            "baths",
+            "sqft",
+            "valuation",
+            "distance"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, recommended_desc, newest, auction_date, address, beds, baths, sqft, valuation, distance.",
+          "example": "recommended"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Free-text search (address, city, ZIP, neighborhood). Honored on its own.",
+          "example": "Austin, TX"
+        },
+        "state": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "2-letter US state code, e.g. CA, TX, FL.",
+          "example": "TX"
+        },
+        "city": {
+          "type": "string",
+          "description": "City name, e.g. Miami.",
+          "example": ""
+        },
+        "county": {
+          "type": "string",
+          "description": "County name, e.g. Travis.",
+          "example": ""
+        },
+        "zip": {
+          "type": "string",
+          "description": "5-digit ZIP code, e.g. 33134.",
+          "example": ""
+        },
+        "beds_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bedrooms."
+        },
+        "beds_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bedrooms."
+        },
+        "baths_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bathrooms."
+        },
+        "baths_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bathrooms."
+        },
+        "sqft_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum living area (sq ft)."
+        },
+        "sqft_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum living area (sq ft)."
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price / starting bid (USD)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price / starting bid (USD)."
+        },
+        "occupancy": {
+          "type": "string",
+          "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+          "example": "VACANT"
+        },
+        "auction_format": {
+          "type": "string",
+          "enum": [
+            "online",
+            "live"
+          ],
+          "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+          "example": "online"
+        },
+        "financing_available": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings where financing is available.",
+          "example": false
+        },
+        "interior_access": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with interior access available.",
+          "example": false
+        },
+        "broker_coop": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with broker co-op available.",
+          "example": false
+        },
+        "hide_ending_soon": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Hide auctions that are ending soon.",
+          "example": false
+        },
+        "marketing_tags": {
+          "type": "string",
+          "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+          "example": ""
+        },
+        "seller_code": {
+          "type": "string",
+          "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+          "example": ""
+        },
+        "property_type": {
+          "type": "string",
+          "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+          "example": ""
+        },
+        "product_type": {
+          "type": "string",
+          "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "recommended_desc",
+            "newest",
+            "auction_date",
+            "address",
+            "beds",
+            "baths",
+            "sqft",
+            "valuation",
+            "distance"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, recommended_desc, newest, auction_date, address, beds, baths, sqft, valuation, distance.",
+          "example": "recommended"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-zipcode",
+    "method": "GET",
+    "path": "/search-by-zipcode",
+    "summary": "/search-by-zipcode",
+    "description": "Search listings in a 5-digit ZIP code.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "zipcode",
+        "in": "query",
+        "required": true,
+        "description": "Required 5-digit US ZIP code to search within, e.g. 30349.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{5}$",
+          "description": "Required 5-digit US ZIP code to search within, e.g. 30349.",
+          "example": "30349"
+        }
+      },
+      {
+        "name": "beds_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bedrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bedrooms."
+        }
+      },
+      {
+        "name": "beds_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bedrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bedrooms."
+        }
+      },
+      {
+        "name": "baths_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bathrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bathrooms."
+        }
+      },
+      {
+        "name": "baths_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bathrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bathrooms."
+        }
+      },
+      {
+        "name": "sqft_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum living area (sq ft).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum living area (sq ft)."
+        }
+      },
+      {
+        "name": "sqft_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum living area (sq ft).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum living area (sq ft)."
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price / starting bid (USD).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price / starting bid (USD)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price / starting bid (USD).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price / starting bid (USD)."
+        }
+      },
+      {
+        "name": "occupancy",
+        "in": "query",
+        "required": false,
+        "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+          "example": "VACANT"
+        }
+      },
+      {
+        "name": "auction_format",
+        "in": "query",
+        "required": false,
+        "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "online",
+            "live"
+          ],
+          "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+          "example": "online"
+        }
+      },
+      {
+        "name": "financing_available",
+        "in": "query",
+        "required": false,
+        "description": "Only listings where financing is available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings where financing is available.",
+          "example": false
+        }
+      },
+      {
+        "name": "interior_access",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with interior access available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with interior access available.",
+          "example": false
+        }
+      },
+      {
+        "name": "broker_coop",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with broker co-op available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with broker co-op available.",
+          "example": false
+        }
+      },
+      {
+        "name": "hide_ending_soon",
+        "in": "query",
+        "required": false,
+        "description": "Hide auctions that are ending soon.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Hide auctions that are ending soon.",
+          "example": false
+        }
+      },
+      {
+        "name": "marketing_tags",
+        "in": "query",
+        "required": false,
+        "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "seller_code",
+        "in": "query",
+        "required": false,
+        "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+        "schema": {
+          "type": "string",
+          "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+          "example": ""
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "product_type",
+        "in": "query",
+        "required": false,
+        "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: recommended, recommended_desc, newest, auction_date, address, beds, baths, sqft, valuation, distance.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "recommended_desc",
+            "newest",
+            "auction_date",
+            "address",
+            "beds",
+            "baths",
+            "sqft",
+            "valuation",
+            "distance"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, recommended_desc, newest, auction_date, address, beds, baths, sqft, valuation, distance.",
+          "example": "recommended"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "zipcode": {
+          "type": "string",
+          "pattern": "^\\d{5}$",
+          "description": "Required 5-digit US ZIP code to search within, e.g. 30349.",
+          "example": "30349"
+        },
+        "beds_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bedrooms."
+        },
+        "beds_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bedrooms."
+        },
+        "baths_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bathrooms."
+        },
+        "baths_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bathrooms."
+        },
+        "sqft_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum living area (sq ft)."
+        },
+        "sqft_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum living area (sq ft)."
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price / starting bid (USD)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price / starting bid (USD)."
+        },
+        "occupancy": {
+          "type": "string",
+          "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+          "example": "VACANT"
+        },
+        "auction_format": {
+          "type": "string",
+          "enum": [
+            "online",
+            "live"
+          ],
+          "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+          "example": "online"
+        },
+        "financing_available": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings where financing is available.",
+          "example": false
+        },
+        "interior_access": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with interior access available.",
+          "example": false
+        },
+        "broker_coop": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with broker co-op available.",
+          "example": false
+        },
+        "hide_ending_soon": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Hide auctions that are ending soon.",
+          "example": false
+        },
+        "marketing_tags": {
+          "type": "string",
+          "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+          "example": ""
+        },
+        "seller_code": {
+          "type": "string",
+          "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+          "example": ""
+        },
+        "property_type": {
+          "type": "string",
+          "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+          "example": ""
+        },
+        "product_type": {
+          "type": "string",
+          "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "recommended_desc",
+            "newest",
+            "auction_date",
+            "address",
+            "beds",
+            "baths",
+            "sqft",
+            "valuation",
+            "distance"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, recommended_desc, newest, auction_date, address, beds, baths, sqft, valuation, distance.",
+          "example": "recommended"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      "required": [
+        "zipcode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-url",
+    "method": "GET",
+    "path": "/search-by-url",
+    "summary": "/search-by-url",
+    "description": "Run a search from an auction.com search URL.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "An auction.com search/results URL (or path). The state, location and filter query-params are parsed and the matching listings are returned.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An auction.com search/results URL (or path). The state, location and filter query-params are parsed and the matching listings are returned.",
+          "example": "https://www.auction.com/residential/TX/?bd=3&os=VACANT&lt=resi_ps&rpp=40"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An auction.com search/results URL (or path). The state, location and filter query-params are parsed and the matching listings are returned.",
+          "example": "https://www.auction.com/residential/TX/?bd=3&os=VACANT&lt=resi_ps&rpp=40"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_upcoming-auctions",
+    "method": "GET",
+    "path": "/upcoming-auctions",
+    "summary": "/upcoming-auctions",
+    "description": "Upcoming auctions in chronological order (soonest first).",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "Free-text search (address, city, ZIP, neighborhood). Honored on its own.",
+        "schema": {
+          "type": "string",
+          "description": "Free-text search (address, city, ZIP, neighborhood). Honored on its own.",
+          "example": "Austin, TX"
+        }
+      },
+      {
+        "name": "state",
+        "in": "query",
+        "required": false,
+        "description": "2-letter US state code, e.g. CA, TX, FL.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "2-letter US state code, e.g. CA, TX, FL.",
+          "example": "TX"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City name, e.g. Miami.",
+        "schema": {
+          "type": "string",
+          "description": "City name, e.g. Miami.",
+          "example": ""
+        }
+      },
+      {
+        "name": "county",
+        "in": "query",
+        "required": false,
+        "description": "County name, e.g. Travis.",
+        "schema": {
+          "type": "string",
+          "description": "County name, e.g. Travis.",
+          "example": ""
+        }
+      },
+      {
+        "name": "zip",
+        "in": "query",
+        "required": false,
+        "description": "5-digit ZIP code, e.g. 33134.",
+        "schema": {
+          "type": "string",
+          "description": "5-digit ZIP code, e.g. 33134.",
+          "example": ""
+        }
+      },
+      {
+        "name": "beds_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bedrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bedrooms."
+        }
+      },
+      {
+        "name": "beds_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bedrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bedrooms."
+        }
+      },
+      {
+        "name": "baths_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bathrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bathrooms."
+        }
+      },
+      {
+        "name": "baths_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bathrooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bathrooms."
+        }
+      },
+      {
+        "name": "sqft_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum living area (sq ft).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum living area (sq ft)."
+        }
+      },
+      {
+        "name": "sqft_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum living area (sq ft).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum living area (sq ft)."
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price / starting bid (USD).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price / starting bid (USD)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price / starting bid (USD).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price / starting bid (USD)."
+        }
+      },
+      {
+        "name": "occupancy",
+        "in": "query",
+        "required": false,
+        "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+          "example": "VACANT"
+        }
+      },
+      {
+        "name": "auction_format",
+        "in": "query",
+        "required": false,
+        "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "online",
+            "live"
+          ],
+          "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+          "example": "online"
+        }
+      },
+      {
+        "name": "financing_available",
+        "in": "query",
+        "required": false,
+        "description": "Only listings where financing is available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings where financing is available.",
+          "example": false
+        }
+      },
+      {
+        "name": "interior_access",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with interior access available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with interior access available.",
+          "example": false
+        }
+      },
+      {
+        "name": "broker_coop",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with broker co-op available.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with broker co-op available.",
+          "example": false
+        }
+      },
+      {
+        "name": "hide_ending_soon",
+        "in": "query",
+        "required": false,
+        "description": "Hide auctions that are ending soon.",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Hide auctions that are ending soon.",
+          "example": false
+        }
+      },
+      {
+        "name": "marketing_tags",
+        "in": "query",
+        "required": false,
+        "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "seller_code",
+        "in": "query",
+        "required": false,
+        "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+        "schema": {
+          "type": "string",
+          "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+          "example": ""
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "product_type",
+        "in": "query",
+        "required": false,
+        "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Free-text search (address, city, ZIP, neighborhood). Honored on its own.",
+          "example": "Austin, TX"
+        },
+        "state": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "2-letter US state code, e.g. CA, TX, FL.",
+          "example": "TX"
+        },
+        "city": {
+          "type": "string",
+          "description": "City name, e.g. Miami.",
+          "example": ""
+        },
+        "county": {
+          "type": "string",
+          "description": "County name, e.g. Travis.",
+          "example": ""
+        },
+        "zip": {
+          "type": "string",
+          "description": "5-digit ZIP code, e.g. 33134.",
+          "example": ""
+        },
+        "beds_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bedrooms."
+        },
+        "beds_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bedrooms."
+        },
+        "baths_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum bathrooms."
+        },
+        "baths_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum bathrooms."
+        },
+        "sqft_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum living area (sq ft)."
+        },
+        "sqft_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum living area (sq ft)."
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price / starting bid (USD)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price / starting bid (USD)."
+        },
+        "occupancy": {
+          "type": "string",
+          "description": "Occupancy status. One or more of: OCCUPIED, VACANT, UNKNOWN (comma = match any). Comma-separated.",
+          "example": "VACANT"
+        },
+        "auction_format": {
+          "type": "string",
+          "enum": [
+            "online",
+            "live"
+          ],
+          "description": "Auction format: `online` (auction.com timed auctions) narrows the results; `live` (courthouse / trustee foreclosure sales) is accepted but effectively returns the full catalog, which live/trustee sales dominate.",
+          "example": "online"
+        },
+        "financing_available": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings where financing is available.",
+          "example": false
+        },
+        "interior_access": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with interior access available.",
+          "example": false
+        },
+        "broker_coop": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Only listings with broker co-op available.",
+          "example": false
+        },
+        "hide_ending_soon": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Hide auctions that are ending soon.",
+          "example": false
+        },
+        "marketing_tags": {
+          "type": "string",
+          "description": "Marketing-tag codes (from /marketing-tags), e.g. PRCD (price drop), ODSB ($1 opening bid), GOTO (foreclosure predict). Comma-separated = match any. Comma-separated.",
+          "example": ""
+        },
+        "seller_code": {
+          "type": "string",
+          "description": "Seller code (a listing’s `seller_cd`), to restrict to one seller’s inventory.",
+          "example": ""
+        },
+        "property_type": {
+          "type": "string",
+          "description": "Property type: house, single_family, condo, townhouse, multi_family, multifamily, land. Comma = match any. Comma-separated.",
+          "example": ""
+        },
+        "product_type": {
+          "type": "string",
+          "description": "Product type: foreclosure, newly_foreclosed, private_seller. Comma = match any. Comma-separated.",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details",
+    "method": "GET",
+    "path": "/listing-details",
+    "summary": "/listing-details",
+    "description": "Full listing detail by id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "auction.com listing id (numeric, e.g. `2091404`). Get one from any /search result (`listing_id`).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "auction.com listing id (numeric, e.g. `2091404`). Get one from any /search result (`listing_id`).",
+          "example": "2091404"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "auction.com listing id (numeric, e.g. `2091404`). Get one from any /search result (`listing_id`).",
+          "example": "2091404"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details-by-url",
+    "method": "GET",
+    "path": "/listing-details-by-url",
+    "summary": "/listing-details-by-url",
+    "description": "Listing detail from a listing URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "An auction.com listing detail URL (…/details/…-). The listing id is read from the URL.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An auction.com listing detail URL (…/details/…-). The listing id is read from the URL.",
+          "example": "https://www.auction.com/details/3402-water-lilly-way-booth-tx-2091404"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An auction.com listing detail URL (…/details/…-). The listing id is read from the URL.",
+          "example": "https://www.auction.com/details/3402-water-lilly-way-booth-tx-2091404"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-details",
+    "method": "GET",
+    "path": "/auction-details",
+    "summary": "/auction-details",
+    "description": "Auction-centric detail for one listing: schedule, venue, trustee, live bid state, and the property summary.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "auction.com listing id (numeric, e.g. `2091404`). Get one from any /search result (`listing_id`).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "auction.com listing id (numeric, e.g. `2091404`). Get one from any /search result (`listing_id`).",
+          "example": "2091404"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "auction.com listing id (numeric, e.g. `2091404`). Get one from any /search result (`listing_id`).",
+          "example": "2091404"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-status",
+    "method": "GET",
+    "path": "/auction-status",
+    "summary": "/auction-status",
+    "description": "Live auction/bid state for listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_ids",
+        "in": "query",
+        "required": true,
+        "description": "Numeric listing id. Returns listing’s live auction/bid state.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Numeric listing id. Returns listing’s live auction/bid state.",
+          "example": "2091404"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_ids": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Numeric listing id. Returns listing’s live auction/bid state.",
+          "example": "2091404"
+        }
+      },
+      "required": [
+        "listing_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_locations-autocomplete",
+    "method": "GET",
+    "path": "/locations-autocomplete",
+    "summary": "/locations-autocomplete",
+    "description": "Find location values (city/county/zip) to search by.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search text. Returns matching cities, counties and ZIPs with coordinates  -  use the `city`, `county`, `state` or `zip` value in /search.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search text. Returns matching cities, counties and ZIPs with coordinates  -  use the `city`, `county`, `state` or `zip` value in /search.",
+          "example": "Austin"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search text. Returns matching cities, counties and ZIPs with coordinates  -  use the `city`, `county`, `state` or `zip` value in /search.",
+          "example": "Austin"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_recommended-listings",
+    "method": "GET",
+    "path": "/recommended-listings",
+    "summary": "/recommended-listings",
+    "description": "Curated recommendation rows of listings.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_marketing-tags",
+    "method": "GET",
+    "path": "/marketing-tags",
+    "summary": "/marketing-tags",
+    "description": "The marketing-tag taxonomy for the marketing_tags filter.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_enums",
+    "method": "GET",
+    "path": "/enums",
+    "summary": "/enums",
+    "description": "All accepted filter values and response-field vocabularies.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

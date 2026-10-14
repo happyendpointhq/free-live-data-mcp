@@ -1,0 +1,1100 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search",
+    "method": "GET",
+    "path": "/search",
+    "summary": "/search",
+    "description": "Search Gumtree listings with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "q",
+        "in": "query",
+        "required": false,
+        "description": "Keyword to search for. Optional  -  omit it to browse a whole category. \"e.g. - \"iphone 16\"",
+        "schema": {
+          "type": "string",
+          "description": "Keyword to search for. Optional  -  omit it to browse a whole category. \"e.g. - \"iphone 16\"",
+          "example": ""
+        }
+      },
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": false,
+        "description": "Restrict to a category id (from `/categories` or `/search-suggestions`). Required for price/attribute filters to take effect.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Restrict to a category id (from `/categories` or `/search-suggestions`). Required for price/attribute filters to take effect.",
+          "example": "10205"
+        }
+      },
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": false,
+        "description": "Restrict to a location id (from `/locations-autocomplete` or `/locations-nearest`).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Restrict to a location id (from `/locations-autocomplete` or `/locations-nearest`).",
+          "example": "10000344"
+        }
+      },
+      {
+        "name": "distance",
+        "in": "query",
+        "required": false,
+        "description": "Search radius in miles around `location_id` (ignored without one). One of: 0, 1, 3, 5, 10, 15, 30, 50, 75, 100, 150, 250, 500, nationwide.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "0",
+            "1",
+            "3",
+            "5",
+            "10",
+            "15",
+            "30",
+            "50",
+            "75",
+            "100",
+            "150",
+            "250",
+            "500",
+            "nationwide"
+          ],
+          "description": "Search radius in miles around `location_id` (ignored without one). One of: 0, 1, 3, 5, 10, 15, 30, 50, 75, 100, 150, 250, 500, nationwide.",
+          "example": "10"
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (GBP). Needs a `category_id` to apply. \"e.g. - \"300\"",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (GBP). Needs a `category_id` to apply. \"e.g. - \"300\""
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (GBP). Needs a `category_id` to apply. \"e.g. - \"900\"",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (GBP). Needs a `category_id` to apply. \"e.g. - \"900\""
+        }
+      },
+      {
+        "name": "seller_type",
+        "in": "query",
+        "required": false,
+        "description": "Filter by seller: `private` or `trade`. Needs a `category_id` to apply.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "private",
+            "trade"
+          ],
+          "description": "Filter by seller: `private` or `trade`. Needs a `category_id` to apply.",
+          "example": "trade"
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "Category-specific attribute filters as comma-separated `name:value` pairs (names/values from `/filters` and `/filter-options`). e.g. `common_for_sale_condition:new,vehicle_make:audi`. Needs a `category_id`.",
+        "schema": {
+          "type": "string",
+          "description": "Category-specific attribute filters as comma-separated `name:value` pairs (names/values from `/filters` and `/filter-options`). e.g. `common_for_sale_condition:new,vehicle_make:audi`. Needs a `category_id`.",
+          "example": "common_for_sale_condition:new"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: relevance, newest, price_low_to_high, price_high_to_low.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "newest",
+            "price_low_to_high",
+            "price_high_to_low"
+          ],
+          "default": "relevance",
+          "description": "Sort order. One of: relevance, newest, price_low_to_high, price_high_to_low.",
+          "example": "price_low_to_high"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "q": {
+          "type": "string",
+          "description": "Keyword to search for. Optional  -  omit it to browse a whole category. \"e.g. - \"iphone 16\"",
+          "example": ""
+        },
+        "category_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Restrict to a category id (from `/categories` or `/search-suggestions`). Required for price/attribute filters to take effect.",
+          "example": "10205"
+        },
+        "location_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Restrict to a location id (from `/locations-autocomplete` or `/locations-nearest`).",
+          "example": "10000344"
+        },
+        "distance": {
+          "type": "string",
+          "enum": [
+            "0",
+            "1",
+            "3",
+            "5",
+            "10",
+            "15",
+            "30",
+            "50",
+            "75",
+            "100",
+            "150",
+            "250",
+            "500",
+            "nationwide"
+          ],
+          "description": "Search radius in miles around `location_id` (ignored without one). One of: 0, 1, 3, 5, 10, 15, 30, 50, 75, 100, 150, 250, 500, nationwide.",
+          "example": "10"
+        },
+        "min_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (GBP). Needs a `category_id` to apply. \"e.g. - \"300\""
+        },
+        "max_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (GBP). Needs a `category_id` to apply. \"e.g. - \"900\""
+        },
+        "seller_type": {
+          "type": "string",
+          "enum": [
+            "private",
+            "trade"
+          ],
+          "description": "Filter by seller: `private` or `trade`. Needs a `category_id` to apply.",
+          "example": "trade"
+        },
+        "attributes": {
+          "type": "string",
+          "description": "Category-specific attribute filters as comma-separated `name:value` pairs (names/values from `/filters` and `/filter-options`). e.g. `common_for_sale_condition:new,vehicle_make:audi`. Needs a `category_id`.",
+          "example": "common_for_sale_condition:new"
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "newest",
+            "price_low_to_high",
+            "price_high_to_low"
+          ],
+          "default": "relevance",
+          "description": "Sort order. One of: relevance, newest, price_low_to_high, price_high_to_low.",
+          "example": "price_low_to_high"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-url",
+    "method": "GET",
+    "path": "/search-by-url",
+    "summary": "/search-by-url",
+    "description": "Run a search from a Gumtree search URL.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A Gumtree web search URL. The keyword, category & location slugs and price/seller filters are parsed and resolved to a search automatically. Location slugs get a default 15-mile radius unless the URL carries a distance; price/seller filters from the URL only take effect when the URL also carries a category.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A Gumtree web search URL. The keyword, category & location slugs and price/seller filters are parsed and resolved to a search automatically. Location slugs get a default 15-mile radius unless the URL carries a distance; price/seller filters from the URL only take effect when the URL also carries a category.",
+          "example": "https://www.gumtree.com/search?q=iphone&search_location=london"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Override sort order.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "newest",
+            "price_low_to_high",
+            "price_high_to_low"
+          ],
+          "description": "Override sort order.",
+          "example": "newest"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A Gumtree web search URL. The keyword, category & location slugs and price/seller filters are parsed and resolved to a search automatically. Location slugs get a default 15-mile radius unless the URL carries a distance; price/seller filters from the URL only take effect when the URL also carries a category.",
+          "example": "https://www.gumtree.com/search?q=iphone&search_location=london"
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "newest",
+            "price_low_to_high",
+            "price_high_to_low"
+          ],
+          "description": "Override sort order.",
+          "example": "newest"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+          "example": 1
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-suggestions",
+    "method": "GET",
+    "path": "/search-suggestions",
+    "summary": "/search-suggestions",
+    "description": "Keyword autocomplete with categories.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "The text typed so far. Returns matching search terms, each with the category it belongs to and a ready-made search query string.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The text typed so far. Returns matching search terms, each with the category it belongs to and a ready-made search query string.",
+          "example": "iph"
+        }
+      },
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": false,
+        "description": "Optional category id to scope suggestions to.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Optional category id to scope suggestions to.",
+          "example": ""
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The text typed so far. Returns matching search terms, each with the category it belongs to and a ready-made search query string.",
+          "example": "iph"
+        },
+        "category_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Optional category id to scope suggestions to.",
+          "example": ""
+        }
+      },
+      "required": [
+        "keyword"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_trending-searches",
+    "method": "GET",
+    "path": "/trending-searches",
+    "summary": "/trending-searches",
+    "description": "Currently trending search terms.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing",
+    "method": "GET",
+    "path": "/listing",
+    "summary": "/listing",
+    "description": "Full listing detail by ad id.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "ad_id",
+        "in": "query",
+        "required": true,
+        "description": "Gumtree ad/listing id (numeric). Get one from any `/search` result (`adId`).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{6,}$",
+          "description": "Gumtree ad/listing id (numeric). Get one from any `/search` result (`adId`).",
+          "example": "1513645531"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ad_id": {
+          "type": "string",
+          "pattern": "^\\d{6,}$",
+          "description": "Gumtree ad/listing id (numeric). Get one from any `/search` result (`adId`).",
+          "example": "1513645531"
+        }
+      },
+      "required": [
+        "ad_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-by-url",
+    "method": "GET",
+    "path": "/listing-by-url",
+    "summary": "/listing-by-url",
+    "description": "Listing detail from a listing URL.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A Gumtree listing URL. The ad id is read from the URL automatically.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A Gumtree listing URL. The ad id is read from the URL automatically.",
+          "example": "https://www.gumtree.com/p/for-sale/comfort-sofa/1513645531"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A Gumtree listing URL. The ad id is read from the URL automatically.",
+          "example": "https://www.gumtree.com/p/for-sale/comfort-sofa/1513645531"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-listings",
+    "method": "GET",
+    "path": "/similar-listings",
+    "summary": "/similar-listings",
+    "description": "Similar listings for an ad id.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "ad_id",
+        "in": "query",
+        "required": true,
+        "description": "Gumtree ad/listing id (numeric). Get one from any `/search` result (`adId`).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{6,}$",
+          "description": "Gumtree ad/listing id (numeric). Get one from any `/search` result (`adId`).",
+          "example": "1513645531"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ad_id": {
+          "type": "string",
+          "pattern": "^\\d{6,}$",
+          "description": "Gumtree ad/listing id (numeric). Get one from any `/search` result (`adId`).",
+          "example": "1513645531"
+        }
+      },
+      "required": [
+        "ad_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_locations-autocomplete",
+    "method": "GET",
+    "path": "/locations-autocomplete",
+    "summary": "/locations-autocomplete",
+    "description": "Find location ids for search.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "Place name, postcode or outcode to look up. The returned `id` is the `location_id` to feed into `/search`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Place name, postcode or outcode to look up. The returned `id` is the `location_id` to feed into `/search`.",
+          "example": "london"
+        }
+      },
+      {
+        "name": "location_type",
+        "in": "query",
+        "required": false,
+        "description": "Optional filter by result type: LOCATION, OUTCODE or POSTCODE.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "LOCATION",
+            "OUTCODE",
+            "POSTCODE"
+          ],
+          "description": "Optional filter by result type: LOCATION, OUTCODE or POSTCODE.",
+          "example": "LOCATION"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Place name, postcode or outcode to look up. The returned `id` is the `location_id` to feed into `/search`.",
+          "example": "london"
+        },
+        "location_type": {
+          "type": "string",
+          "enum": [
+            "LOCATION",
+            "OUTCODE",
+            "POSTCODE"
+          ],
+          "description": "Optional filter by result type: LOCATION, OUTCODE or POSTCODE.",
+          "example": "LOCATION"
+        }
+      },
+      "required": [
+        "keyword"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_locations-nearest",
+    "method": "GET",
+    "path": "/locations-nearest",
+    "summary": "/locations-nearest",
+    "description": "Reverse-geocode a coordinate to a location.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": false,
+        "description": "Latitude.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Latitude.",
+          "example": 51.5074
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": false,
+        "description": "Longitude.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Longitude.",
+          "example": -0.1278
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Latitude.",
+          "example": 51.5074
+        },
+        "longitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Longitude.",
+          "example": -0.1278
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_countries",
+    "method": "GET",
+    "path": "/countries",
+    "summary": "/countries",
+    "description": "ISO country list.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_categories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "/categories",
+    "description": "Category tree (optionally a subtree).",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": false,
+        "description": "Optional category id or SEO slug (e.g. `cars`). Returns just that node’s subtree; omit for the full tree.",
+        "schema": {
+          "type": "string",
+          "description": "Optional category id or SEO slug (e.g. `cars`). Returns just that node’s subtree; omit for the full tree.",
+          "example": "9311"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "string",
+          "description": "Optional category id or SEO slug (e.g. `cars`). Returns just that node’s subtree; omit for the full tree.",
+          "example": "9311"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_filters",
+    "method": "GET",
+    "path": "/filters",
+    "summary": "/filters",
+    "description": "Available filters for a category.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "Gumtree category, as its numeric id (e.g. `9311`) or SEO slug (e.g. `cars`). Get one from `/categories`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[\\w-]+$",
+          "description": "Gumtree category, as its numeric id (e.g. `9311`) or SEO slug (e.g. `cars`). Get one from `/categories`.",
+          "example": "9311"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "string",
+          "pattern": "^[\\w-]+$",
+          "description": "Gumtree category, as its numeric id (e.g. `9311`) or SEO slug (e.g. `cars`). Get one from `/categories`.",
+          "example": "9311"
+        }
+      },
+      "required": [
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_filter-options",
+    "method": "GET",
+    "path": "/filter-options",
+    "summary": "/filter-options",
+    "description": "Selectable values for one attribute filter.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "Gumtree category, as its numeric id (e.g. `9311`) or SEO slug (e.g. `cars`). Get one from `/categories`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[\\w-]+$",
+          "description": "Gumtree category, as its numeric id (e.g. `9311`) or SEO slug (e.g. `cars`). Get one from `/categories`.",
+          "example": "9311"
+        }
+      },
+      {
+        "name": "name",
+        "in": "query",
+        "required": true,
+        "description": "The attribute `name` to list options for (from `/filters`, e.g. `common_for_sale_condition`, `vehicle_make`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The attribute `name` to list options for (from `/filters`, e.g. `common_for_sale_condition`, `vehicle_make`).",
+          "example": "common_for_sale_condition"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "string",
+          "pattern": "^[\\w-]+$",
+          "description": "Gumtree category, as its numeric id (e.g. `9311`) or SEO slug (e.g. `cars`). Get one from `/categories`.",
+          "example": "9311"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The attribute `name` to list options for (from `/filters`, e.g. `common_for_sale_condition`, `vehicle_make`).",
+          "example": "common_for_sale_condition"
+        }
+      },
+      "required": [
+        "category_id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_seller",
+    "method": "GET",
+    "path": "/seller",
+    "summary": "/seller",
+    "description": "Public seller profile.",
+    "tags": [
+      "Seller"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "public_user_id",
+        "in": "query",
+        "required": true,
+        "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+          "example": "fa9ac182800e5bfe6a43e4540ea92fcb"
+        }
+      },
+      {
+        "name": "user_id",
+        "in": "query",
+        "required": true,
+        "description": "Seller `userId` (from a listing detail `seller.userId`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `userId` (from a listing detail `seller.userId`).",
+          "example": "102166807"
+        }
+      },
+      {
+        "name": "account_id",
+        "in": "query",
+        "required": false,
+        "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+        "schema": {
+          "type": "string",
+          "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+          "example": "101624600"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "public_user_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+          "example": "fa9ac182800e5bfe6a43e4540ea92fcb"
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `userId` (from a listing detail `seller.userId`).",
+          "example": "102166807"
+        },
+        "account_id": {
+          "type": "string",
+          "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+          "example": "101624600"
+        }
+      },
+      "required": [
+        "public_user_id",
+        "user_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_seller-listings",
+    "method": "GET",
+    "path": "/seller-listings",
+    "summary": "/seller-listings",
+    "description": "A seller’s active listings.",
+    "tags": [
+      "Seller"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "public_user_id",
+        "in": "query",
+        "required": true,
+        "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+          "example": "fa9ac182800e5bfe6a43e4540ea92fcb"
+        }
+      },
+      {
+        "name": "user_id",
+        "in": "query",
+        "required": true,
+        "description": "Seller `userId` (from a listing detail `seller.userId`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `userId` (from a listing detail `seller.userId`).",
+          "example": "102166807"
+        }
+      },
+      {
+        "name": "account_id",
+        "in": "query",
+        "required": false,
+        "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+        "schema": {
+          "type": "string",
+          "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+          "example": "101624600"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "public_user_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+          "example": "fa9ac182800e5bfe6a43e4540ea92fcb"
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `userId` (from a listing detail `seller.userId`).",
+          "example": "102166807"
+        },
+        "account_id": {
+          "type": "string",
+          "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+          "example": "101624600"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Around 20 listings are returned per page (18 - 23); the page size is fixed and cannot be changed.",
+          "example": 1
+        }
+      },
+      "required": [
+        "public_user_id",
+        "user_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_seller-reviews",
+    "method": "GET",
+    "path": "/seller-reviews",
+    "summary": "/seller-reviews",
+    "description": "A seller’s reviews.",
+    "tags": [
+      "Seller"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "public_user_id",
+        "in": "query",
+        "required": true,
+        "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+          "example": "fa9ac182800e5bfe6a43e4540ea92fcb"
+        }
+      },
+      {
+        "name": "user_id",
+        "in": "query",
+        "required": true,
+        "description": "Seller `userId` (from a listing detail `seller.userId`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `userId` (from a listing detail `seller.userId`).",
+          "example": "102166807"
+        }
+      },
+      {
+        "name": "account_id",
+        "in": "query",
+        "required": false,
+        "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+        "schema": {
+          "type": "string",
+          "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+          "example": "101624600"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "public_user_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `publicUserId` (from a listing detail `seller.publicUserId`).",
+          "example": "fa9ac182800e5bfe6a43e4540ea92fcb"
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller `userId` (from a listing detail `seller.userId`).",
+          "example": "102166807"
+        },
+        "account_id": {
+          "type": "string",
+          "description": "Seller `accountId` (optional; from a listing detail `seller.accountId`).",
+          "example": "101624600"
+        }
+      },
+      "required": [
+        "public_user_id",
+        "user_id"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

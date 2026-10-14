@@ -1,0 +1,2920 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auto-complete",
+    "method": "GET",
+    "path": "/auto-complete",
+    "summary": "/auto-complete",
+    "description": "Location autocomplete by name prefix. Returns hierarchical location IDs (province → city → district → neighbourhood) ranked by listing density for the supplied `search_type` × `property_type`. Use the returned `locationId` values as the `location_ids` query param on `/property-search`.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "location_name",
+        "in": "query",
+        "required": true,
+        "description": "Location-name prefix to search. Matches city / district / neighbourhood names.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Location-name prefix to search. Matches city / district / neighbourhood names.",
+          "example": "Madrid"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        }
+      },
+      {
+        "name": "search_type",
+        "in": "query",
+        "required": false,
+        "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "location_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Location-name prefix to search. Matches city / district / neighbourhood names.",
+          "example": "Madrid"
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        },
+        "search_type": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      },
+      "required": [
+        "country",
+        "location_name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_smart-search",
+    "method": "GET",
+    "path": "/smart-search",
+    "summary": "/smart-search",
+    "description": "Natural-language search - server parses a free-text query (e.g. \"duplex chamberi terraza\") into structured filter params.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "search_text",
+        "in": "query",
+        "required": true,
+        "description": "Natural-language search query (e.g. `duplex chamberi terraza`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Natural-language search query (e.g. `duplex chamberi terraza`).",
+          "example": "duplex chamberi terraza"
+        }
+      },
+      {
+        "name": "search_type",
+        "in": "query",
+        "required": false,
+        "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "search_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Natural-language search query (e.g. `duplex chamberi terraza`).",
+          "example": "duplex chamberi terraza"
+        },
+        "search_type": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "country",
+        "search_text"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_sublocations",
+    "method": "GET",
+    "path": "/sublocations",
+    "summary": "/sublocations",
+    "description": "Drill from a parent location to its direct children - province → comarca → municipio → distrito → barrio (Spain) or province → area → comune → zona (Italy). Each child carries a `total` count scoped to the supplied `search_type` × `property_type` and a `divisible` flag that tells you whether it has further sub-locations. Useful for building a hierarchical location picker without hitting the autocomplete.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": true,
+        "description": "Parent location id whose direct children should be returned. Pass any `locationId` returned by `/auto-complete` or a previous `/sublocations` call. The hierarchy is: country → province → comarca → municipio → distrito → barrio (Spain); province → area → comune → zona (Italy).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Parent location id whose direct children should be returned. Pass any `locationId` returned by `/auto-complete` or a previous `/sublocations` call. The hierarchy is: country → province → comarca → municipio → distrito → barrio (Spain); province → area → comune → zona (Italy).",
+          "example": "0-EU-ES-28"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        }
+      },
+      {
+        "name": "search_type",
+        "in": "query",
+        "required": false,
+        "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "location_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Parent location id whose direct children should be returned. Pass any `locationId` returned by `/auto-complete` or a previous `/sublocations` call. The hierarchy is: country → province → comarca → municipio → distrito → barrio (Spain); province → area → comune → zona (Italy).",
+          "example": "0-EU-ES-28"
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        },
+        "search_type": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      },
+      "required": [
+        "country",
+        "location_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_reverse-geocode",
+    "method": "GET",
+    "path": "/reverse-geocode",
+    "summary": "/reverse-geocode",
+    "description": "Find points of interest (metro stations, train stations, landmarks) closest to a `latitude`/`longitude` pair, sorted by distance ascending. Use this when you want to enrich a property with its nearby amenities. For \"find listings near here\", use `/property-search-by-coordinates` instead.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": false,
+        "description": "Center latitude in decimal degrees (-90 to 90). Example: `40.4168` (Puerta del Sol, Madrid).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Center latitude in decimal degrees (-90 to 90). Example: `40.4168` (Puerta del Sol, Madrid).",
+          "example": 40.4168
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": false,
+        "description": "Center longitude in decimal degrees (-180 to 180). Example: `-3.7038` (Madrid).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Center longitude in decimal degrees (-180 to 180). Example: `-3.7038` (Madrid).",
+          "example": -3.7038
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "latitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Center latitude in decimal degrees (-90 to 90). Example: `40.4168` (Puerta del Sol, Madrid).",
+          "example": 40.4168
+        },
+        "longitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Center longitude in decimal degrees (-180 to 180). Example: `-3.7038` (Madrid).",
+          "example": -3.7038
+        }
+      },
+      "required": [
+        "country"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-search",
+    "method": "GET",
+    "path": "/property-search",
+    "summary": "/property-search",
+    "description": "Paginated property search by location. Pass `country` + comma-separated `location_ids` (from `/auto-complete`) and pick a `search_type` (`for_sale` / `for_rent` / `transfer`). Fifteen most-used filters are exposed as typed top-level params (`min_price`, `max_price`, `has_elevator`, `has_parking`, `min_rooms`, etc.); for the long tail, pass a `filters` JSON object. Sort with one of `sort_order` presets.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "location_ids",
+        "in": "query",
+        "required": true,
+        "description": "One or more comma-separated Idealista location IDs (hyphenated form like `0-EU-ES-28-07-001-079`). Use `/auto-complete` to discover them - every result there carries a `locationId` you can paste here.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One or more comma-separated Idealista location IDs (hyphenated form like `0-EU-ES-28-07-001-079`). Use `/auto-complete` to discover them - every result there carries a `locationId` you can paste here.",
+          "example": "0-EU-ES-28-07-001-079"
+        }
+      },
+      {
+        "name": "search_type",
+        "in": "query",
+        "required": false,
+        "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        }
+      },
+      {
+        "name": "result_count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1-50). Default: 30.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent."
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price in the listing currency. For rentals this is the monthly rent.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in the listing currency. For rentals this is the monthly rent."
+        }
+      },
+      {
+        "name": "min_size",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area in m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area in m²."
+        }
+      },
+      {
+        "name": "max_size",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area in m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area in m²."
+        }
+      },
+      {
+        "name": "min_rooms",
+        "in": "query",
+        "required": false,
+        "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum)."
+        }
+      },
+      {
+        "name": "min_bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "Minimum number of bathrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms."
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that include a parking space.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that include a parking space.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings in buildings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings in buildings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_swimming_pool",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a swimming pool (private or shared).",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a swimming pool (private or shared).",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_air_conditioning",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_terrace",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a garden (private or shared).",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a garden (private or shared).",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets_allowed",
+        "in": "query",
+        "required": false,
+        "description": "Only listings where pets are explicitly allowed.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings where pets are explicitly allowed.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_virtual_tour",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a virtual tour.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a virtual tour.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furnished_kitchen",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a furnished kitchen.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a furnished kitchen.",
+          "example": ""
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins.",
+        "schema": {
+          "type": "string",
+          "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "location_ids": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One or more comma-separated Idealista location IDs (hyphenated form like `0-EU-ES-28-07-001-079`). Use `/auto-complete` to discover them - every result there carries a `locationId` you can paste here.",
+          "example": "0-EU-ES-28-07-001-079"
+        },
+        "search_type": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        },
+        "result_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        },
+        "min_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent."
+        },
+        "max_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in the listing currency. For rentals this is the monthly rent."
+        },
+        "min_size": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area in m²."
+        },
+        "max_size": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area in m²."
+        },
+        "min_rooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum)."
+        },
+        "min_bathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms."
+        },
+        "has_parking": {
+          "type": "boolean",
+          "description": "Only listings that include a parking space.",
+          "example": ""
+        },
+        "has_elevator": {
+          "type": "boolean",
+          "description": "Only listings in buildings with an elevator.",
+          "example": ""
+        },
+        "has_swimming_pool": {
+          "type": "boolean",
+          "description": "Only listings with a swimming pool (private or shared).",
+          "example": ""
+        },
+        "has_air_conditioning": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "has_terrace": {
+          "type": "boolean",
+          "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+          "example": ""
+        },
+        "has_garden": {
+          "type": "boolean",
+          "description": "Only listings with a garden (private or shared).",
+          "example": ""
+        },
+        "pets_allowed": {
+          "type": "boolean",
+          "description": "Only listings where pets are explicitly allowed.",
+          "example": ""
+        },
+        "has_virtual_tour": {
+          "type": "boolean",
+          "description": "Only listings with a virtual tour.",
+          "example": ""
+        },
+        "furnished_kitchen": {
+          "type": "boolean",
+          "description": "Only listings with a furnished kitchen.",
+          "example": ""
+        },
+        "filters": {
+          "type": "string",
+          "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins."
+        }
+      },
+      "required": [
+        "country",
+        "location_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-search-by-url",
+    "method": "GET",
+    "path": "/property-search-by-url",
+    "summary": "/property-search-by-url",
+    "description": "Paste any public Idealista search URL (browser, saved search, email, etc.) and get listings back in one call. Country is auto-detected from the URL host. The response shape mirrors `/property-search` - same top-level keys, same JSON-walking code works against either endpoint.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A search-results URL from idealista.com / .es / .it / .pt. Country is auto-detected from the URL host (`.com` / `.es` → `es`, `.it` → `it`, `.pt` → `pt`); pass `country` to override.",
+        "schema": {
+          "type": "string",
+          "format": "uri",
+          "description": "A search-results URL from idealista.com / .es / .it / .pt. Country is auto-detected from the URL host (`.com` / `.es` → `es`, `.it` → `it`, `.pt` → `pt`); pass `country` to override.",
+          "example": "https://www.idealista.com/en/venta-viviendas/madrid-madrid/"
+        }
+      },
+      {
+        "name": "country",
+        "in": "query",
+        "required": false,
+        "description": "Override the country auto-detected from the URL host.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Override the country auto-detected from the URL host.",
+          "example": "es"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        }
+      },
+      {
+        "name": "result_count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1-50). Default: 30.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "A search-results URL from idealista.com / .es / .it / .pt. Country is auto-detected from the URL host (`.com` / `.es` → `es`, `.it` → `it`, `.pt` → `pt`); pass `country` to override.",
+          "example": "https://www.idealista.com/en/venta-viviendas/madrid-madrid/"
+        },
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Override the country auto-detected from the URL host.",
+          "example": "es"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        },
+        "result_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-search-by-coordinates",
+    "method": "GET",
+    "path": "/property-search-by-coordinates",
+    "summary": "/property-search-by-coordinates",
+    "description": "Search listings inside a circular area defined by `latitude`, `longitude`, and `radius_km` (default 3 km, max 15 km). Same filter surface as `/property-search` - same `min_price` / `max_price` / `has_elevator` / `filters` parameters apply - and the same response shape, so the same JSON-walking code works against either endpoint.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": false,
+        "description": "Center latitude in decimal degrees (-90 to 90). Example: `40.4168` (Puerta del Sol, Madrid).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Center latitude in decimal degrees (-90 to 90). Example: `40.4168` (Puerta del Sol, Madrid).",
+          "example": 40.4168
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": false,
+        "description": "Center longitude in decimal degrees (-180 to 180). Example: `-3.7038` (Madrid).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Center longitude in decimal degrees (-180 to 180). Example: `-3.7038` (Madrid).",
+          "example": -3.7038
+        }
+      },
+      {
+        "name": "radius_km",
+        "in": "query",
+        "required": false,
+        "description": "Search radius around the centre point in **kilometres**. Default: `3`. Maximum: `15`.",
+        "schema": {
+          "type": "number",
+          "maximum": 15,
+          "default": 3,
+          "description": "Search radius around the centre point in **kilometres**. Default: `3`. Maximum: `15`.",
+          "example": 3,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "search_type",
+        "in": "query",
+        "required": false,
+        "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        }
+      },
+      {
+        "name": "result_count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1-50). Default: 30.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent."
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price in the listing currency. For rentals this is the monthly rent.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in the listing currency. For rentals this is the monthly rent."
+        }
+      },
+      {
+        "name": "min_size",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area in m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area in m²."
+        }
+      },
+      {
+        "name": "max_size",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area in m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area in m²."
+        }
+      },
+      {
+        "name": "min_rooms",
+        "in": "query",
+        "required": false,
+        "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum)."
+        }
+      },
+      {
+        "name": "min_bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "Minimum number of bathrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms."
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that include a parking space.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that include a parking space.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings in buildings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings in buildings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_swimming_pool",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a swimming pool (private or shared).",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a swimming pool (private or shared).",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_air_conditioning",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_terrace",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a garden (private or shared).",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a garden (private or shared).",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets_allowed",
+        "in": "query",
+        "required": false,
+        "description": "Only listings where pets are explicitly allowed.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings where pets are explicitly allowed.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_virtual_tour",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a virtual tour.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a virtual tour.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furnished_kitchen",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a furnished kitchen.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a furnished kitchen.",
+          "example": ""
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins.",
+        "schema": {
+          "type": "string",
+          "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "latitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90,
+          "description": "Center latitude in decimal degrees (-90 to 90). Example: `40.4168` (Puerta del Sol, Madrid).",
+          "example": 40.4168
+        },
+        "longitude": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180,
+          "description": "Center longitude in decimal degrees (-180 to 180). Example: `-3.7038` (Madrid).",
+          "example": -3.7038
+        },
+        "radius_km": {
+          "type": "number",
+          "maximum": 15,
+          "default": 3,
+          "description": "Search radius around the centre point in **kilometres**. Default: `3`. Maximum: `15`.",
+          "example": 3,
+          "exclusiveMinimum": 0
+        },
+        "search_type": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        },
+        "result_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        },
+        "min_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent."
+        },
+        "max_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in the listing currency. For rentals this is the monthly rent."
+        },
+        "min_size": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area in m²."
+        },
+        "max_size": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area in m²."
+        },
+        "min_rooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum)."
+        },
+        "min_bathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms."
+        },
+        "has_parking": {
+          "type": "boolean",
+          "description": "Only listings that include a parking space.",
+          "example": ""
+        },
+        "has_elevator": {
+          "type": "boolean",
+          "description": "Only listings in buildings with an elevator.",
+          "example": ""
+        },
+        "has_swimming_pool": {
+          "type": "boolean",
+          "description": "Only listings with a swimming pool (private or shared).",
+          "example": ""
+        },
+        "has_air_conditioning": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "has_terrace": {
+          "type": "boolean",
+          "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+          "example": ""
+        },
+        "has_garden": {
+          "type": "boolean",
+          "description": "Only listings with a garden (private or shared).",
+          "example": ""
+        },
+        "pets_allowed": {
+          "type": "boolean",
+          "description": "Only listings where pets are explicitly allowed.",
+          "example": ""
+        },
+        "has_virtual_tour": {
+          "type": "boolean",
+          "description": "Only listings with a virtual tour.",
+          "example": ""
+        },
+        "furnished_kitchen": {
+          "type": "boolean",
+          "description": "Only listings with a furnished kitchen.",
+          "example": ""
+        },
+        "filters": {
+          "type": "string",
+          "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins."
+        }
+      },
+      "required": [
+        "country"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-search-by-zip",
+    "method": "GET",
+    "path": "/property-search-by-zip",
+    "summary": "/property-search-by-zip",
+    "description": "Search listings by postal code (Spain / Italy / Portugal). Resolves the postal code to a searchable scope first, then runs a normal search; the `resolved` block in the response echoes how the postal code was interpreted so the caller can verify the resolution. Same filter surface and response shape as `/property-search`.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "zip_code",
+        "in": "query",
+        "required": true,
+        "description": "Postal code (or city / district name) to resolve into a search scope. Spanish ZIPs are 5 digits (e.g. `28013` = Madrid centro). Italian and Portuguese postal codes also work.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "Postal code (or city / district name) to resolve into a search scope. Spanish ZIPs are 5 digits (e.g. `28013` = Madrid centro). Italian and Portuguese postal codes also work.",
+          "example": "28013"
+        }
+      },
+      {
+        "name": "search_type",
+        "in": "query",
+        "required": false,
+        "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        }
+      },
+      {
+        "name": "result_count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1-50). Default: 30.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent."
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price in the listing currency. For rentals this is the monthly rent.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in the listing currency. For rentals this is the monthly rent."
+        }
+      },
+      {
+        "name": "min_size",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area in m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area in m²."
+        }
+      },
+      {
+        "name": "max_size",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area in m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area in m²."
+        }
+      },
+      {
+        "name": "min_rooms",
+        "in": "query",
+        "required": false,
+        "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum)."
+        }
+      },
+      {
+        "name": "min_bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "Minimum number of bathrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms."
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that include a parking space.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that include a parking space.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings in buildings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings in buildings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_swimming_pool",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a swimming pool (private or shared).",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a swimming pool (private or shared).",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_air_conditioning",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_terrace",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a garden (private or shared).",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a garden (private or shared).",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets_allowed",
+        "in": "query",
+        "required": false,
+        "description": "Only listings where pets are explicitly allowed.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings where pets are explicitly allowed.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_virtual_tour",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a virtual tour.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a virtual tour.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furnished_kitchen",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a furnished kitchen.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a furnished kitchen.",
+          "example": ""
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins.",
+        "schema": {
+          "type": "string",
+          "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "zip_code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "Postal code (or city / district name) to resolve into a search scope. Spanish ZIPs are 5 digits (e.g. `28013` = Madrid centro). Italian and Portuguese postal codes also work.",
+          "example": "28013"
+        },
+        "search_type": {
+          "type": "string",
+          "enum": [
+            "for_sale",
+            "for_rent",
+            "transfer"
+          ],
+          "default": "for_sale",
+          "description": "What kind of listing to return. `for_sale` = purchase listings, `for_rent` = rental listings, `transfer` = business-transfer listings (cafés, shops, etc. with a sale price for the going concern). When `search_type=transfer`, `property_type` is overridden to `transfers`.",
+          "example": "for_sale"
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "homes",
+            "garages",
+            "lands",
+            "offices",
+            "premises",
+            "newDevelopments",
+            "vacationRentals",
+            "transfers",
+            "storageRooms",
+            "buildings",
+            "bedrooms"
+          ],
+          "default": "homes",
+          "description": "Asset class. `homes` is the largest category (flats + houses). Some property types must be paired with a specific operation: `bedrooms` and `vacationRentals` are only valid with `operation=rent`; `transfers` is only valid with `operation=sale`.",
+          "example": "homes"
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        },
+        "result_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 30,
+          "description": "Results per page (1-50). Default: 30.",
+          "example": 30
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        },
+        "min_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in the listing currency (EUR for ES/IT/PT). For rentals this is the monthly rent."
+        },
+        "max_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in the listing currency. For rentals this is the monthly rent."
+        },
+        "min_size": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area in m²."
+        },
+        "max_size": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area in m²."
+        },
+        "min_rooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms (matches upstream `bedrooms`, which filters by minimum)."
+        },
+        "min_bathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms."
+        },
+        "has_parking": {
+          "type": "boolean",
+          "description": "Only listings that include a parking space.",
+          "example": ""
+        },
+        "has_elevator": {
+          "type": "boolean",
+          "description": "Only listings in buildings with an elevator.",
+          "example": ""
+        },
+        "has_swimming_pool": {
+          "type": "boolean",
+          "description": "Only listings with a swimming pool (private or shared).",
+          "example": ""
+        },
+        "has_air_conditioning": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "has_terrace": {
+          "type": "boolean",
+          "description": "Only listings with a terrace. (Mapped to upstream key `terrance` - preserves their typo.)",
+          "example": ""
+        },
+        "has_garden": {
+          "type": "boolean",
+          "description": "Only listings with a garden (private or shared).",
+          "example": ""
+        },
+        "pets_allowed": {
+          "type": "boolean",
+          "description": "Only listings where pets are explicitly allowed.",
+          "example": ""
+        },
+        "has_virtual_tour": {
+          "type": "boolean",
+          "description": "Only listings with a virtual tour.",
+          "example": ""
+        },
+        "furnished_kitchen": {
+          "type": "boolean",
+          "description": "Only listings with a furnished kitchen.",
+          "example": ""
+        },
+        "filters": {
+          "type": "string",
+          "description": "Optional JSON object of additional filter knobs not covered by the typed top-level params. Booleans MUST use the literal strings `\"true\"`/`\"false\"`. Common keys, grouped by category:\n\n**Property subtypes:** `flat`, `penthouse`, `duplex`, `studio`, `chalet`, `countryHouse`, `newDevelopment`, `onlyFlats`.\n\n**Parking variants:** `garage`, `singleParkingSpace`, `doubleParkingSpace`, `outdoorCoveredParkingSpace`, `outdoorUncoveredParkingSpace`.\n\n**Indoor amenities:** `storeRoom`, `builtinWardrobes`, `independentHotWater`, `exterior`, `accessible`, `balcony`, `luxury`.\n\n**Outdoor / view amenities:** `privateGarden`, `communityGarden`, `seaViews`, `exteriorDomesticSpace`.\n\n**Other:** `hasPlan`.\n\n**Example:** `{\"swimmingPool\":\"true\",\"flat\":\"true\",\"penthouse\":\"true\"}`.\n\nIf a key here collides with a typed top-level param (e.g. `elevator` vs `has_elevator`), the top-level value wins."
+        }
+      },
+      "required": [
+        "country",
+        "zip_code"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "/property-details",
+    "description": "Full property detail page (PDP): price, size, rooms, full description, contact info, features, energy certification, coordinates, and more. Identify the property by `property_id` (the value appears as `propertyCode` in `/property-search` results, as `adid` in PDP responses, and as the numeric segment of property URLs).",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "property_id",
+        "in": "query",
+        "required": true,
+        "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+          "example": "106387165"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "property_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+          "example": "106387165"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "country",
+        "property_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details-by-url",
+    "method": "GET",
+    "path": "/property-details-by-url",
+    "summary": "/property-details-by-url",
+    "description": "Paste any property URL (browser, email, etc.) and get the full property detail page back in one call. Country and property ID are auto-detected from the URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "Full Idealista listing URL. Examples: `https://www.idealista.com/inmueble//`, `https://www.idealista.it/immobile//`, `https://www.idealista.pt/imovel//`. Country is auto-detected from the URL host (`.com` / `.es` → `es`, `.it` → `it`, `.pt` → `pt`); pass `country` to override.",
+        "schema": {
+          "type": "string",
+          "format": "uri",
+          "description": "Full Idealista listing URL. Examples: `https://www.idealista.com/inmueble//`, `https://www.idealista.it/immobile//`, `https://www.idealista.pt/imovel//`. Country is auto-detected from the URL host (`.com` / `.es` → `es`, `.it` → `it`, `.pt` → `pt`); pass `country` to override.",
+          "example": "https://www.idealista.com/inmueble/106387165/"
+        }
+      },
+      {
+        "name": "country",
+        "in": "query",
+        "required": false,
+        "description": "Override the country auto-detected from the URL host.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Override the country auto-detected from the URL host.",
+          "example": "es"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Full Idealista listing URL. Examples: `https://www.idealista.com/inmueble//`, `https://www.idealista.it/immobile//`, `https://www.idealista.pt/imovel//`. Country is auto-detected from the URL host (`.com` / `.es` → `es`, `.it` → `it`, `.pt` → `pt`); pass `country` to override.",
+          "example": "https://www.idealista.com/inmueble/106387165/"
+        },
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Override the country auto-detected from the URL host.",
+          "example": "es"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-stats",
+    "method": "GET",
+    "path": "/listing-stats",
+    "summary": "/listing-stats",
+    "description": "View counts and lead-engagement stats for a listing (views, email contacts, favorites, shares).",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "property_id",
+        "in": "query",
+        "required": true,
+        "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+          "example": "106387165"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "property_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+          "example": "106387165"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "country",
+        "property_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_comments",
+    "method": "GET",
+    "path": "/comments",
+    "summary": "/comments",
+    "description": "Listing description text for a property, auto-translated into the requested `language`. Returns just the translated text and the language code - lighter than `/property-details` when all you need is the description blurb.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "property_id",
+        "in": "query",
+        "required": true,
+        "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+          "example": "106387165"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "property_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Idealista property identifier. Same value appears as `propertyCode` in `/property-search` results, as `adid` in `/property-details` responses, and as the numeric segment of property URLs (e.g. `/inmueble/106387165/` → `106387165`).",
+          "example": "106387165"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "country",
+        "property_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agent-details",
+    "method": "GET",
+    "path": "/agent-details",
+    "summary": "/agent-details",
+    "description": "Agency / agent profile: branding, contact, phone, total active listings, languages spoken, slogan. Identify the agent by `agent_id` (the URL slug from their Idealista microsite).",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "agent_id",
+        "in": "query",
+        "required": true,
+        "description": "Agency identifier - the URL slug from the agency's Idealista microsite page (e.g. `moransender` from `idealista.com/.../moransender`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Agency identifier - the URL slug from the agency's Idealista microsite page (e.g. `moransender` from `idealista.com/.../moransender`).",
+          "example": "moransender"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "agent_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Agency identifier - the URL slug from the agency's Idealista microsite page (e.g. `moransender` from `idealista.com/.../moransender`).",
+          "example": "moransender"
+        }
+      },
+      "required": [
+        "country",
+        "agent_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agent-listings",
+    "method": "GET",
+    "path": "/agent-listings",
+    "summary": "/agent-listings",
+    "description": "Paginated listings published by a specific agency. Reproduces what `idealista.com/{lang}/pro//` shows publicly. Minimal surface: just identify the agency with `agent_id`, paginate with `page`, and optionally pick a `sort_order`. Same response shape as `/property-search`.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        }
+      },
+      {
+        "name": "agent_id",
+        "in": "query",
+        "required": true,
+        "description": "Agency identifier  -  the URL slug from the agency's Idealista microsite (e.g. `gilmarchamberi` from `idealista.com/.../pro/gilmarchamberi/`). Use the same value you pass to `/agent-details`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Agency identifier  -  the URL slug from the agency's Idealista microsite (e.g. `gilmarchamberi` from `idealista.com/.../pro/gilmarchamberi/`). Use the same value you pass to `/agent-details`.",
+          "example": "moransender"
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "enum": [
+            "es",
+            "it",
+            "pt"
+          ],
+          "description": "Idealista marketplace country: `es` (Spain), `it` (Italy), `pt` (Portugal).",
+          "example": "es"
+        },
+        "agent_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Agency identifier  -  the URL slug from the agency's Idealista microsite (e.g. `gilmarchamberi` from `idealista.com/.../pro/gilmarchamberi/`). Use the same value you pass to `/agent-details`.",
+          "example": "moransender"
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest",
+            "oldest",
+            "size_high_to_low",
+            "size_low_to_high"
+          ],
+          "default": "default",
+          "description": "Result ordering. `default` = relevance / weighted ranking. Other options: `price_low_to_high`, `price_high_to_low`, `newest` (most recently published first), `oldest` (least recently published first), `size_high_to_low` (largest m² first), `size_low_to_high` (smallest m² first).",
+          "example": "default"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-based). Combine with `result_count` to walk through `totalPages` pages.",
+          "example": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 5,
+          "default": "en",
+          "description": "Response language for description translations. Default: `en`. Common codes: `ca`, `en`, `fr`, `de`, `it`, `pt`, `da`, `fi`, `no`, `nl`, `pl`, `ro`, `ru`, `sv`, `el`, `zh`, `uk`.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "country",
+        "agent_id"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

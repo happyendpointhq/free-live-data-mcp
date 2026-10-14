@@ -1,0 +1,2060 @@
+[
+  {
+    "id": "get_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "/health",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "autocomplete",
+    "method": "GET",
+    "path": "/autocomplete",
+    "summary": "Search for locations in Dubai/UAE",
+    "description": "Get location suggestions and IDs for property searches. Returns location IDs and slugs that can be used as input for property search, agent search, and agency search endpoints.",
+    "tags": [
+      "Location"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "- Location search query\n- Examples: `dubai marina`, `palm jumeirah`, `downtown dubai`\n- Minimum 1 character",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location search query\n- Examples: `dubai marina`, `palm jumeirah`, `downtown dubai`\n- Minimum 1 character",
+          "example": "dubai"
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes for localized results\n- Available: `en` (English), `ar` (Arabic), `ru` (Russian), `zh` (Chinese)\n- Example: `en,ar` returns English + Arabic names\n- Default: `en`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes for localized results\n- Available: `en` (English), `ar` (Arabic), `ru` (Russian), `zh` (Chinese)\n- Example: `en,ar` returns English + Arabic names\n- Default: `en`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location search query\n- Examples: `dubai marina`, `palm jumeirah`, `downtown dubai`\n- Minimum 1 character",
+          "example": "dubai"
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes for localized results\n- Available: `en` (English), `ar` (Arabic), `ru` (Russian), `zh` (Chinese)\n- Example: `en,ar` returns English + Arabic names\n- Default: `en`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "search-property",
+    "method": "GET",
+    "path": "/search-property",
+    "summary": "Search properties for sale or rent",
+    "description": "Search properties available for sale or rent in Dubai/UAE. Filter by location, property type, bedrooms, bathrooms, price range, area, amenities, completion status, and more. Supports multiple sort orders and multi-language results.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "purpose",
+        "in": "query",
+        "required": true,
+        "description": "- Transaction type\n- `for-sale`  -  properties for purchase\n- `for-rent`  -  properties for rent",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for-sale",
+            "for-rent"
+          ],
+          "description": "- Transaction type\n- `for-sale`  -  properties for purchase\n- `for-rent`  -  properties for rent",
+          "example": "for-sale"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 24",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 24",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes\n- Available: `en`, `ar`, `ru`, `zh`\n- Example: `en,ar` returns English + Arabic\n- Default: `en`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes\n- Available: `en`, `ar`, `ru`, `zh`\n- Example: `en,ar` returns English + Arabic\n- Default: `en`",
+          "example": "en"
+        }
+      },
+      {
+        "name": "location_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated location external IDs\n- Get IDs from `/autocomplete` endpoint (externalID field)",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs\n- Get IDs from `/autocomplete` endpoint (externalID field)",
+          "example": "6901,5003"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated property types\n- Use `residential` or `commercial` to search all sub-types\n- Residential types: `apartments`, `townhouses`, `penthouse`, `villas`, `villa-compound`, `hotel-apartments`, `residential-plots`, `residential-floors`, `residential-building`\n- Commercial types: `offices`, `warehouses`, `commercial-villas`, `commercial-plots`, `commercial-buildings`, `industrial-land`, `showrooms`, `shops`, `labour-camps`, `bulk-units`, `commercial-floors`, `factories`, `mixed-use-land`, `commerical-properties`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Use `residential` or `commercial` to search all sub-types\n- Residential types: `apartments`, `townhouses`, `penthouse`, `villas`, `villa-compound`, `hotel-apartments`, `residential-plots`, `residential-floors`, `residential-building`\n- Commercial types: `offices`, `warehouses`, `commercial-villas`, `commercial-plots`, `commercial-buildings`, `industrial-land`, `showrooms`, `shops`, `labour-camps`, `bulk-units`, `commercial-floors`, `factories`, `mixed-use-land`, `commerical-properties`",
+          "example": "apartments,villas"
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for results\n- `popular`  -  most popular (default)\n- `latest`  -  newest listings\n- `verified`  -  TruCheck verified first\n- `trubroker_first`  -  TruBroker agents first\n- `lowest_price`  -  cheapest first\n- `highest_price`  -  most expensive first",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "latest",
+            "verified",
+            "trubroker_first",
+            "lowest_price",
+            "highest_price"
+          ],
+          "default": "popular",
+          "description": "- Sort order for results\n- `popular`  -  most popular (default)\n- `latest`  -  newest listings\n- `verified`  -  TruCheck verified first\n- `trubroker_first`  -  TruBroker agents first\n- `lowest_price`  -  cheapest first\n- `highest_price`  -  most expensive first",
+          "example": "popular"
+        }
+      },
+      {
+        "name": "completion_status",
+        "in": "query",
+        "required": false,
+        "description": "- Filter by completion status\n- `completed`  -  ready/built properties\n- `under-construction`  -  off-plan/under construction\n- `any`  -  all properties (omit this param for no filter)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "under-construction",
+            "any"
+          ],
+          "description": "- Filter by completion status\n- `completed`  -  ready/built properties\n- `under-construction`  -  off-plan/under construction\n- `any`  -  all properties (omit this param for no filter)",
+          "example": "completed"
+        }
+      },
+      {
+        "name": "rooms",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated number of bedrooms\n- `0` = Studio\n- Example: `0,1,2` for studio, 1-bed, 2-bed",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated number of bedrooms\n- `0` = Studio\n- Example: `0,1,2` for studio, 1-bed, 2-bed",
+          "example": "0,1,2,3"
+        }
+      },
+      {
+        "name": "baths",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated number of bathrooms\n- Example: `1,2,3`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated number of bathrooms\n- Example: `1,2,3`",
+          "example": "1,2"
+        }
+      },
+      {
+        "name": "is_furnished",
+        "in": "query",
+        "required": false,
+        "description": "- Filter by furnishing status\n- `furnished`  -  furnished properties\n- `unfurnished`  -  unfurnished properties",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "unfurnished"
+          ],
+          "description": "- Filter by furnishing status\n- `furnished`  -  furnished properties\n- `unfurnished`  -  unfurnished properties",
+          "example": "furnished"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum price in AED\n- For sale: purchase price\n- For rent: annual rent amount\n- For Buy Transaction: `200000`, `225000`, `250000`\n- For Rent Transaction: `20000`, `30000`, `40000`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED\n- For sale: purchase price\n- For rent: annual rent amount\n- For Buy Transaction: `200000`, `225000`, `250000`\n- For Rent Transaction: `20000`, `30000`, `40000`",
+          "example": 200000
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum price in AED\n- For sale: purchase price\n- For rent: annual rent amount\n- For Buy Transaction: `400000`, `450000`, `500000`\n- For Rent Transaction: `50000`, `50000`, `85000`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED\n- For sale: purchase price\n- For rent: annual rent amount\n- For Buy Transaction: `400000`, `450000`, `500000`\n- For Rent Transaction: `50000`, `50000`, `85000`",
+          "example": 2000000
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum area in Square Feet (sqft)\n- For Buy Transactions: `800`, `1000`, `1500, `2000`\n- For Rent Transactions: `800`, `1000`, `1500, `2000`",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in Square Feet (sqft)\n- For Buy Transactions: `800`, `1000`, `1500, `2000`\n- For Rent Transactions: `800`, `1000`, `1500, `2000`",
+          "example": 800
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum area in Square Feet (sqft)",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in Square Feet (sqft)",
+          "example": 2500
+        }
+      },
+      {
+        "name": "amenities",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated amenity names\n- Use `/amenities-search` endpoint to find available amenities\n- Examples: `Swimming Pool`, `Security Staff`, `Gym`, `Parking`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated amenity names\n- Use `/amenities-search` endpoint to find available amenities\n- Examples: `Swimming Pool`, `Security Staff`, `Gym`, `Parking`",
+          "example": "Swimming Pool,Security Staff"
+        }
+      },
+      {
+        "name": "has_video",
+        "in": "query",
+        "required": false,
+        "description": "- Filter properties that have video tours",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "- Filter properties that have video tours"
+        }
+      },
+      {
+        "name": "has_360_tour",
+        "in": "query",
+        "required": false,
+        "description": "- Filter properties that have 360° virtual tours",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "- Filter properties that have 360° virtual tours"
+        }
+      },
+      {
+        "name": "has_floorplan",
+        "in": "query",
+        "required": false,
+        "description": "- Filter properties that have floor plans",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "- Filter properties that have floor plans"
+        }
+      },
+      {
+        "name": "agent_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated agent IDs to filter by specific agents\n- Examples: `474947`, `632216`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated agent IDs to filter by specific agents\n- Examples: `474947`, `632216`"
+        }
+      },
+      {
+        "name": "agency_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated agency external IDs to filter by specific agencies\n- Examples:- `10212`, `6168`, `6415`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated agency external IDs to filter by specific agencies\n- Examples:- `10212`, `6168`, `6415`"
+        }
+      },
+      {
+        "name": "developer_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated developer IDs to filter by specific developers",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated developer IDs to filter by specific developers"
+        }
+      },
+      {
+        "name": "rent_frequency",
+        "in": "query",
+        "required": false,
+        "description": "- Rent payment frequency (only for `for-rent` purpose)\n- Default: `yearly`\n- Options: `yearly`, `monthly`, `weekly`, `daily`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "yearly",
+            "monthly",
+            "weekly",
+            "daily"
+          ],
+          "description": "- Rent payment frequency (only for `for-rent` purpose)\n- Default: `yearly`\n- Options: `yearly`, `monthly`, `weekly`, `daily`"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "for-sale",
+            "for-rent"
+          ],
+          "description": "- Transaction type\n- `for-sale`  -  properties for purchase\n- `for-rent`  -  properties for rent",
+          "example": "for-sale"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 24",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes\n- Available: `en`, `ar`, `ru`, `zh`\n- Example: `en,ar` returns English + Arabic\n- Default: `en`",
+          "example": "en"
+        },
+        "location_ids": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs\n- Get IDs from `/autocomplete` endpoint (externalID field)",
+          "example": "6901,5003"
+        },
+        "property_type": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Use `residential` or `commercial` to search all sub-types\n- Residential types: `apartments`, `townhouses`, `penthouse`, `villas`, `villa-compound`, `hotel-apartments`, `residential-plots`, `residential-floors`, `residential-building`\n- Commercial types: `offices`, `warehouses`, `commercial-villas`, `commercial-plots`, `commercial-buildings`, `industrial-land`, `showrooms`, `shops`, `labour-camps`, `bulk-units`, `commercial-floors`, `factories`, `mixed-use-land`, `commerical-properties`",
+          "example": "apartments,villas"
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "latest",
+            "verified",
+            "trubroker_first",
+            "lowest_price",
+            "highest_price"
+          ],
+          "default": "popular",
+          "description": "- Sort order for results\n- `popular`  -  most popular (default)\n- `latest`  -  newest listings\n- `verified`  -  TruCheck verified first\n- `trubroker_first`  -  TruBroker agents first\n- `lowest_price`  -  cheapest first\n- `highest_price`  -  most expensive first",
+          "example": "popular"
+        },
+        "completion_status": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "under-construction",
+            "any"
+          ],
+          "description": "- Filter by completion status\n- `completed`  -  ready/built properties\n- `under-construction`  -  off-plan/under construction\n- `any`  -  all properties (omit this param for no filter)",
+          "example": "completed"
+        },
+        "rooms": {
+          "type": "string",
+          "description": "- Comma-separated number of bedrooms\n- `0` = Studio\n- Example: `0,1,2` for studio, 1-bed, 2-bed",
+          "example": "0,1,2,3"
+        },
+        "baths": {
+          "type": "string",
+          "description": "- Comma-separated number of bathrooms\n- Example: `1,2,3`",
+          "example": "1,2"
+        },
+        "is_furnished": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "unfurnished"
+          ],
+          "description": "- Filter by furnishing status\n- `furnished`  -  furnished properties\n- `unfurnished`  -  unfurnished properties",
+          "example": "furnished"
+        },
+        "price_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED\n- For sale: purchase price\n- For rent: annual rent amount\n- For Buy Transaction: `200000`, `225000`, `250000`\n- For Rent Transaction: `20000`, `30000`, `40000`",
+          "example": 200000
+        },
+        "price_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED\n- For sale: purchase price\n- For rent: annual rent amount\n- For Buy Transaction: `400000`, `450000`, `500000`\n- For Rent Transaction: `50000`, `50000`, `85000`",
+          "example": 2000000
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in Square Feet (sqft)\n- For Buy Transactions: `800`, `1000`, `1500, `2000`\n- For Rent Transactions: `800`, `1000`, `1500, `2000`",
+          "example": 800
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in Square Feet (sqft)",
+          "example": 2500
+        },
+        "amenities": {
+          "type": "string",
+          "description": "- Comma-separated amenity names\n- Use `/amenities-search` endpoint to find available amenities\n- Examples: `Swimming Pool`, `Security Staff`, `Gym`, `Parking`",
+          "example": "Swimming Pool,Security Staff"
+        },
+        "has_video": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "- Filter properties that have video tours"
+        },
+        "has_360_tour": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "- Filter properties that have 360° virtual tours"
+        },
+        "has_floorplan": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "- Filter properties that have floor plans"
+        },
+        "agent_ids": {
+          "type": "string",
+          "description": "- Comma-separated agent IDs to filter by specific agents\n- Examples: `474947`, `632216`"
+        },
+        "agency_ids": {
+          "type": "string",
+          "description": "- Comma-separated agency external IDs to filter by specific agencies\n- Examples:- `10212`, `6168`, `6415`"
+        },
+        "developer_ids": {
+          "type": "string",
+          "description": "- Comma-separated developer IDs to filter by specific developers"
+        },
+        "rent_frequency": {
+          "type": "string",
+          "enum": [
+            "yearly",
+            "monthly",
+            "weekly",
+            "daily"
+          ],
+          "description": "- Rent payment frequency (only for `for-rent` purpose)\n- Default: `yearly`\n- Options: `yearly`, `monthly`, `weekly`, `daily`"
+        }
+      },
+      "required": [
+        "purpose"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "search-new-projects",
+    "method": "GET",
+    "path": "/search-new-projects",
+    "summary": "Search new off-plan development projects",
+    "description": "Search for new development projects and off-plan properties in Dubai/UAE. These are properties with floor plans that are under construction or newly launched.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "location_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated location external IDs",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs",
+          "example": "6901,5003"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 24",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 24",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated property types\n- Default: `residential`\n- Use `residential` or `commercial` to search all sub-types\n- Residential types: `apartments`, `townhouses`, `penthouse`, `villas`, `villa-compound`, `hotel-apartments`, `residential-plots`, `residential-floors`, `residential-building`\n- Commercial types: `offices`, `warehouses`, `commercial-villas`, `commercial-plots`, `commercial-buildings`, `industrial-land`, `showrooms`, `shops`, `labour-camps`, `bulk-units`, `commercial-floors`, `factories`, `mixed-use-land`, `commerical-properties`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Default: `residential`\n- Use `residential` or `commercial` to search all sub-types\n- Residential types: `apartments`, `townhouses`, `penthouse`, `villas`, `villa-compound`, `hotel-apartments`, `residential-plots`, `residential-floors`, `residential-building`\n- Commercial types: `offices`, `warehouses`, `commercial-villas`, `commercial-plots`, `commercial-buildings`, `industrial-land`, `showrooms`, `shops`, `labour-camps`, `bulk-units`, `commercial-floors`, `factories`, `mixed-use-land`, `commerical-properties`",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for results",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "latest",
+            "verified",
+            "trubroker_first",
+            "lowest_price",
+            "highest_price"
+          ],
+          "default": "popular",
+          "description": "- Sort order for results",
+          "example": "popular"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum price in AED",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED",
+          "example": 200000
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum price in AED",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED",
+          "example": 5000000
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum area in sqft",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in sqft",
+          "example": 1000
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum area in sqft",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in sqft",
+          "example": 5000
+        }
+      },
+      {
+        "name": "rooms",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated bedrooms (0=Studio)",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated bedrooms (0=Studio)",
+          "example": "1,2,3"
+        }
+      },
+      {
+        "name": "baths",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated bathrooms",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated bathrooms",
+          "example": "1,2"
+        }
+      },
+      {
+        "name": "developer_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated developer IDs\n- Get developer's id from `/developer-search-by-name` endpoint\n- i.e. - `551` for \"Sobha Realty\"",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated developer IDs\n- Get developer's id from `/developer-search-by-name` endpoint\n- i.e. - `551` for \"Sobha Realty\""
+        }
+      },
+      {
+        "name": "completion_percentage",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "any",
+            "0-25",
+            "25-50",
+            "50-75",
+            "75-100"
+          ],
+          "default": "any"
+        }
+      },
+      {
+        "name": "pre_handover_payment",
+        "in": "query",
+        "required": false,
+        "description": "- Max pre-handover percentage, e.g., 50",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "- Max pre-handover percentage, e.g., 50"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "location_ids": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs",
+          "example": "6901,5003"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 24",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        },
+        "property_type": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Default: `residential`\n- Use `residential` or `commercial` to search all sub-types\n- Residential types: `apartments`, `townhouses`, `penthouse`, `villas`, `villa-compound`, `hotel-apartments`, `residential-plots`, `residential-floors`, `residential-building`\n- Commercial types: `offices`, `warehouses`, `commercial-villas`, `commercial-plots`, `commercial-buildings`, `industrial-land`, `showrooms`, `shops`, `labour-camps`, `bulk-units`, `commercial-floors`, `factories`, `mixed-use-land`, `commerical-properties`",
+          "example": "residential"
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "latest",
+            "verified",
+            "trubroker_first",
+            "lowest_price",
+            "highest_price"
+          ],
+          "default": "popular",
+          "description": "- Sort order for results",
+          "example": "popular"
+        },
+        "price_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED",
+          "example": 200000
+        },
+        "price_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED",
+          "example": 5000000
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in sqft",
+          "example": 1000
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in sqft",
+          "example": 5000
+        },
+        "rooms": {
+          "type": "string",
+          "description": "- Comma-separated bedrooms (0=Studio)",
+          "example": "1,2,3"
+        },
+        "baths": {
+          "type": "string",
+          "description": "- Comma-separated bathrooms",
+          "example": "1,2"
+        },
+        "developer_ids": {
+          "type": "string",
+          "description": "- Comma-separated developer IDs\n- Get developer's id from `/developer-search-by-name` endpoint\n- i.e. - `551` for \"Sobha Realty\""
+        },
+        "completion_percentage": {
+          "type": "string",
+          "enum": [
+            "any",
+            "0-25",
+            "25-50",
+            "50-75",
+            "75-100"
+          ],
+          "default": "any"
+        },
+        "pre_handover_payment": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "- Max pre-handover percentage, e.g., 50"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "Get detailed property information",
+    "description": "Get comprehensive details about a specific property by its external ID. Returns full property information including photos, floor plans, amenities, agent details, and more.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "external_id",
+        "in": "query",
+        "required": true,
+        "description": "- Property external ID\n- Get this from `/search-property` response (`externalID` field)\n- Example: `13495633`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Property external ID\n- Get this from `/search-property` response (`externalID` field)\n- Example: `13495633`",
+          "example": "13495633"
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Language code for response\n- Available: `en`, `ar`, `ru`, `zh`\n- Default: `en`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code for response\n- Available: `en`, `ar`, `ru`, `zh`\n- Default: `en`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "external_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Property external ID\n- Get this from `/search-property` response (`externalID` field)\n- Example: `13495633`",
+          "example": "13495633"
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code for response\n- Available: `en`, `ar`, `ru`, `zh`\n- Default: `en`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "external_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agent-search",
+    "method": "GET",
+    "path": "/agent-search",
+    "summary": "Search real estate agents by filters",
+    "description": "Search for real estate agents in Dubai/UAE. Filter by location, category (residential/commercial), purpose (sale/rent), TruBroker status, and agent languages.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "location_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated location external IDs\n- Get IDs from `/autocomplete` endpoint (`externalID` field)",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs\n- Get IDs from `/autocomplete` endpoint (`externalID` field)",
+          "example": "5003,5460"
+        }
+      },
+      {
+        "name": "purpose",
+        "in": "query",
+        "required": false,
+        "description": "- Transaction type to filter agents by",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for-sale",
+            "for-rent"
+          ],
+          "default": "for-sale",
+          "description": "- Transaction type to filter agents by",
+          "example": "for-sale"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "- Property category the agent specializes in",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial"
+          ],
+          "default": "residential",
+          "description": "- Property category the agent specializes in",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 40",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 40",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      {
+        "name": "completion_status",
+        "in": "query",
+        "required": false,
+        "description": "- Filter agents by completion status of their listings",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "any",
+            "completed",
+            "under-construction"
+          ],
+          "default": "any",
+          "description": "- Filter agents by completion status of their listings",
+          "example": "any"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "location_ids": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs\n- Get IDs from `/autocomplete` endpoint (`externalID` field)",
+          "example": "5003,5460"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "for-sale",
+            "for-rent"
+          ],
+          "default": "for-sale",
+          "description": "- Transaction type to filter agents by",
+          "example": "for-sale"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial"
+          ],
+          "default": "residential",
+          "description": "- Property category the agent specializes in",
+          "example": "residential"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 40",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        },
+        "completion_status": {
+          "type": "string",
+          "enum": [
+            "any",
+            "completed",
+            "under-construction"
+          ],
+          "default": "any",
+          "description": "- Filter agents by completion status of their listings",
+          "example": "any"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agent-search-by-name",
+    "method": "GET",
+    "path": "/agent-search-by-name",
+    "summary": "Search agents by name",
+    "description": "Search for real estate agents by their name. Returns matching agents with basic profile info, badges, and listing counts.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "- Agent name to search for\n- Searches by name only\n- Example: `vipul`, `john`, `anna`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agent name to search for\n- Searches by name only\n- Example: `vipul`, `john`, `anna`",
+          "example": "anna"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 20",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 20",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agent name to search for\n- Searches by name only\n- Example: `vipul`, `john`, `anna`",
+          "example": "anna"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 20",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agent-details",
+    "method": "GET",
+    "path": "/agent-details",
+    "summary": "Get agent details",
+    "description": "Get detailed information about a specific real estate agent by their external ID. Returns agent profile, contact info, badges, stats, and service areas.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "agent_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agent external ID\n- Get this from `/agent-search` or `/agent-search-by-name` response",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent external ID\n- Get this from `/agent-search` or `/agent-search-by-name` response",
+          "example": "2518657"
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agent_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent external ID\n- Get this from `/agent-search` or `/agent-search-by-name` response",
+          "example": "2518657"
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "agent_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agent-properties",
+    "method": "GET",
+    "path": "/agent-properties",
+    "summary": "Get properties listed by an agent",
+    "description": "Get all properties listed by a specific real estate agent. Uses the agent's owner ID (not external ID) to fetch their property listings. Get the owner ID from the agent-details response.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "owner_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agent owner ID\n- Get from `/agent-details` response (`ownerID` field)\n- This is different from `externalID`  -  the ownerID links agents to their listings",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent owner ID\n- Get from `/agent-details` response (`ownerID` field)\n- This is different from `externalID`  -  the ownerID links agents to their listings",
+          "example": "2243594"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 25",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 25",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "owner_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent owner ID\n- Get from `/agent-details` response (`ownerID` field)\n- This is different from `externalID`  -  the ownerID links agents to their listings",
+          "example": "2243594"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 25",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "owner_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agency-search",
+    "method": "GET",
+    "path": "/agency-search",
+    "summary": "Search agencies by location",
+    "description": "Search for real estate agencies in Dubai/UAE by location. Returns agencies with active listings in the specified location.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": true,
+        "description": "- Location external ID\n- Get from `/autocomplete` endpoint (`externalID` field)\n- Example: `5001` (Dubai)\n- Example: `1` for whole of dubai, `3` for whole of Abu Dhabi",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Location external ID\n- Get from `/autocomplete` endpoint (`externalID` field)\n- Example: `5001` (Dubai)\n- Example: `1` for whole of dubai, `3` for whole of Abu Dhabi",
+          "example": "1"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 40",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 40",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "location_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Location external ID\n- Get from `/autocomplete` endpoint (`externalID` field)\n- Example: `5001` (Dubai)\n- Example: `1` for whole of dubai, `3` for whole of Abu Dhabi",
+          "example": "1"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 40",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "location_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agency-search-by-name",
+    "method": "GET",
+    "path": "/agency-search-by-name",
+    "summary": "Search agencies by name",
+    "description": "Search for real estate agencies by their name. Returns matching agencies with listing counts, agent counts, and basic info.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "- Agency name to search for\n- Searches by name only\n- Example: `white`, `metropolitan`, `emaar`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agency name to search for\n- Searches by name only\n- Example: `white`, `metropolitan`, `emaar`",
+          "example": "sobha"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 80",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 80",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agency name to search for\n- Searches by name only\n- Example: `white`, `metropolitan`, `emaar`",
+          "example": "sobha"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 80",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agency-details",
+    "method": "GET",
+    "path": "/agency-details",
+    "summary": "Get agency details",
+    "description": "Get detailed information about a specific real estate agency by its ID. Returns agency profile, contact info, and stats.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "agency_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agency ID\n- Get from `/agency-search` response\n- Example: `8566`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency ID\n- Get from `/agency-search` response\n- Example: `8566`",
+          "example": "8566"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agency_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency ID\n- Get from `/agency-search` response\n- Example: `8566`",
+          "example": "8566"
+        }
+      },
+      "required": [
+        "agency_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agency-agents",
+    "method": "GET",
+    "path": "/agency-agents",
+    "summary": "Get agents in an agency",
+    "description": "Get a list of all agents working in a specific real estate agency.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "agency_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agency ID\n- Get from `/agency-search` or `/agency-details` response\n- Example: `10212`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency ID\n- Get from `/agency-search` or `/agency-details` response\n- Example: `10212`",
+          "example": "10212"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (default: 1)",
+        "schema": {
+          "type": "number",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (default: 1)",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agency_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency ID\n- Get from `/agency-search` or `/agency-details` response\n- Example: `10212`",
+          "example": "10212"
+        },
+        "page": {
+          "type": "number",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (default: 1)",
+          "example": 1
+        }
+      },
+      "required": [
+        "agency_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "agency-properties",
+    "method": "GET",
+    "path": "/agency-properties",
+    "summary": "Get properties listed by an agency",
+    "description": "Get all properties listed by a specific real estate agency. Uses the agency's external ID to fetch their property listings.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "agency_external_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agency external ID\n- Get from `/agency-search` or `/agency-search-by-name` response (`externalID` field)\n- Example: `106317`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency external ID\n- Get from `/agency-search` or `/agency-search-by-name` response (`externalID` field)\n- Example: `106317`",
+          "example": "106317"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 25",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 25",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agency_external_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency external ID\n- Get from `/agency-search` or `/agency-search-by-name` response (`externalID` field)\n- Example: `106317`",
+          "example": "106317"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 25",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Comma-separated language codes: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "agency_external_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "developer-search-by-name",
+    "method": "GET",
+    "path": "/developer-search-by-name",
+    "summary": "Search developers by name",
+    "description": "Search for real estate developers by their name. Returns matching developers with listing counts, project counts, and basic info.",
+    "tags": [
+      "Developers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "- Developer name to search for\n- Searches by name only\n- Example: `emaar`, `damac`, `sobha`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Developer name to search for\n- Searches by name only\n- Example: `emaar`, `damac`, `sobha`",
+          "example": "emaar"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 80",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 80",
+          "example": 1
+        }
+      },
+      {
+        "name": "langs",
+        "in": "query",
+        "required": false,
+        "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+        "schema": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Developer name to search for\n- Searches by name only\n- Example: `emaar`, `damac`, `sobha`",
+          "example": "emaar"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 80",
+          "example": 1
+        },
+        "langs": {
+          "type": "string",
+          "default": "en",
+          "description": "- Language code: `en`, `ar`, `ru`, `zh`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "transactions",
+    "method": "GET",
+    "path": "/transactions",
+    "summary": "Get property transaction history",
+    "description": "Get historical property transaction data (sales and rentals) for Dubai/UAE. Filter by purpose, category, location, completion status, time period, bedrooms, price range, and area. Useful for market analysis and pricing trends.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "purpose",
+        "in": "query",
+        "required": true,
+        "description": "- Transaction type\n- `for-sale`  -  sale transactions\n- `for-rent`  -  rental transactions",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "for-sale",
+            "for-rent"
+          ],
+          "description": "- Transaction type\n- `for-sale`  -  sale transactions\n- `for-rent`  -  rental transactions",
+          "example": "for-sale"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)\n- Results per page: 20",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 20",
+          "example": 1
+        }
+      },
+      {
+        "name": "category_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated category names or external IDs\n- Names: `residential`, `commercial`, `apartments`, `villas`, `townhouses`, `penthouse`, `offices`, `shops`, etc.\n- Or external IDs: `1` (residential), `2` (commercial), `4` (apartments), `3` (villas)\n- Example: `apartments,villas,townhouses` or `4,3,16`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated category names or external IDs\n- Names: `residential`, `commercial`, `apartments`, `villas`, `townhouses`, `penthouse`, `offices`, `shops`, etc.\n- Or external IDs: `1` (residential), `2` (commercial), `4` (apartments), `3` (villas)\n- Example: `apartments,villas,townhouses` or `4,3,16`",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "location_ids",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated location external IDs from `/autocomplete`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs from `/autocomplete`",
+          "example": "5003,5460"
+        }
+      },
+      {
+        "name": "completion_status",
+        "in": "query",
+        "required": false,
+        "description": "- Filter by completion status",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "any",
+            "completed",
+            "under-construction"
+          ],
+          "default": "any",
+          "description": "- Filter by completion status",
+          "example": "any"
+        }
+      },
+      {
+        "name": "time_period",
+        "in": "query",
+        "required": false,
+        "description": "- Time period for transaction data\n- `1m`  -  last 1 month\n- `3m`  -  last 3 months\n- `6m`  -  last 6 months\n- `12m`  -  last 12 months (default)\n- `24m`  -  last 24 months",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1m",
+            "3m",
+            "6m",
+            "12m",
+            "24m"
+          ],
+          "default": "12m",
+          "description": "- Time period for transaction data\n- `1m`  -  last 1 month\n- `3m`  -  last 3 months\n- `6m`  -  last 6 months\n- `12m`  -  last 12 months (default)\n- `24m`  -  last 24 months",
+          "example": "12m"
+        }
+      },
+      {
+        "name": "beds",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated bedrooms filter\n- `0` = Studio",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated bedrooms filter\n- `0` = Studio",
+          "example": "0,1,2,3"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum price in AED",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED",
+          "example": 200000
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum price in AED",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED",
+          "example": 5000000
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum area in sqft",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in sqft",
+          "example": 800
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum area in sqft",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in sqft",
+          "example": 5000
+        }
+      },
+      {
+        "name": "sort_by",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for transactions\n- `date_desc`  -  newest first (default)\n- `date_asc`  -  oldest first\n- `price_desc`  -  highest price first\n- `price_asc`  -  lowest price first\n- `area_desc`  -  largest area first\n- `area_asc`  -  smallest area first",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "date_desc",
+            "date_asc",
+            "price_desc",
+            "price_asc",
+            "area_desc",
+            "area_asc"
+          ],
+          "default": "date_desc",
+          "description": "- Sort order for transactions\n- `date_desc`  -  newest first (default)\n- `date_asc`  -  oldest first\n- `price_desc`  -  highest price first\n- `price_asc`  -  lowest price first\n- `area_desc`  -  largest area first\n- `area_asc`  -  smallest area first",
+          "example": "date_desc"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "for-sale",
+            "for-rent"
+          ],
+          "description": "- Transaction type\n- `for-sale`  -  sale transactions\n- `for-rent`  -  rental transactions",
+          "example": "for-sale"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)\n- Results per page: 20",
+          "example": 1
+        },
+        "category_ids": {
+          "type": "string",
+          "description": "- Comma-separated category names or external IDs\n- Names: `residential`, `commercial`, `apartments`, `villas`, `townhouses`, `penthouse`, `offices`, `shops`, etc.\n- Or external IDs: `1` (residential), `2` (commercial), `4` (apartments), `3` (villas)\n- Example: `apartments,villas,townhouses` or `4,3,16`",
+          "example": "residential"
+        },
+        "location_ids": {
+          "type": "string",
+          "description": "- Comma-separated location external IDs from `/autocomplete`",
+          "example": "5003,5460"
+        },
+        "completion_status": {
+          "type": "string",
+          "enum": [
+            "any",
+            "completed",
+            "under-construction"
+          ],
+          "default": "any",
+          "description": "- Filter by completion status",
+          "example": "any"
+        },
+        "time_period": {
+          "type": "string",
+          "enum": [
+            "1m",
+            "3m",
+            "6m",
+            "12m",
+            "24m"
+          ],
+          "default": "12m",
+          "description": "- Time period for transaction data\n- `1m`  -  last 1 month\n- `3m`  -  last 3 months\n- `6m`  -  last 6 months\n- `12m`  -  last 12 months (default)\n- `24m`  -  last 24 months",
+          "example": "12m"
+        },
+        "beds": {
+          "type": "string",
+          "description": "- Comma-separated bedrooms filter\n- `0` = Studio",
+          "example": "0,1,2,3"
+        },
+        "price_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED",
+          "example": 200000
+        },
+        "price_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED",
+          "example": 5000000
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in sqft",
+          "example": 800
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in sqft",
+          "example": 5000
+        },
+        "sort_by": {
+          "type": "string",
+          "enum": [
+            "date_desc",
+            "date_asc",
+            "price_desc",
+            "price_asc",
+            "area_desc",
+            "area_asc"
+          ],
+          "default": "date_desc",
+          "description": "- Sort order for transactions\n- `date_desc`  -  newest first (default)\n- `date_asc`  -  oldest first\n- `price_desc`  -  highest price first\n- `price_asc`  -  lowest price first\n- `area_desc`  -  largest area first\n- `area_asc`  -  smallest area first",
+          "example": "date_desc"
+        }
+      },
+      "required": [
+        "purpose"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "amenities-search",
+    "method": "GET",
+    "path": "/amenities-search",
+    "summary": "Search available amenities",
+    "description": "Search for property amenities by keyword. Returns amenity names and the count of properties that have each amenity. Use the returned amenity names in the `/search-property` endpoint's `amenities` parameter.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "- Search query for amenities\n- Examples: `swimming`, `gym`, `security`, `parking`, `sauna`\n- Returns matching amenity names that can be used in `/search-property` `amenities` parameter",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Search query for amenities\n- Examples: `swimming`, `gym`, `security`, `parking`, `sauna`\n- Returns matching amenity names that can be used in `/search-property` `amenities` parameter",
+          "example": "swimming"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Search query for amenities\n- Examples: `swimming`, `gym`, `security`, `parking`, `sauna`\n- Returns matching amenity names that can be used in `/search-property` `amenities` parameter",
+          "example": "swimming"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

@@ -1,0 +1,1536 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-properties",
+    "method": "GET",
+    "path": "/search-properties",
+    "summary": "/search-properties",
+    "description": "Search Saudi sale & long-term-rent listings with price, area, room, age, location and REGA-licence filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        }
+      },
+      {
+        "name": "zone_id",
+        "in": "query",
+        "required": false,
+        "description": "**Zone id  -  a city quadrant (east / west / north / south / central).** Optional.\n\nRiyadh (`city_id=273`) splits into five: `1` East · `2` South · `3` Central · `4` West ·\n`5` North.\n\nZone ids are city-scoped and come back nested inside every `/cities` entry and every\n`/markets` entry, each with its own live listing count. Send `zone_id` together with\n`city_id`.\n\nFor a finer cut use `district_id` (one named district) or `neighbourhood_ids` (several).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Zone id  -  a city quadrant (east / west / north / south / central).** Optional.\n\nRiyadh (`city_id=273`) splits into five: `1` East · `2` South · `3` Central · `4` West ·\n`5` North.\n\nZone ids are city-scoped and come back nested inside every `/cities` entry and every\n`/markets` entry, each with its own live listing count. Send `zone_id` together with\n`city_id`.\n\nFor a finer cut use `district_id` (one named district) or `neighbourhood_ids` (several)."
+        }
+      },
+      {
+        "name": "district_id",
+        "in": "query",
+        "required": false,
+        "description": "**District id  -  one named district inside a city.** Optional. Narrower than `zone_id`.\n\n- `2170`  -  Dhahrat Laban, west Riyadh\n\nIds and their coordinates come from `/districts?city_id=…`, which returns every district of a\ncity with a lat/lng pin  -  usable both as a filter value and as a map layer.\n\nSend exactly one district id. To combine several areas, use `neighbourhood_ids`, which takes\na list and carries per-area inventory counts and median price per m².",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**District id  -  one named district inside a city.** Optional. Narrower than `zone_id`.\n\n- `2170`  -  Dhahrat Laban, west Riyadh\n\nIds and their coordinates come from `/districts?city_id=…`, which returns every district of a\ncity with a lat/lng pin  -  usable both as a filter value and as a map layer.\n\nSend exactly one district id. To combine several areas, use `neighbourhood_ids`, which takes\na list and carries per-area inventory counts and median price per m²."
+        }
+      },
+      {
+        "name": "neighbourhood_ids",
+        "in": "query",
+        "required": false,
+        "description": "**Neighbourhood ids  -  filter to one or more named neighbourhoods.** Optional.\nComma-separated; several ids widen the search (union), they do not intersect.\n\n- `2171`  -  Al-Mahdiyah, Riyadh · `2057`  -  Ar-Rimal · `2171,2057`  -  both\n\nIds come from `/neighbourhoods?city_id=…`, which also returns each area's live listing\ncount, its median sale price per m² and its median built-up area  -  enough to pick target\nareas without a separate market-data source.",
+        "schema": {
+          "type": "string",
+          "description": "**Neighbourhood ids  -  filter to one or more named neighbourhoods.** Optional.\nComma-separated; several ids widen the search (union), they do not intersect.\n\n- `2171`  -  Al-Mahdiyah, Riyadh · `2057`  -  Ar-Rimal · `2171,2057`  -  both\n\nIds come from `/neighbourhoods?city_id=…`, which also returns each area's live listing\ncount, its median sale price per m² and its median built-up area  -  enough to pick target\nareas without a separate market-data source.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        }
+      },
+      {
+        "name": "property_for",
+        "in": "query",
+        "required": false,
+        "description": "**Listing intent.** Optional  -  omit to return sale and rent listings together.\n\n- `sale`  -  for sale\n- `rent`  -  long-term rent\n\nThese are the only two values the platform recognises; anything else is rejected.\n\nShort-term / holiday rentals are a **separate inventory** and are not reachable from here  - \nuse `/search-rentals`, which has its own nightly pricing, guest cap and amenity data.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "description": "**Listing intent.** Optional  -  omit to return sale and rent listings together.\n\n- `sale`  -  for sale\n- `rent`  -  long-term rent\n\nThese are the only two values the platform recognises; anything else is rejected.\n\nShort-term / holiday rentals are a **separate inventory** and are not reachable from here  - \nuse `/search-rentals`, which has its own nightly pricing, guest cap and amenity data."
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "**Main property use.** Optional  -  but **omitting it is not \"both\"**: an omitted\n`property_type` returns the **residential** plane only.\n\n- `residential`  -  homes and residential land. Same result set as omitting the parameter.\n- `commercial`  -  offices, showrooms, warehouses, commercial land and buildings. Reachable\n  **only** by sending this value explicitly.\n\nThe two planes are disjoint and every other filter applies inside whichever one you pick, so\ncovering both means two calls: one with `commercial` and one without it. The commercial plane\nis much the smaller of the two  -  a query that omits `property_type` therefore looks complete\nwhile silently excluding it.\n\nThis is the only main-type filter. For a finer cut  -  apartment vs villa vs land  -  use\n`category` (see its description for how it interacts with `estimatedCount`).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial"
+          ],
+          "description": "**Main property use.** Optional  -  but **omitting it is not \"both\"**: an omitted\n`property_type` returns the **residential** plane only.\n\n- `residential`  -  homes and residential land. Same result set as omitting the parameter.\n- `commercial`  -  offices, showrooms, warehouses, commercial land and buildings. Reachable\n  **only** by sending this value explicitly.\n\nThe two planes are disjoint and every other filter applies inside whichever one you pick, so\ncovering both means two calls: one with `commercial` and one without it. The commercial plane\nis much the smaller of the two  -  a query that omits `property_type` therefore looks complete\nwhile silently excluding it.\n\nThis is the only main-type filter. For a finer cut  -  apartment vs villa vs land  -  use\n`category` (see its description for how it interacts with `estimatedCount`)."
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "**Property category  -  apartment, villa, land and so on.** Optional. Comma-separated;\nseveral values widen the search (union).\n\nThese are the slugs listings actually carry:\n\n- Residential  -  `apartment` · `villa-townhouse` · `floor` · `residential-land` · `land` ·\n  `building` · `building-1` · `tower` · `rest-house` · `room` · `hotel`\n- Commercial  -  `showroom-1` · `office-space` · `warehouse` · `repair-shop` · `station` ·\n  `commercial-rest-house`. Reach these by pairing `category` with `property_type=commercial`.\n\n**Two names are not what you would guess.** Townhouses and villas share one slug,\n`villa-townhouse`, and showrooms are `showroom-1` with the numeric suffix. The property-type\ntaxonomy at `/taxonomy` spells four of these differently, so those spellings are accepted and\nnormalised for you rather than quietly matching nothing: `villa` → `villa-townhouse`,\n`showroom` → `showroom-1`, and `residential-building` / `commercial-building` → `building`\n(listings use one merged building slug). The remaining `/taxonomy` spellings are accepted as\nwritten; they select any listing carrying them.\n\n**How this filter behaves.** `category` filters the results on each page. `estimatedCount` is\nnot category-scoped  -  never quote it as a category total  -  and a page may return fewer rows,\nor none, while later pages still match. Page until `hasMore` is `false` rather than stopping\non a short page.\n\nEvery returned listing carries its own `category`, so you can always verify the cut.",
+        "schema": {
+          "type": "string",
+          "description": "**Property category  -  apartment, villa, land and so on.** Optional. Comma-separated;\nseveral values widen the search (union).\n\nThese are the slugs listings actually carry:\n\n- Residential  -  `apartment` · `villa-townhouse` · `floor` · `residential-land` · `land` ·\n  `building` · `building-1` · `tower` · `rest-house` · `room` · `hotel`\n- Commercial  -  `showroom-1` · `office-space` · `warehouse` · `repair-shop` · `station` ·\n  `commercial-rest-house`. Reach these by pairing `category` with `property_type=commercial`.\n\n**Two names are not what you would guess.** Townhouses and villas share one slug,\n`villa-townhouse`, and showrooms are `showroom-1` with the numeric suffix. The property-type\ntaxonomy at `/taxonomy` spells four of these differently, so those spellings are accepted and\nnormalised for you rather than quietly matching nothing: `villa` → `villa-townhouse`,\n`showroom` → `showroom-1`, and `residential-building` / `commercial-building` → `building`\n(listings use one merged building slug). The remaining `/taxonomy` spellings are accepted as\nwritten; they select any listing carrying them.\n\n**How this filter behaves.** `category` filters the results on each page. `estimatedCount` is\nnot category-scoped  -  never quote it as a category total  -  and a page may return fewer rows,\nor none, while later pages still match. Page until `hasMore` is `false` rather than stopping\non a short page.\n\nEvery returned listing carries its own `category`, so you can always verify the cut.",
+          "pattern": "^\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom)(\\s*,\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom))*\\s*$"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum price, in Saudi riyals (SAR).** Optional. Whole riyals, not thousands.\n\n- `500000`  -  500k SAR · `2000000`  -  2M SAR\n\nSend `price_min` alone for \"at least\", `price_max` alone for \"at most\", or both for a band\n(`500000` - `600000` is a working band). `price_min` above `price_max` is rejected with a 400\nnaming both parameters rather than answered with an empty result set.\n\nFor sale listings this is the asking price; for `property_for=rent` it is the annual rent.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum price, in Saudi riyals (SAR).** Optional. Whole riyals, not thousands.\n\n- `500000`  -  500k SAR · `2000000`  -  2M SAR\n\nSend `price_min` alone for \"at least\", `price_max` alone for \"at most\", or both for a band\n(`500000` - `600000` is a working band). `price_min` above `price_max` is rejected with a 400\nnaming both parameters rather than answered with an empty result set.\n\nFor sale listings this is the asking price; for `property_for=rent` it is the annual rent."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum price, in Saudi riyals (SAR).** Optional. Whole riyals, not thousands.\n\n- `600000`  -  600k SAR · `3000000`  -  3M SAR\n\nPairs with `price_min`; either bound works on its own, and the two must not be transposed  - \na `price_max` below `price_min` is rejected with a 400 naming both. For sale listings this is\nthe asking price, for `property_for=rent` the annual rent.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum price, in Saudi riyals (SAR).** Optional. Whole riyals, not thousands.\n\n- `600000`  -  600k SAR · `3000000`  -  3M SAR\n\nPairs with `price_min`; either bound works on its own, and the two must not be transposed  - \na `price_max` below `price_min` is rejected with a 400 naming both. For sale listings this is\nthe asking price, for `property_for=rent` the annual rent."
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum built-up area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `200`  -  a large apartment · `1000`  -  a villa or small building\n\nPairs with `area_max` for a band (`200` - `300` m² is a working band); either bound works alone.\n`area_min` above `area_max` is rejected with a 400 naming both parameters.\n\nThis is the built-up area. Plot/land area is returned per listing as `plotAreaSqm` but is not\nseparately filterable.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum built-up area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `200`  -  a large apartment · `1000`  -  a villa or small building\n\nPairs with `area_max` for a band (`200` - `300` m² is a working band); either bound works alone.\n`area_min` above `area_max` is rejected with a 400 naming both parameters.\n\nThis is the built-up area. Plot/land area is returned per listing as `plotAreaSqm` but is not\nseparately filterable."
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum built-up area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `300`  -  mid-size apartment ceiling · `100000`  -  effectively no ceiling\n\nPairs with `area_min`; either bound works on its own, and an `area_max` below `area_min` is\nrejected with a 400 naming both.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum built-up area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `300`  -  mid-size apartment ceiling · `100000`  -  effectively no ceiling\n\nPairs with `area_min`; either bound works on its own, and an `area_max` below `area_min` is\nrejected with a 400 naming both."
+        }
+      },
+      {
+        "name": "bedrooms",
+        "in": "query",
+        "required": false,
+        "description": "**Bedroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `3`  -  exactly 3 bedrooms · `4`  -  exactly 4\n- `3,4`  -  3 **or** 4 bedrooms\n\n**This is the trap worth reading twice:** `bedrooms=3` does *not* mean \"3 or more\". To express\n\"at least 3\", list the counts you want  -  `3,4,5,6`. Competing products expose only a minimum;\nthe exact-set form lets you isolate a single bedroom count, which a minimum cannot do.",
+        "schema": {
+          "type": "string",
+          "description": "**Bedroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `3`  -  exactly 3 bedrooms · `4`  -  exactly 4\n- `3,4`  -  3 **or** 4 bedrooms\n\n**This is the trap worth reading twice:** `bedrooms=3` does *not* mean \"3 or more\". To express\n\"at least 3\", list the counts you want  -  `3,4,5,6`. Competing products expose only a minimum;\nthe exact-set form lets you isolate a single bedroom count, which a minimum cannot do.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        }
+      },
+      {
+        "name": "bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "**Bathroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `2`  -  exactly 2 bathrooms\n- `2,3`  -  2 **or** 3\n\nSame semantics as `bedrooms`: list every count you want rather than a minimum. Bathroom data\nis sparser than bedroom data on this platform, so a bathroom filter cuts hard  -  combine it\nwith a wide `bedrooms` set rather than a narrow one.",
+        "schema": {
+          "type": "string",
+          "description": "**Bathroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `2`  -  exactly 2 bathrooms\n- `2,3`  -  2 **or** 3\n\nSame semantics as `bedrooms`: list every count you want rather than a minimum. Bathroom data\nis sparser than bedroom data on this platform, so a bathroom filter cuts hard  -  combine it\nwith a wide `bedrooms` set rather than a narrow one.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        }
+      },
+      {
+        "name": "parking",
+        "in": "query",
+        "required": false,
+        "description": "**Parking-space counts  -  an exact-match set.** Optional. Comma-separated.\n\n- `1`  -  exactly one space\n- `1,2`  -  one **or** two\n\nSame exact-set semantics as `bedrooms`. Only a minority of listings declare a parking count,\nso this filter narrows sharply; use it to find listings that explicitly advertise parking,\nnot to exclude ones that merely omit the field.",
+        "schema": {
+          "type": "string",
+          "description": "**Parking-space counts  -  an exact-match set.** Optional. Comma-separated.\n\n- `1`  -  exactly one space\n- `1,2`  -  one **or** two\n\nSame exact-set semantics as `bedrooms`. Only a minority of listings declare a parking count,\nso this filter narrows sharply; use it to find listings that explicitly advertise parking,\nnot to exclude ones that merely omit the field.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        }
+      },
+      {
+        "name": "age_bands",
+        "in": "query",
+        "required": false,
+        "description": "**Property age band.** Optional. Comma-separated; several bands widen the search.\n\n- `0_1`  -  new build, up to 1 year old. The bulk of the market.\n- `1_5`  -  1 to 5 years\n- `5_10`  -  5 to 10 years\n\nThese three bands are the platform's entire age vocabulary  -  there is no \"over 10 years\"\nband and no free-form year filter. Listings older than 10 years are simply not matched by any\nband, so omit the filter to include them.",
+        "schema": {
+          "type": "string",
+          "description": "**Property age band.** Optional. Comma-separated; several bands widen the search.\n\n- `0_1`  -  new build, up to 1 year old. The bulk of the market.\n- `1_5`  -  1 to 5 years\n- `5_10`  -  5 to 10 years\n\nThese three bands are the platform's entire age vocabulary  -  there is no \"over 10 years\"\nband and no free-form year filter. Listings older than 10 years are simply not matched by any\nband, so omit the filter to include them.",
+          "pattern": "^\\s*(0_1|1_5|5_10)(\\s*,\\s*(0_1|1_5|5_10))*\\s*$"
+        }
+      },
+      {
+        "name": "rega_verified",
+        "in": "query",
+        "required": false,
+        "description": "**REGA-licensed listings only.** Optional. Filters on the Saudi Real Estate General\nAuthority advertising licence  -  the regulator's own compliance marker.\n\n- `true`  -  licensed listings only\n- `false`  -  the unlicensed remainder\n\nMost of the Saudi catalogue is licensed, so `true` is a light filter and `false` is the interesting\none: it isolates the inventory that has not been through REGA registration, and it is a real\nfilter rather than a synonym for omitting the parameter.\n\nEvery listing also returns its licence data regardless of this filter: `isRegaLicensed`,\n`regaLicenceNumber` (the REGA advertising licence number) and `regaFullReference`. Those are\nthe join keys for cross-referencing against REGA's own records.",
+        "schema": {
+          "type": "boolean",
+          "description": "**REGA-licensed listings only.** Optional. Filters on the Saudi Real Estate General\nAuthority advertising licence  -  the regulator's own compliance marker.\n\n- `true`  -  licensed listings only\n- `false`  -  the unlicensed remainder\n\nMost of the Saudi catalogue is licensed, so `true` is a light filter and `false` is the interesting\none: it isolates the inventory that has not been through REGA registration, and it is a real\nfilter rather than a synonym for omitting the parameter.\n\nEvery listing also returns its licence data regardless of this filter: `isRegaLicensed`,\n`regaLicenceNumber` (the REGA advertising licence number) and `regaFullReference`. Those are\nthe join keys for cross-referencing against REGA's own records.",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**16 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 17 - 32. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\n**Do not page against `estimatedCount`.** On a narrow slice the count over-reports how many\nlistings are actually retrievable, and on others it is exact  -  you cannot tell which case you\nare in up front, so page until `hasMore` comes back `false` instead. `hasMore` is accurate in\nboth directions: the page after the last populated one is genuinely empty.\n\nThe ceiling is the real depth of the catalogue, not a throttle  -  a broad sweep exhausts before\nreaching it, and every page up to that point is disjoint from every other, so the catalogue\nenumerates without duplicates. Filtered slices run out far sooner. To reach past the ceiling on\na broad query, narrow it and walk each slice  -  by `city_id`, then `zone_id`, then\n`neighbourhood_ids`.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**16 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 17 - 32. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\n**Do not page against `estimatedCount`.** On a narrow slice the count over-reports how many\nlistings are actually retrievable, and on others it is exact  -  you cannot tell which case you\nare in up front, so page until `hasMore` comes back `false` instead. `hasMore` is accurate in\nboth directions: the page after the last populated one is genuinely empty.\n\nThe ceiling is the real depth of the catalogue, not a throttle  -  a broad sweep exhausts before\nreaching it, and every page up to that point is disjoint from every other, so the catalogue\nenumerates without duplicates. Filtered slices run out far sooner. To reach past the ceiling on\na broad query, narrow it and walk each slice  -  by `city_id`, then `zone_id`, then\n`neighbourhood_ids`.",
+          "minimum": 1,
+          "maximum": 3000,
+          "default": 1,
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        },
+        "zone_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Zone id  -  a city quadrant (east / west / north / south / central).** Optional.\n\nRiyadh (`city_id=273`) splits into five: `1` East · `2` South · `3` Central · `4` West ·\n`5` North.\n\nZone ids are city-scoped and come back nested inside every `/cities` entry and every\n`/markets` entry, each with its own live listing count. Send `zone_id` together with\n`city_id`.\n\nFor a finer cut use `district_id` (one named district) or `neighbourhood_ids` (several)."
+        },
+        "district_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**District id  -  one named district inside a city.** Optional. Narrower than `zone_id`.\n\n- `2170`  -  Dhahrat Laban, west Riyadh\n\nIds and their coordinates come from `/districts?city_id=…`, which returns every district of a\ncity with a lat/lng pin  -  usable both as a filter value and as a map layer.\n\nSend exactly one district id. To combine several areas, use `neighbourhood_ids`, which takes\na list and carries per-area inventory counts and median price per m²."
+        },
+        "neighbourhood_ids": {
+          "type": "string",
+          "description": "**Neighbourhood ids  -  filter to one or more named neighbourhoods.** Optional.\nComma-separated; several ids widen the search (union), they do not intersect.\n\n- `2171`  -  Al-Mahdiyah, Riyadh · `2057`  -  Ar-Rimal · `2171,2057`  -  both\n\nIds come from `/neighbourhoods?city_id=…`, which also returns each area's live listing\ncount, its median sale price per m² and its median built-up area  -  enough to pick target\nareas without a separate market-data source.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        },
+        "property_for": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "description": "**Listing intent.** Optional  -  omit to return sale and rent listings together.\n\n- `sale`  -  for sale\n- `rent`  -  long-term rent\n\nThese are the only two values the platform recognises; anything else is rejected.\n\nShort-term / holiday rentals are a **separate inventory** and are not reachable from here  - \nuse `/search-rentals`, which has its own nightly pricing, guest cap and amenity data."
+        },
+        "property_type": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial"
+          ],
+          "description": "**Main property use.** Optional  -  but **omitting it is not \"both\"**: an omitted\n`property_type` returns the **residential** plane only.\n\n- `residential`  -  homes and residential land. Same result set as omitting the parameter.\n- `commercial`  -  offices, showrooms, warehouses, commercial land and buildings. Reachable\n  **only** by sending this value explicitly.\n\nThe two planes are disjoint and every other filter applies inside whichever one you pick, so\ncovering both means two calls: one with `commercial` and one without it. The commercial plane\nis much the smaller of the two  -  a query that omits `property_type` therefore looks complete\nwhile silently excluding it.\n\nThis is the only main-type filter. For a finer cut  -  apartment vs villa vs land  -  use\n`category` (see its description for how it interacts with `estimatedCount`)."
+        },
+        "category": {
+          "type": "string",
+          "description": "**Property category  -  apartment, villa, land and so on.** Optional. Comma-separated;\nseveral values widen the search (union).\n\nThese are the slugs listings actually carry:\n\n- Residential  -  `apartment` · `villa-townhouse` · `floor` · `residential-land` · `land` ·\n  `building` · `building-1` · `tower` · `rest-house` · `room` · `hotel`\n- Commercial  -  `showroom-1` · `office-space` · `warehouse` · `repair-shop` · `station` ·\n  `commercial-rest-house`. Reach these by pairing `category` with `property_type=commercial`.\n\n**Two names are not what you would guess.** Townhouses and villas share one slug,\n`villa-townhouse`, and showrooms are `showroom-1` with the numeric suffix. The property-type\ntaxonomy at `/taxonomy` spells four of these differently, so those spellings are accepted and\nnormalised for you rather than quietly matching nothing: `villa` → `villa-townhouse`,\n`showroom` → `showroom-1`, and `residential-building` / `commercial-building` → `building`\n(listings use one merged building slug). The remaining `/taxonomy` spellings are accepted as\nwritten; they select any listing carrying them.\n\n**How this filter behaves.** `category` filters the results on each page. `estimatedCount` is\nnot category-scoped  -  never quote it as a category total  -  and a page may return fewer rows,\nor none, while later pages still match. Page until `hasMore` is `false` rather than stopping\non a short page.\n\nEvery returned listing carries its own `category`, so you can always verify the cut.",
+          "pattern": "^\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom)(\\s*,\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom))*\\s*$"
+        },
+        "price_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum price, in Saudi riyals (SAR).** Optional. Whole riyals, not thousands.\n\n- `500000`  -  500k SAR · `2000000`  -  2M SAR\n\nSend `price_min` alone for \"at least\", `price_max` alone for \"at most\", or both for a band\n(`500000` - `600000` is a working band). `price_min` above `price_max` is rejected with a 400\nnaming both parameters rather than answered with an empty result set.\n\nFor sale listings this is the asking price; for `property_for=rent` it is the annual rent."
+        },
+        "price_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum price, in Saudi riyals (SAR).** Optional. Whole riyals, not thousands.\n\n- `600000`  -  600k SAR · `3000000`  -  3M SAR\n\nPairs with `price_min`; either bound works on its own, and the two must not be transposed  - \na `price_max` below `price_min` is rejected with a 400 naming both. For sale listings this is\nthe asking price, for `property_for=rent` the annual rent."
+        },
+        "area_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum built-up area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `200`  -  a large apartment · `1000`  -  a villa or small building\n\nPairs with `area_max` for a band (`200` - `300` m² is a working band); either bound works alone.\n`area_min` above `area_max` is rejected with a 400 naming both parameters.\n\nThis is the built-up area. Plot/land area is returned per listing as `plotAreaSqm` but is not\nseparately filterable."
+        },
+        "area_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum built-up area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `300`  -  mid-size apartment ceiling · `100000`  -  effectively no ceiling\n\nPairs with `area_min`; either bound works on its own, and an `area_max` below `area_min` is\nrejected with a 400 naming both."
+        },
+        "bedrooms": {
+          "type": "string",
+          "description": "**Bedroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `3`  -  exactly 3 bedrooms · `4`  -  exactly 4\n- `3,4`  -  3 **or** 4 bedrooms\n\n**This is the trap worth reading twice:** `bedrooms=3` does *not* mean \"3 or more\". To express\n\"at least 3\", list the counts you want  -  `3,4,5,6`. Competing products expose only a minimum;\nthe exact-set form lets you isolate a single bedroom count, which a minimum cannot do.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        },
+        "bathrooms": {
+          "type": "string",
+          "description": "**Bathroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `2`  -  exactly 2 bathrooms\n- `2,3`  -  2 **or** 3\n\nSame semantics as `bedrooms`: list every count you want rather than a minimum. Bathroom data\nis sparser than bedroom data on this platform, so a bathroom filter cuts hard  -  combine it\nwith a wide `bedrooms` set rather than a narrow one.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        },
+        "parking": {
+          "type": "string",
+          "description": "**Parking-space counts  -  an exact-match set.** Optional. Comma-separated.\n\n- `1`  -  exactly one space\n- `1,2`  -  one **or** two\n\nSame exact-set semantics as `bedrooms`. Only a minority of listings declare a parking count,\nso this filter narrows sharply; use it to find listings that explicitly advertise parking,\nnot to exclude ones that merely omit the field.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        },
+        "age_bands": {
+          "type": "string",
+          "description": "**Property age band.** Optional. Comma-separated; several bands widen the search.\n\n- `0_1`  -  new build, up to 1 year old. The bulk of the market.\n- `1_5`  -  1 to 5 years\n- `5_10`  -  5 to 10 years\n\nThese three bands are the platform's entire age vocabulary  -  there is no \"over 10 years\"\nband and no free-form year filter. Listings older than 10 years are simply not matched by any\nband, so omit the filter to include them.",
+          "pattern": "^\\s*(0_1|1_5|5_10)(\\s*,\\s*(0_1|1_5|5_10))*\\s*$"
+        },
+        "rega_verified": {
+          "type": "boolean",
+          "description": "**REGA-licensed listings only.** Optional. Filters on the Saudi Real Estate General\nAuthority advertising licence  -  the regulator's own compliance marker.\n\n- `true`  -  licensed listings only\n- `false`  -  the unlicensed remainder\n\nMost of the Saudi catalogue is licensed, so `true` is a light filter and `false` is the interesting\none: it isolates the inventory that has not been through REGA registration, and it is a real\nfilter rather than a synonym for omitting the parameter.\n\nEvery listing also returns its licence data regardless of this filter: `isRegaLicensed`,\n`regaLicenceNumber` (the REGA advertising licence number) and `regaFullReference`. Those are\nthe join keys for cross-referencing against REGA's own records.",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**16 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 17 - 32. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\n**Do not page against `estimatedCount`.** On a narrow slice the count over-reports how many\nlistings are actually retrievable, and on others it is exact  -  you cannot tell which case you\nare in up front, so page until `hasMore` comes back `false` instead. `hasMore` is accurate in\nboth directions: the page after the last populated one is genuinely empty.\n\nThe ceiling is the real depth of the catalogue, not a throttle  -  a broad sweep exhausts before\nreaching it, and every page up to that point is disjoint from every other, so the catalogue\nenumerates without duplicates. Filtered slices run out far sooner. To reach past the ceiling on\na broad query, narrow it and walk each slice  -  by `city_id`, then `zone_id`, then\n`neighbourhood_ids`.",
+          "minimum": 1,
+          "maximum": 3000,
+          "default": 1,
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-properties-by-url",
+    "method": "GET",
+    "path": "/search-properties-by-url",
+    "summary": "/search-properties-by-url",
+    "description": "Run a search straight from a wasalt search-page URL; the parsed filters are echoed back.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A wasalt search page URL.** Required. Paste one straight from the browser address bar after\nsetting the filters you want on the site.\n\n- `https://wasalt.sa/en/sale/search?cityId=273&type=residential`  -  Riyadh residential for sale\n- `https://wasalt.sa/ar/rent/search?cityId=274`  -  Jeddah, to rent\n\nThe `sale` / `rent` path segment sets the listing intent; `cityId`, `zoneId`, `districtId`,\n`type` and `page` are read from the query string. The response echoes the `filters` this API\nderived **and** an `unrecognisedParams` list of any query keys it could not map  -  so a URL is\nnever silently reinterpreted.\n\nA property page URL belongs to `/property-details-by-url`; sending one here returns a 400\nnaming the right endpoint.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "wasalt\\.(sa|com)",
+          "description": "**A wasalt search page URL.** Required. Paste one straight from the browser address bar after\nsetting the filters you want on the site.\n\n- `https://wasalt.sa/en/sale/search?cityId=273&type=residential`  -  Riyadh residential for sale\n- `https://wasalt.sa/ar/rent/search?cityId=274`  -  Jeddah, to rent\n\nThe `sale` / `rent` path segment sets the listing intent; `cityId`, `zoneId`, `districtId`,\n`type` and `page` are read from the query string. The response echoes the `filters` this API\nderived **and** an `unrecognisedParams` list of any query keys it could not map  -  so a URL is\nnever silently reinterpreted.\n\nA property page URL belongs to `/property-details-by-url`; sending one here returns a 400\nnaming the right endpoint.",
+          "example": "https://wasalt.sa/en/sale/search?cityId=273&type=residential"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-indexed  -  overrides any `page` inside the URL.** Optional.\n\n**16 results per page, fixed.** Omit this and the page comes from the URL itself if it carries\none (`…/search?cityId=273&page=3` returns page 3), or page 1 if it does not. Send it to walk a\nsaved search without rewriting its query string each time.\n\nThe `filters` block in the response always reports the page that was actually fetched, so a\nURL page and an override can never disagree silently. Range `1` - `3000`; page until `hasMore`\ncomes back `false` rather than counting against `estimatedCount`, which over-reports.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed  -  overrides any `page` inside the URL.** Optional.\n\n**16 results per page, fixed.** Omit this and the page comes from the URL itself if it carries\none (`…/search?cityId=273&page=3` returns page 3), or page 1 if it does not. Send it to walk a\nsaved search without rewriting its query string each time.\n\nThe `filters` block in the response always reports the page that was actually fetched, so a\nURL page and an override can never disagree silently. Range `1` - `3000`; page until `hasMore`\ncomes back `false` rather than counting against `estimatedCount`, which over-reports.",
+          "minimum": 1,
+          "maximum": 3000,
+          "example": 1
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "**Property category  -  apartment, villa, land and so on.** Optional. Comma-separated;\nseveral values widen the search (union).\n\nThese are the slugs listings actually carry:\n\n- Residential  -  `apartment` · `villa-townhouse` · `floor` · `residential-land` · `land` ·\n  `building` · `building-1` · `tower` · `rest-house` · `room` · `hotel`\n- Commercial  -  `showroom-1` · `office-space` · `warehouse` · `repair-shop` · `station` ·\n  `commercial-rest-house`. Reach these by pairing `category` with `property_type=commercial`.\n\n**Two names are not what you would guess.** Townhouses and villas share one slug,\n`villa-townhouse`, and showrooms are `showroom-1` with the numeric suffix. The property-type\ntaxonomy at `/taxonomy` spells four of these differently, so those spellings are accepted and\nnormalised for you rather than quietly matching nothing: `villa` → `villa-townhouse`,\n`showroom` → `showroom-1`, and `residential-building` / `commercial-building` → `building`\n(listings use one merged building slug). The remaining `/taxonomy` spellings are accepted as\nwritten; they select any listing carrying them.\n\n**How this filter behaves.** `category` filters the results on each page. `estimatedCount` is\nnot category-scoped  -  never quote it as a category total  -  and a page may return fewer rows,\nor none, while later pages still match. Page until `hasMore` is `false` rather than stopping\non a short page.\n\nEvery returned listing carries its own `category`, so you can always verify the cut.",
+        "schema": {
+          "type": "string",
+          "description": "**Property category  -  apartment, villa, land and so on.** Optional. Comma-separated;\nseveral values widen the search (union).\n\nThese are the slugs listings actually carry:\n\n- Residential  -  `apartment` · `villa-townhouse` · `floor` · `residential-land` · `land` ·\n  `building` · `building-1` · `tower` · `rest-house` · `room` · `hotel`\n- Commercial  -  `showroom-1` · `office-space` · `warehouse` · `repair-shop` · `station` ·\n  `commercial-rest-house`. Reach these by pairing `category` with `property_type=commercial`.\n\n**Two names are not what you would guess.** Townhouses and villas share one slug,\n`villa-townhouse`, and showrooms are `showroom-1` with the numeric suffix. The property-type\ntaxonomy at `/taxonomy` spells four of these differently, so those spellings are accepted and\nnormalised for you rather than quietly matching nothing: `villa` → `villa-townhouse`,\n`showroom` → `showroom-1`, and `residential-building` / `commercial-building` → `building`\n(listings use one merged building slug). The remaining `/taxonomy` spellings are accepted as\nwritten; they select any listing carrying them.\n\n**How this filter behaves.** `category` filters the results on each page. `estimatedCount` is\nnot category-scoped  -  never quote it as a category total  -  and a page may return fewer rows,\nor none, while later pages still match. Page until `hasMore` is `false` rather than stopping\non a short page.\n\nEvery returned listing carries its own `category`, so you can always verify the cut.",
+          "pattern": "^\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom)(\\s*,\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom))*\\s*$"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "wasalt\\.(sa|com)",
+          "description": "**A wasalt search page URL.** Required. Paste one straight from the browser address bar after\nsetting the filters you want on the site.\n\n- `https://wasalt.sa/en/sale/search?cityId=273&type=residential`  -  Riyadh residential for sale\n- `https://wasalt.sa/ar/rent/search?cityId=274`  -  Jeddah, to rent\n\nThe `sale` / `rent` path segment sets the listing intent; `cityId`, `zoneId`, `districtId`,\n`type` and `page` are read from the query string. The response echoes the `filters` this API\nderived **and** an `unrecognisedParams` list of any query keys it could not map  -  so a URL is\nnever silently reinterpreted.\n\nA property page URL belongs to `/property-details-by-url`; sending one here returns a 400\nnaming the right endpoint.",
+          "example": "https://wasalt.sa/en/sale/search?cityId=273&type=residential"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed  -  overrides any `page` inside the URL.** Optional.\n\n**16 results per page, fixed.** Omit this and the page comes from the URL itself if it carries\none (`…/search?cityId=273&page=3` returns page 3), or page 1 if it does not. Send it to walk a\nsaved search without rewriting its query string each time.\n\nThe `filters` block in the response always reports the page that was actually fetched, so a\nURL page and an override can never disagree silently. Range `1` - `3000`; page until `hasMore`\ncomes back `false` rather than counting against `estimatedCount`, which over-reports.",
+          "minimum": 1,
+          "maximum": 3000,
+          "example": 1
+        },
+        "category": {
+          "type": "string",
+          "description": "**Property category  -  apartment, villa, land and so on.** Optional. Comma-separated;\nseveral values widen the search (union).\n\nThese are the slugs listings actually carry:\n\n- Residential  -  `apartment` · `villa-townhouse` · `floor` · `residential-land` · `land` ·\n  `building` · `building-1` · `tower` · `rest-house` · `room` · `hotel`\n- Commercial  -  `showroom-1` · `office-space` · `warehouse` · `repair-shop` · `station` ·\n  `commercial-rest-house`. Reach these by pairing `category` with `property_type=commercial`.\n\n**Two names are not what you would guess.** Townhouses and villas share one slug,\n`villa-townhouse`, and showrooms are `showroom-1` with the numeric suffix. The property-type\ntaxonomy at `/taxonomy` spells four of these differently, so those spellings are accepted and\nnormalised for you rather than quietly matching nothing: `villa` → `villa-townhouse`,\n`showroom` → `showroom-1`, and `residential-building` / `commercial-building` → `building`\n(listings use one merged building slug). The remaining `/taxonomy` spellings are accepted as\nwritten; they select any listing carrying them.\n\n**How this filter behaves.** `category` filters the results on each page. `estimatedCount` is\nnot category-scoped  -  never quote it as a category total  -  and a page may return fewer rows,\nor none, while later pages still match. Page until `hasMore` is `false` rather than stopping\non a short page.\n\nEvery returned listing carries its own `category`, so you can always verify the cut.",
+          "pattern": "^\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom)(\\s*,\\s*(apartment|villa-townhouse|floor|room|residential-land|land|building|building-1|tower|rest-house|hotel|office-space|showroom-1|warehouse|repair-shop|station|commercial-rest-house|villa|palace|farm|chalet|duplex|residential-building|residential-complex|commercial-building|commercial-complex|commercial-land|showroom))*\\s*$"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "/property-details",
+    "description": "Full record for one listing  -  description, extra facts, REGA licence, view count.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "property_id",
+        "in": "query",
+        "required": true,
+        "description": "**Property id  -  the stable numeric identifier of one listing.** Required. Typically 7 digits.\n\n- `5891941`  -  a live Riyadh apartment used throughout these docs\n\nGet one from any `/search-properties` result (`listings[].id`), from the `promotedProjects`\nblock, or by passing a property page URL to `/property-details-by-url` (which extracts it for\nyou). The URL slug is **not** accepted here  -  listings key on the numeric id only, and the id is\nalways the last number in a property page URL.\n\nAn id that does not exist, or a listing that has been taken down, returns a clean 404.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Property id  -  the stable numeric identifier of one listing.** Required. Typically 7 digits.\n\n- `5891941`  -  a live Riyadh apartment used throughout these docs\n\nGet one from any `/search-properties` result (`listings[].id`), from the `promotedProjects`\nblock, or by passing a property page URL to `/property-details-by-url` (which extracts it for\nyou). The URL slug is **not** accepted here  -  listings key on the numeric id only, and the id is\nalways the last number in a property page URL.\n\nAn id that does not exist, or a listing that has been taken down, returns a clean 404.",
+          "example": 5891941
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "property_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Property id  -  the stable numeric identifier of one listing.** Required. Typically 7 digits.\n\n- `5891941`  -  a live Riyadh apartment used throughout these docs\n\nGet one from any `/search-properties` result (`listings[].id`), from the `promotedProjects`\nblock, or by passing a property page URL to `/property-details-by-url` (which extracts it for\nyou). The URL slug is **not** accepted here  -  listings key on the numeric id only, and the id is\nalways the last number in a property page URL.\n\nAn id that does not exist, or a listing that has been taken down, returns a clean 404.",
+          "example": 5891941
+        }
+      },
+      "required": [
+        "property_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details-by-url",
+    "method": "GET",
+    "path": "/property-details-by-url",
+    "summary": "/property-details-by-url",
+    "description": "Resolve a wasalt property page URL to its listing id and canonical identity, ready for /property-details.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A wasalt property page URL.** Required. Paste one straight from the browser address bar  - \npercent-encoded Arabic slugs, trailing slashes and query strings are all handled.\n\n- `https://wasalt.sa/ar/property/شقة-12738-متر-مربع-ب-4-غرف-5891941`\n- `https://wasalt.sa/en/property/-5891941`  -  the English twin works identically\n\nThe listing id is the last number in the path; everything before it is a display slug the\nplatform regenerates freely, so it is ignored. The response echoes `sourceUrl` back so you can\nconfirm which URL produced which record when batching.\n\nA search-page URL belongs to `/search-properties-by-url` and an auction URL to\n`/auction-group-details-by-url`; sending one here returns a 400 naming the right endpoint.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "wasalt\\.(sa|com)",
+          "description": "**A wasalt property page URL.** Required. Paste one straight from the browser address bar  - \npercent-encoded Arabic slugs, trailing slashes and query strings are all handled.\n\n- `https://wasalt.sa/ar/property/شقة-12738-متر-مربع-ب-4-غرف-5891941`\n- `https://wasalt.sa/en/property/-5891941`  -  the English twin works identically\n\nThe listing id is the last number in the path; everything before it is a display slug the\nplatform regenerates freely, so it is ignored. The response echoes `sourceUrl` back so you can\nconfirm which URL produced which record when batching.\n\nA search-page URL belongs to `/search-properties-by-url` and an auction URL to\n`/auction-group-details-by-url`; sending one here returns a 400 naming the right endpoint.",
+          "example": "https://wasalt.sa/ar/property/شقة-12738-متر-مربع-ب-4-غرف-5891941"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "wasalt\\.(sa|com)",
+          "description": "**A wasalt property page URL.** Required. Paste one straight from the browser address bar  - \npercent-encoded Arabic slugs, trailing slashes and query strings are all handled.\n\n- `https://wasalt.sa/ar/property/شقة-12738-متر-مربع-ب-4-غرف-5891941`\n- `https://wasalt.sa/en/property/-5891941`  -  the English twin works identically\n\nThe listing id is the last number in the path; everything before it is a display slug the\nplatform regenerates freely, so it is ignored. The response echoes `sourceUrl` back so you can\nconfirm which URL produced which record when batching.\n\nA search-page URL belongs to `/search-properties-by-url` and an auction URL to\n`/auction-group-details-by-url`; sending one here returns a 400 naming the right endpoint.",
+          "example": "https://wasalt.sa/ar/property/شقة-12738-متر-مربع-ب-4-غرف-5891941"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-map-card",
+    "method": "GET",
+    "path": "/property-map-card",
+    "summary": "/property-map-card",
+    "description": "The lighter map-pin payload for one listing  -  and the photo gallery.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "property_id",
+        "in": "query",
+        "required": true,
+        "description": "**Property id  -  the stable numeric identifier of one listing.** Required. Typically 7 digits.\n\n- `5891941`  -  a live Riyadh apartment used throughout these docs\n\nGet one from any `/search-properties` result (`listings[].id`), from the `promotedProjects`\nblock, or by passing a property page URL to `/property-details-by-url` (which extracts it for\nyou). The URL slug is **not** accepted here  -  listings key on the numeric id only, and the id is\nalways the last number in a property page URL.\n\nAn id that does not exist, or a listing that has been taken down, returns a clean 404.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Property id  -  the stable numeric identifier of one listing.** Required. Typically 7 digits.\n\n- `5891941`  -  a live Riyadh apartment used throughout these docs\n\nGet one from any `/search-properties` result (`listings[].id`), from the `promotedProjects`\nblock, or by passing a property page URL to `/property-details-by-url` (which extracts it for\nyou). The URL slug is **not** accepted here  -  listings key on the numeric id only, and the id is\nalways the last number in a property page URL.\n\nAn id that does not exist, or a listing that has been taken down, returns a clean 404.",
+          "example": 5891941
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "property_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Property id  -  the stable numeric identifier of one listing.** Required. Typically 7 digits.\n\n- `5891941`  -  a live Riyadh apartment used throughout these docs\n\nGet one from any `/search-properties` result (`listings[].id`), from the `promotedProjects`\nblock, or by passing a property page URL to `/property-details-by-url` (which extracts it for\nyou). The URL slug is **not** accepted here  -  listings key on the numeric id only, and the id is\nalways the last number in a property page URL.\n\nAn id that does not exist, or a listing that has been taken down, returns a clean 404.",
+          "example": 5891941
+        }
+      },
+      "required": [
+        "property_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-rentals",
+    "method": "GET",
+    "path": "/search-rentals",
+    "summary": "/search-rentals",
+    "description": "Search the short-term / holiday-rental inventory  -  nightly pricing, guest cap, amenities.",
+    "tags": [
+      "Short-term Rentals"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum nightly price, in Saudi riyals (SAR).** Optional. Per night, not per stay.\n\n- `100`  -  budget floor · `500`  -  mid-market floor\n\nPairs with `price_max` for a band (`100` - `500` SAR/night is a working band); either bound works\nalone, and `price_min` above `price_max` is rejected with a 400 naming both. The returned\n`nightlyPrice` and `nightlyPriceWithFee` let you see the platform fee separately from the\nhost's rate.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum nightly price, in Saudi riyals (SAR).** Optional. Per night, not per stay.\n\n- `100`  -  budget floor · `500`  -  mid-market floor\n\nPairs with `price_max` for a band (`100` - `500` SAR/night is a working band); either bound works\nalone, and `price_min` above `price_max` is rejected with a 400 naming both. The returned\n`nightlyPrice` and `nightlyPriceWithFee` let you see the platform fee separately from the\nhost's rate."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum nightly price, in Saudi riyals (SAR).** Optional. Per night, not per stay.\n\n- `500`  -  mid-market ceiling · `2000`  -  luxury ceiling\n\nPairs with `price_min`; either bound works on its own, and a `price_max` below `price_min` is\nrejected with a 400 naming both.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum nightly price, in Saudi riyals (SAR).** Optional. Per night, not per stay.\n\n- `500`  -  mid-market ceiling · `2000`  -  luxury ceiling\n\nPairs with `price_min`; either bound works on its own, and a `price_max` below `price_min` is\nrejected with a 400 naming both."
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `50`  -  studio floor · `150`  -  family-sized floor\n\nPairs with `area_max` (`50` - `150` m² is a working band); either bound works alone, and `area_min`\nabove `area_max` is rejected with a 400 naming both. For a capacity filter rather than a size\nfilter, read `maxGuests` on each result.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `50`  -  studio floor · `150`  -  family-sized floor\n\nPairs with `area_max` (`50` - `150` m² is a working band); either bound works alone, and `area_min`\nabove `area_max` is rejected with a 400 naming both. For a capacity filter rather than a size\nfilter, read `maxGuests` on each result."
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `150`  -  family-sized ceiling · `400`  -  villa ceiling\n\nPairs with `area_min`; either bound works on its own, and an `area_max` below `area_min` is\nrejected with a 400 naming both.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `150`  -  family-sized ceiling · `400`  -  villa ceiling\n\nPairs with `area_min`; either bound works on its own, and an `area_max` below `area_min` is\nrejected with a 400 naming both."
+        }
+      },
+      {
+        "name": "bedrooms",
+        "in": "query",
+        "required": false,
+        "description": "**Bedroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `2`  -  exactly 2 bedrooms\n- `1,2`  -  1 **or** 2 bedrooms\n\nSame exact-set semantics as the sale catalogue: list every count you want rather than a\nminimum. Studios report `1`.",
+        "schema": {
+          "type": "string",
+          "description": "**Bedroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `2`  -  exactly 2 bedrooms\n- `1,2`  -  1 **or** 2 bedrooms\n\nSame exact-set semantics as the sale catalogue: list every count you want rather than a\nminimum. Studios report `1`.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**10 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 11 - 20. Consecutive pages are disjoint, so paging never\nrepeats a result.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**10 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 11 - 20. Consecutive pages are disjoint, so paging never\nrepeats a result.",
+          "minimum": 1,
+          "maximum": 3000,
+          "default": 1,
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        },
+        "price_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum nightly price, in Saudi riyals (SAR).** Optional. Per night, not per stay.\n\n- `100`  -  budget floor · `500`  -  mid-market floor\n\nPairs with `price_max` for a band (`100` - `500` SAR/night is a working band); either bound works\nalone, and `price_min` above `price_max` is rejected with a 400 naming both. The returned\n`nightlyPrice` and `nightlyPriceWithFee` let you see the platform fee separately from the\nhost's rate."
+        },
+        "price_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum nightly price, in Saudi riyals (SAR).** Optional. Per night, not per stay.\n\n- `500`  -  mid-market ceiling · `2000`  -  luxury ceiling\n\nPairs with `price_min`; either bound works on its own, and a `price_max` below `price_min` is\nrejected with a 400 naming both."
+        },
+        "area_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `50`  -  studio floor · `150`  -  family-sized floor\n\nPairs with `area_max` (`50` - `150` m² is a working band); either bound works alone, and `area_min`\nabove `area_max` is rejected with a 400 naming both. For a capacity filter rather than a size\nfilter, read `maxGuests` on each result."
+        },
+        "area_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum area, in square metres.** Optional. Note the unit: m², not ft².\n\n- `150`  -  family-sized ceiling · `400`  -  villa ceiling\n\nPairs with `area_min`; either bound works on its own, and an `area_max` below `area_min` is\nrejected with a 400 naming both."
+        },
+        "bedrooms": {
+          "type": "string",
+          "description": "**Bedroom counts  -  an exact-match set, not a floor.** Optional. Comma-separated.\n\n- `2`  -  exactly 2 bedrooms\n- `1,2`  -  1 **or** 2 bedrooms\n\nSame exact-set semantics as the sale catalogue: list every count you want rather than a\nminimum. Studios report `1`.",
+          "pattern": "^\\s*\\d+(\\s*,\\s*\\d+)*\\s*$"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**10 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 11 - 20. Consecutive pages are disjoint, so paging never\nrepeats a result.",
+          "minimum": 1,
+          "maximum": 3000,
+          "default": 1,
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_rental-details",
+    "method": "GET",
+    "path": "/rental-details",
+    "summary": "/rental-details",
+    "description": "Full short-term-rental record  -  nightly-rate calendar, arrival guide, house rules.",
+    "tags": [
+      "Short-term Rentals"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "rental_id",
+        "in": "query",
+        "required": true,
+        "description": "**Short-term-rental id.** Required. Usually four digits.\n\n- `6398`  -  a studio apartment in Al Malqa, Riyadh\n\nGet one from `/search-rentals` (`rentals[].id`). Short-term rentals live in a **separate**\ninventory from the sale/long-term-rent catalogue, so their ids are a different namespace  -  a\nrental id will not work on `/property-details`, and a listing id will not work here.\n\nAn id that is not a short-term rental returns a clean 404.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Short-term-rental id.** Required. Usually four digits.\n\n- `6398`  -  a studio apartment in Al Malqa, Riyadh\n\nGet one from `/search-rentals` (`rentals[].id`). Short-term rentals live in a **separate**\ninventory from the sale/long-term-rent catalogue, so their ids are a different namespace  -  a\nrental id will not work on `/property-details`, and a listing id will not work here.\n\nAn id that is not a short-term rental returns a clean 404.",
+          "example": 6398
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "rental_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Short-term-rental id.** Required. Usually four digits.\n\n- `6398`  -  a studio apartment in Al Malqa, Riyadh\n\nGet one from `/search-rentals` (`rentals[].id`). Short-term rentals live in a **separate**\ninventory from the sale/long-term-rent catalogue, so their ids are a different namespace  -  a\nrental id will not work on `/property-details`, and a listing id will not work here.\n\nAn id that is not a short-term rental returns a clean 404.",
+          "example": 6398
+        }
+      },
+      "required": [
+        "rental_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_nationalities",
+    "method": "GET",
+    "path": "/nationalities",
+    "summary": "/nationalities",
+    "description": "The guest-nationality vocabulary the rental booking flow filters on.",
+    "tags": [
+      "Short-term Rentals"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_projects",
+    "method": "GET",
+    "path": "/projects",
+    "summary": "/projects",
+    "description": "Browse developer projects and off-plan developments with price bands and unit mix.",
+    "tags": [
+      "New Developments"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        }
+      },
+      {
+        "name": "zone_id",
+        "in": "query",
+        "required": false,
+        "description": "**Zone id  -  a city quadrant (east / west / north / south / central).** Optional; omit to\nget every project in the city. Send it together with `city_id`  -  zone ids are city-scoped,\nso a zone id on its own has no meaning.\n\nProjects are not spread evenly across a city's zones: a zone can return zero projects even\nwhen it is the largest zone in the resale catalogue, because new-build supply and resale\nsupply sit in different parts of the city. That mismatch is the useful signal, not a bug.\nZone ids and their names come back nested inside every `/cities` entry and every `/markets`\nentry.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Zone id  -  a city quadrant (east / west / north / south / central).** Optional; omit to\nget every project in the city. Send it together with `city_id`  -  zone ids are city-scoped,\nso a zone id on its own has no meaning.\n\nProjects are not spread evenly across a city's zones: a zone can return zero projects even\nwhen it is the largest zone in the resale catalogue, because new-build supply and resale\nsupply sit in different parts of the city. That mismatch is the useful signal, not a bug.\nZone ids and their names come back nested inside every `/cities` entry and every `/markets`\nentry.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        },
+        "zone_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Zone id  -  a city quadrant (east / west / north / south / central).** Optional; omit to\nget every project in the city. Send it together with `city_id`  -  zone ids are city-scoped,\nso a zone id on its own has no meaning.\n\nProjects are not spread evenly across a city's zones: a zone can return zero projects even\nwhen it is the largest zone in the resale catalogue, because new-build supply and resale\nsupply sit in different parts of the city. That mismatch is the useful signal, not a bug.\nZone ids and their names come back nested inside every `/cities` entry and every `/markets`\nentry.",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-details",
+    "method": "GET",
+    "path": "/project-details",
+    "summary": "/project-details",
+    "description": "Full record for one development  -  description, attributes, developer identity, gallery.",
+    "tags": [
+      "New Developments"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "project_id",
+        "in": "query",
+        "required": true,
+        "description": "**Project id  -  the identifier of one developer project (compound / new development).**\nRequired. Six digits, in the 100000-range.\n\n- `100577`  -  Sama Al-Fursan 2, a Riyadh villa project\n\nGet one from `/projects` (`projects[].id`) or from the `promotedProjects` block that\n`/search-properties` returns alongside its listings. Project ids and listing ids are different\nnamespaces  -  a project id will not work on `/property-details`.\n\nAn id that is not a project returns a clean 404.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Project id  -  the identifier of one developer project (compound / new development).**\nRequired. Six digits, in the 100000-range.\n\n- `100577`  -  Sama Al-Fursan 2, a Riyadh villa project\n\nGet one from `/projects` (`projects[].id`) or from the `promotedProjects` block that\n`/search-properties` returns alongside its listings. Project ids and listing ids are different\nnamespaces  -  a project id will not work on `/property-details`.\n\nAn id that is not a project returns a clean 404.",
+          "example": 100577
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Project id  -  the identifier of one developer project (compound / new development).**\nRequired. Six digits, in the 100000-range.\n\n- `100577`  -  Sama Al-Fursan 2, a Riyadh villa project\n\nGet one from `/projects` (`projects[].id`) or from the `promotedProjects` block that\n`/search-properties` returns alongside its listings. Project ids and listing ids are different\nnamespaces  -  a project id will not work on `/property-details`.\n\nAn id that is not a project returns a clean 404.",
+          "example": 100577
+        }
+      },
+      "required": [
+        "project_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-units",
+    "method": "GET",
+    "path": "/project-units",
+    "summary": "/project-units",
+    "description": "The unit mix inside one development  -  price, size and availability per unit type.",
+    "tags": [
+      "New Developments"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "project_id",
+        "in": "query",
+        "required": true,
+        "description": "**Project id  -  the identifier of one developer project (compound / new development).**\nRequired. Six digits, in the 100000-range.\n\n- `100577`  -  Sama Al-Fursan 2, a Riyadh villa project\n\nGet one from `/projects` (`projects[].id`) or from the `promotedProjects` block that\n`/search-properties` returns alongside its listings. Project ids and listing ids are different\nnamespaces  -  a project id will not work on `/property-details`.\n\nAn id that is not a project returns a clean 404.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Project id  -  the identifier of one developer project (compound / new development).**\nRequired. Six digits, in the 100000-range.\n\n- `100577`  -  Sama Al-Fursan 2, a Riyadh villa project\n\nGet one from `/projects` (`projects[].id`) or from the `promotedProjects` block that\n`/search-properties` returns alongside its listings. Project ids and listing ids are different\nnamespaces  -  a project id will not work on `/property-details`.\n\nAn id that is not a project returns a clean 404.",
+          "example": 100577
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Project id  -  the identifier of one developer project (compound / new development).**\nRequired. Six digits, in the 100000-range.\n\n- `100577`  -  Sama Al-Fursan 2, a Riyadh villa project\n\nGet one from `/projects` (`projects[].id`) or from the `promotedProjects` block that\n`/search-properties` returns alongside its listings. Project ids and listing ids are different\nnamespaces  -  a project id will not work on `/property-details`.\n\nAn id that is not a project returns a clean 404.",
+          "example": 100577
+        }
+      },
+      "required": [
+        "project_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-search",
+    "method": "GET",
+    "path": "/auction-search",
+    "summary": "/auction-search",
+    "description": "Search property-auction events  -  judicial (Infath) and private brokerage  -  by status, format and city.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "seller",
+        "in": "query",
+        "required": false,
+        "description": "**Which auction plane to search.** Optional  -  default `all`.\n\n- `all`  -  every auction event\n- `au-infath`  -  Infath events only. Infath is the Saudi Ministry of Justice\n  enforcement-auction programme, so these are court-ordered/judicial sales\n- `au-wasalt`  -  private brokerage events run on the platform itself\n\nThe distinction matters commercially: Infath lots are distressed/enforcement inventory with\na different pricing dynamic from private-brokerage events. Every result also carries its own\n`sellerSlug` so you can split a mixed `all` response after the fact.\n\n**`sellerSlug` on a result is not the value you send back here.** The private-brokerage plane\nanswers to `seller=au-wasalt` but its rows report `sellerSlug: \"au-wasalt-group\"`, and sending\nthat back is rejected with a 400. Split on `sellerSlug`, filter with the three values above.\nThe sibling `seller` field is the platform's display label and is not a stable key at all  -  it\nis a slug on most slices and the Arabic name (`وصلت`) on the `format=offline` rows.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "all",
+            "au-infath",
+            "au-wasalt"
+          ],
+          "default": "all",
+          "description": "**Which auction plane to search.** Optional  -  default `all`.\n\n- `all`  -  every auction event\n- `au-infath`  -  Infath events only. Infath is the Saudi Ministry of Justice\n  enforcement-auction programme, so these are court-ordered/judicial sales\n- `au-wasalt`  -  private brokerage events run on the platform itself\n\nThe distinction matters commercially: Infath lots are distressed/enforcement inventory with\na different pricing dynamic from private-brokerage events. Every result also carries its own\n`sellerSlug` so you can split a mixed `all` response after the fact.\n\n**`sellerSlug` on a result is not the value you send back here.** The private-brokerage plane\nanswers to `seller=au-wasalt` but its rows report `sellerSlug: \"au-wasalt-group\"`, and sending\nthat back is rejected with a 400. Split on `sellerSlug`, filter with the three values above.\nThe sibling `seller` field is the platform's display label and is not a stable key at all  -  it\nis a slug on most slices and the Arabic name (`وصلت`) on the `format=offline` rows."
+        }
+      },
+      {
+        "name": "status",
+        "in": "query",
+        "required": false,
+        "description": "**Auction lifecycle stage.** Optional  -  omit to return every stage together.\n\n- `auction-live`  -  bidding open right now\n- `auction-upcoming`  -  scheduled, not yet started\n- `auction-past`  -  closed. The bulk of the archive, and the stage historical and comparable\n  analysis runs on\n\nRead `millisRemaining` on each result for the exact countdown to its next state change,\nmeasured against the `serverTime` returned alongside it, so you can render a live clock\nwithout trusting your own.\n\nAll three stages page identically and their counts are exact  -  `returned` reconciles with\n`estimatedCount` on every one. Expect the live and upcoming sets to be small at any moment\nand `auction-past` to hold the archive.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "auction-live",
+            "auction-upcoming",
+            "auction-past"
+          ],
+          "description": "**Auction lifecycle stage.** Optional  -  omit to return every stage together.\n\n- `auction-live`  -  bidding open right now\n- `auction-upcoming`  -  scheduled, not yet started\n- `auction-past`  -  closed. The bulk of the archive, and the stage historical and comparable\n  analysis runs on\n\nRead `millisRemaining` on each result for the exact countdown to its next state change,\nmeasured against the `serverTime` returned alongside it, so you can render a live clock\nwithout trusting your own.\n\nAll three stages page identically and their counts are exact  -  `returned` reconciles with\n`estimatedCount` on every one. Expect the live and upcoming sets to be small at any moment\nand `auction-past` to hold the archive."
+        }
+      },
+      {
+        "name": "format",
+        "in": "query",
+        "required": false,
+        "description": "**Auction format.** Optional  -  omit for both.\n\n- `online`  -  bidding happens on the platform. The large majority of events.\n- `offline`  -  a physical/in-person sale the platform only advertises\n\nFormat decides what data an event carries: `online` events have a live bidding panel per lot\n(starting price, bid-increment ladder, deposit, registration window), while `offline` ones\nare effectively a catalogue plus the auctioneer's contact details.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "online",
+            "offline"
+          ],
+          "description": "**Auction format.** Optional  -  omit for both.\n\n- `online`  -  bidding happens on the platform. The large majority of events.\n- `offline`  -  a physical/in-person sale the platform only advertises\n\nFormat decides what data an event carries: `online` events have a live bidding panel per lot\n(starting price, bid-increment ladder, deposit, registration window), while `offline` ones\nare effectively a catalogue plus the auctioneer's contact details."
+        }
+      },
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `60`.\n\n**10 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 11 - 20. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\n**`estimatedCount` is exact on this plane, and `hasMore` is derived from it.** A full walk of\nany slice returns the number of distinct events the count claims, so paging until `hasMore` is\n`false` and paging until you have seen `estimatedCount` rows agree here  -  unlike the sale/rent\ncatalogue, where the count over-reports on narrow slices.\n\n**Do not stop on a short page.** This list has genuinely short pages in the MIDDLE of it, so\n\"the page came back short\" is not the end of the list and treating it as one drops events off\nthe tail. `hasMore` accounts for this; a fullness test would not.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `60`.\n\n**10 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 11 - 20. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\n**`estimatedCount` is exact on this plane, and `hasMore` is derived from it.** A full walk of\nany slice returns the number of distinct events the count claims, so paging until `hasMore` is\n`false` and paging until you have seen `estimatedCount` rows agree here  -  unlike the sale/rent\ncatalogue, where the count over-reports on narrow slices.\n\n**Do not stop on a short page.** This list has genuinely short pages in the MIDDLE of it, so\n\"the page came back short\" is not the end of the list and treating it as one drops events off\nthe tail. `hasMore` accounts for this; a fullness test would not.",
+          "minimum": 1,
+          "maximum": 60,
+          "default": 1,
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "seller": {
+          "type": "string",
+          "enum": [
+            "all",
+            "au-infath",
+            "au-wasalt"
+          ],
+          "default": "all",
+          "description": "**Which auction plane to search.** Optional  -  default `all`.\n\n- `all`  -  every auction event\n- `au-infath`  -  Infath events only. Infath is the Saudi Ministry of Justice\n  enforcement-auction programme, so these are court-ordered/judicial sales\n- `au-wasalt`  -  private brokerage events run on the platform itself\n\nThe distinction matters commercially: Infath lots are distressed/enforcement inventory with\na different pricing dynamic from private-brokerage events. Every result also carries its own\n`sellerSlug` so you can split a mixed `all` response after the fact.\n\n**`sellerSlug` on a result is not the value you send back here.** The private-brokerage plane\nanswers to `seller=au-wasalt` but its rows report `sellerSlug: \"au-wasalt-group\"`, and sending\nthat back is rejected with a 400. Split on `sellerSlug`, filter with the three values above.\nThe sibling `seller` field is the platform's display label and is not a stable key at all  -  it\nis a slug on most slices and the Arabic name (`وصلت`) on the `format=offline` rows."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "auction-live",
+            "auction-upcoming",
+            "auction-past"
+          ],
+          "description": "**Auction lifecycle stage.** Optional  -  omit to return every stage together.\n\n- `auction-live`  -  bidding open right now\n- `auction-upcoming`  -  scheduled, not yet started\n- `auction-past`  -  closed. The bulk of the archive, and the stage historical and comparable\n  analysis runs on\n\nRead `millisRemaining` on each result for the exact countdown to its next state change,\nmeasured against the `serverTime` returned alongside it, so you can render a live clock\nwithout trusting your own.\n\nAll three stages page identically and their counts are exact  -  `returned` reconciles with\n`estimatedCount` on every one. Expect the live and upcoming sets to be small at any moment\nand `auction-past` to hold the archive."
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "online",
+            "offline"
+          ],
+          "description": "**Auction format.** Optional  -  omit for both.\n\n- `online`  -  bidding happens on the platform. The large majority of events.\n- `offline`  -  a physical/in-person sale the platform only advertises\n\nFormat decides what data an event carries: `online` events have a live bidding panel per lot\n(starting price, bid-increment ladder, deposit, registration window), while `offline` ones\nare effectively a catalogue plus the auctioneer's contact details."
+        },
+        "city_id": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `60`.\n\n**10 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 11 - 20. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\n**`estimatedCount` is exact on this plane, and `hasMore` is derived from it.** A full walk of\nany slice returns the number of distinct events the count claims, so paging until `hasMore` is\n`false` and paging until you have seen `estimatedCount` rows agree here  -  unlike the sale/rent\ncatalogue, where the count over-reports on narrow slices.\n\n**Do not stop on a short page.** This list has genuinely short pages in the MIDDLE of it, so\n\"the page came back short\" is not the end of the list and treating it as one drops events off\nthe tail. `hasMore` accounts for this; a fullness test would not.",
+          "minimum": 1,
+          "maximum": 60,
+          "default": 1,
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-lots",
+    "method": "GET",
+    "path": "/auction-lots",
+    "summary": "/auction-lots",
+    "description": "Every asset under the hammer in one auction event  -  the step that turns a group id into lot ids.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "group_id",
+        "in": "query",
+        "required": true,
+        "description": "**Auction group id  -  one auction event, whose lots this returns.** Required.\n\n- `1012`  -  a 13-lot event\n\nGet one from `/auction-search` (`auctionGroups[].groupId`). Note the two-level model: an\nauction **group** is the event (its schedule, deposit and brokerage), while an auction **lot**\nis one asset being sold inside it. This route takes the group id and returns the lot ids;\n`/auction-details` and `/auction-activity` take a lot id (`lots[].auctionId`) from the result.\n\nAn id that is not an auction group returns a clean 404.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction group id  -  one auction event, whose lots this returns.** Required.\n\n- `1012`  -  a 13-lot event\n\nGet one from `/auction-search` (`auctionGroups[].groupId`). Note the two-level model: an\nauction **group** is the event (its schedule, deposit and brokerage), while an auction **lot**\nis one asset being sold inside it. This route takes the group id and returns the lot ids;\n`/auction-details` and `/auction-activity` take a lot id (`lots[].auctionId`) from the result.\n\nAn id that is not an auction group returns a clean 404.",
+          "example": 1012
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**25 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 26 - 50. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\nThe lot list of one event is usually short enough to fit in a single page  -  `lotCount`\ntells you the total before you page.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**25 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 26 - 50. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\nThe lot list of one event is usually short enough to fit in a single page  -  `lotCount`\ntells you the total before you page.",
+          "minimum": 1,
+          "maximum": 3000,
+          "default": 1,
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction group id  -  one auction event, whose lots this returns.** Required.\n\n- `1012`  -  a 13-lot event\n\nGet one from `/auction-search` (`auctionGroups[].groupId`). Note the two-level model: an\nauction **group** is the event (its schedule, deposit and brokerage), while an auction **lot**\nis one asset being sold inside it. This route takes the group id and returns the lot ids;\n`/auction-details` and `/auction-activity` take a lot id (`lots[].auctionId`) from the result.\n\nAn id that is not an auction group returns a clean 404.",
+          "example": 1012
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-indexed.** Optional  -  default `1`, maximum `3000`.\n\n**25 results per page, fixed**  -  there is no page-size parameter; page 2 returns\nresults 26 - 50. Consecutive pages are disjoint, so paging never\nrepeats a result.\n\nThe lot list of one event is usually short enough to fit in a single page  -  `lotCount`\ntells you the total before you page.",
+          "minimum": 1,
+          "maximum": 3000,
+          "default": 1,
+          "example": 1
+        }
+      },
+      "required": [
+        "group_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-group-details-by-url",
+    "method": "GET",
+    "path": "/auction-group-details-by-url",
+    "summary": "/auction-group-details-by-url",
+    "description": "Resolve a wasalt auction URL to its event id and canonical identity, ready for /auction-lots.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A wasalt auction group URL.** Required. Paste one straight from the browser address bar.\n\n- `https://auction.wasalt.sa/auction-group/1017`\n- `https://wasalt.sa/auction-group/1017`  -  the main-domain twin works identically\n\nThe auction group id is the number after `auction-group/`; everything else in the URL is\nignored. The response echoes `sourceUrl` back so you can confirm which URL produced which\nrecord when batching, and the group id it resolves is what `/auction-lots` takes to list the\nindividual assets in the event.\n\nA property page URL belongs to `/property-details-by-url`; sending one here returns a 400\nnaming the right endpoint.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "wasalt\\.(sa|com)",
+          "description": "**A wasalt auction group URL.** Required. Paste one straight from the browser address bar.\n\n- `https://auction.wasalt.sa/auction-group/1017`\n- `https://wasalt.sa/auction-group/1017`  -  the main-domain twin works identically\n\nThe auction group id is the number after `auction-group/`; everything else in the URL is\nignored. The response echoes `sourceUrl` back so you can confirm which URL produced which\nrecord when batching, and the group id it resolves is what `/auction-lots` takes to list the\nindividual assets in the event.\n\nA property page URL belongs to `/property-details-by-url`; sending one here returns a 400\nnaming the right endpoint.",
+          "example": "https://auction.wasalt.sa/auction-group/1017"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "wasalt\\.(sa|com)",
+          "description": "**A wasalt auction group URL.** Required. Paste one straight from the browser address bar.\n\n- `https://auction.wasalt.sa/auction-group/1017`\n- `https://wasalt.sa/auction-group/1017`  -  the main-domain twin works identically\n\nThe auction group id is the number after `auction-group/`; everything else in the URL is\nignored. The response echoes `sourceUrl` back so you can confirm which URL produced which\nrecord when batching, and the group id it resolves is what `/auction-lots` takes to list the\nindividual assets in the event.\n\nA property page URL belongs to `/property-details-by-url`; sending one here returns a 400\nnaming the right endpoint.",
+          "example": "https://auction.wasalt.sa/auction-group/1017"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-details",
+    "method": "GET",
+    "path": "/auction-details",
+    "summary": "/auction-details",
+    "description": "One auction lot plus its live bidding state  -  starting price, high bid, increment ladder, deposit.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "auction_id",
+        "in": "query",
+        "required": true,
+        "description": "**Auction lot id  -  one individual asset being auctioned.** Required.\n\n- `4734`  -  a closed Jeddah lot, carrying its settled bidding block\n- `4882`  -  an upcoming Asir lot, not yet priced (its bidding block reads all zeros until the\n  event opens)\n\nGet one from `/auction-lots` (`lots[].auctionId`). This is **not** the auction group\nid: a group is the event, a lot is one asset inside it. Passing a group id here returns a 404.\n\nThe response includes the live bidding state  -  starting price, current high bid, the\nbid-increment ladder, deposit, registration window and buyer commission/VAT.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction lot id  -  one individual asset being auctioned.** Required.\n\n- `4734`  -  a closed Jeddah lot, carrying its settled bidding block\n- `4882`  -  an upcoming Asir lot, not yet priced (its bidding block reads all zeros until the\n  event opens)\n\nGet one from `/auction-lots` (`lots[].auctionId`). This is **not** the auction group\nid: a group is the event, a lot is one asset inside it. Passing a group id here returns a 404.\n\nThe response includes the live bidding state  -  starting price, current high bid, the\nbid-increment ladder, deposit, registration window and buyer commission/VAT.",
+          "example": 4734
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "auction_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction lot id  -  one individual asset being auctioned.** Required.\n\n- `4734`  -  a closed Jeddah lot, carrying its settled bidding block\n- `4882`  -  an upcoming Asir lot, not yet priced (its bidding block reads all zeros until the\n  event opens)\n\nGet one from `/auction-lots` (`lots[].auctionId`). This is **not** the auction group\nid: a group is the event, a lot is one asset inside it. Passing a group id here returns a 404.\n\nThe response includes the live bidding state  -  starting price, current high bid, the\nbid-increment ladder, deposit, registration window and buyer commission/VAT.",
+          "example": 4734
+        }
+      },
+      "required": [
+        "auction_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-activity",
+    "method": "GET",
+    "path": "/auction-activity",
+    "summary": "/auction-activity",
+    "description": "Public activity feed for an auction event or a single lot  -  bids, alerts, followers.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "group_id",
+        "in": "query",
+        "required": false,
+        "description": "**Auction group id  -  scope the feed to a whole auction event.** Optional, but supply this\nor `auction_id`: a call with neither scope is rejected as invalid rather than returning a\nglobal feed.\n\n- `1017`  -  an Asir auction event id, useful for testing group-scoped queries\n\nScoping by group returns the merged feed for **every lot in the event**, which is what you\nwant for an event-level watch: each entry still carries its own `auctionId`, so you can\ngroup the feed by lot yourself. Ids come from `/auction-search` (`auctionGroups[].groupId`).\n**`group_id` wins if you send both**  -  it does not narrow to one lot inside the event, it\nreturns the whole event feed, so send `auction_id` alone for a single-lot view.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction group id  -  scope the feed to a whole auction event.** Optional, but supply this\nor `auction_id`: a call with neither scope is rejected as invalid rather than returning a\nglobal feed.\n\n- `1017`  -  an Asir auction event id, useful for testing group-scoped queries\n\nScoping by group returns the merged feed for **every lot in the event**, which is what you\nwant for an event-level watch: each entry still carries its own `auctionId`, so you can\ngroup the feed by lot yourself. Ids come from `/auction-search` (`auctionGroups[].groupId`).\n**`group_id` wins if you send both**  -  it does not narrow to one lot inside the event, it\nreturns the whole event feed, so send `auction_id` alone for a single-lot view.",
+          "example": 1017
+        }
+      },
+      {
+        "name": "auction_id",
+        "in": "query",
+        "required": false,
+        "description": "**Auction lot id  -  scope the feed to a single asset.** Optional, but supply this or\n`group_id`: a call with neither scope is rejected as invalid rather than returning a global\nfeed.\n\n- `4882`  -  a lot inside event `1017`, useful for testing single-lot scoping; a lot's own\n  feed can be empty even while its parent event carries activity, since some entries are\n  recorded at the event level only\n\nThis is the per-asset view: only bids, alerts and follows against that one lot. Ids come from\n`/auction-lots` (`lots[].auctionId`)  -  a **group** id sent here is a different namespace and\nreturns an empty feed with zero counts, not an error, so check you have the right one if a\nbusy event looks silent. Send it **without** `group_id`: when both are present the group\nscope wins and you get the whole event feed back.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction lot id  -  scope the feed to a single asset.** Optional, but supply this or\n`group_id`: a call with neither scope is rejected as invalid rather than returning a global\nfeed.\n\n- `4882`  -  a lot inside event `1017`, useful for testing single-lot scoping; a lot's own\n  feed can be empty even while its parent event carries activity, since some entries are\n  recorded at the event level only\n\nThis is the per-asset view: only bids, alerts and follows against that one lot. Ids come from\n`/auction-lots` (`lots[].auctionId`)  -  a **group** id sent here is a different namespace and\nreturns an empty feed with zero counts, not an error, so check you have the right one if a\nbusy event looks silent. Send it **without** `group_id`: when both are present the group\nscope wins and you get the whole event feed back.",
+          "example": 4882
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "**How many activity entries to return in one call.** Optional  -  default and maximum `100`.\n\n- `100`  -  the whole first window, the default\n- `20`  -  a short preview, cheaper to render\n\nA busy live event can accumulate hundreds of entries. The feed is windowed, so read\n`hasMore` and `nextCursor` on the response and pass the cursor back to walk the rest  - \n`limit` sets the window size, it does not raise a total ceiling.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "**How many activity entries to return in one call.** Optional  -  default and maximum `100`.\n\n- `100`  -  the whole first window, the default\n- `20`  -  a short preview, cheaper to render\n\nA busy live event can accumulate hundreds of entries. The feed is windowed, so read\n`hasMore` and `nextCursor` on the response and pass the cursor back to walk the rest  - \n`limit` sets the window size, it does not raise a total ceiling.",
+          "example": 100
+        }
+      },
+      {
+        "name": "cursor",
+        "in": "query",
+        "required": false,
+        "description": "**Continuation token for the next window of the feed.** Optional  -  omit for the first page.\n\nTake the `nextCursor` value from a response where `hasMore` is `true` and send it back here\nunchanged, keeping the same `group_id` / `auction_id` scope. The token encodes the position\nof the last entry returned, so entries are never repeated or skipped between windows even\nwhile new bids land on a live event. When `hasMore` is `false`, `nextCursor` is `null` and\nyou have the complete feed.",
+        "schema": {
+          "type": "string",
+          "description": "**Continuation token for the next window of the feed.** Optional  -  omit for the first page.\n\nTake the `nextCursor` value from a response where `hasMore` is `true` and send it back here\nunchanged, keeping the same `group_id` / `auction_id` scope. The token encodes the position\nof the last entry returned, so entries are never repeated or skipped between windows even\nwhile new bids land on a live event. When `hasMore` is `false`, `nextCursor` is `null` and\nyou have the complete feed.",
+          "example": ""
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction group id  -  scope the feed to a whole auction event.** Optional, but supply this\nor `auction_id`: a call with neither scope is rejected as invalid rather than returning a\nglobal feed.\n\n- `1017`  -  an Asir auction event id, useful for testing group-scoped queries\n\nScoping by group returns the merged feed for **every lot in the event**, which is what you\nwant for an event-level watch: each entry still carries its own `auctionId`, so you can\ngroup the feed by lot yourself. Ids come from `/auction-search` (`auctionGroups[].groupId`).\n**`group_id` wins if you send both**  -  it does not narrow to one lot inside the event, it\nreturns the whole event feed, so send `auction_id` alone for a single-lot view.",
+          "example": 1017
+        },
+        "auction_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Auction lot id  -  scope the feed to a single asset.** Optional, but supply this or\n`group_id`: a call with neither scope is rejected as invalid rather than returning a global\nfeed.\n\n- `4882`  -  a lot inside event `1017`, useful for testing single-lot scoping; a lot's own\n  feed can be empty even while its parent event carries activity, since some entries are\n  recorded at the event level only\n\nThis is the per-asset view: only bids, alerts and follows against that one lot. Ids come from\n`/auction-lots` (`lots[].auctionId`)  -  a **group** id sent here is a different namespace and\nreturns an empty feed with zero counts, not an error, so check you have the right one if a\nbusy event looks silent. Send it **without** `group_id`: when both are present the group\nscope wins and you get the whole event feed back.",
+          "example": 4882
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "**How many activity entries to return in one call.** Optional  -  default and maximum `100`.\n\n- `100`  -  the whole first window, the default\n- `20`  -  a short preview, cheaper to render\n\nA busy live event can accumulate hundreds of entries. The feed is windowed, so read\n`hasMore` and `nextCursor` on the response and pass the cursor back to walk the rest  - \n`limit` sets the window size, it does not raise a total ceiling.",
+          "example": 100
+        },
+        "cursor": {
+          "type": "string",
+          "description": "**Continuation token for the next window of the feed.** Optional  -  omit for the first page.\n\nTake the `nextCursor` value from a response where `hasMore` is `true` and send it back here\nunchanged, keeping the same `group_id` / `auction_id` scope. The token encodes the position\nof the last entry returned, so entries are never repeated or skipped between windows even\nwhile new bids land on a live event. When `hasMore` is `false`, `nextCursor` is `null` and\nyou have the complete feed.",
+          "example": ""
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-locations",
+    "method": "GET",
+    "path": "/auction-locations",
+    "summary": "/auction-locations",
+    "description": "Cities currently hosting auctions, ranked by how many  -  the auction discovery entry point.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-statuses",
+    "method": "GET",
+    "path": "/auction-statuses",
+    "summary": "/auction-statuses",
+    "description": "The auction lifecycle vocabulary with ids and slugs, scoped to a city.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "description": "**City id.** Optional  -  omit to search every Saudi city at once.\n\n- `273`  -  Riyadh · `274`  -  Jeddah · `329`  -  Abha · `334`  -  Khamis Mushait\n\nIds come from `/cities` (with a live listing count per city), `/city-list` (every registered\ncity, including those with no inventory) or `/markets` (the covered markets, already split by\nzone). An id that is not a city narrows the result set to zero rather than returning an error.",
+          "minimum": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_auction-taxonomy",
+    "method": "GET",
+    "path": "/auction-taxonomy",
+    "summary": "/auction-taxonomy",
+    "description": "Auction-side vocabularies  -  lifecycle stages and seller planes  -  with stable ids.",
+    "tags": [
+      "Auctions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "types",
+        "in": "query",
+        "required": false,
+        "description": "**Which auction vocabularies to return.** Optional  -  default `auction_status,auction_seller`,\nwhich is both of them and costs no more than asking for one. Comma-separated, order-insensitive.\n\n- `auction_status`  -  the three lifecycle stages: `auction-live` (572), `auction-upcoming` (573),\n  `auction-past` (574)\n- `auction_seller`  -  the two seller planes: `au-infath` (665, the Ministry of Justice enforcement\n  programme) and `au-wasalt` (666, private brokerage events)\n\nEach key you request becomes a key in the response, so a two-key request returns a two-key object\nand the shape is predictable. An unknown key is rejected with a 400 naming the valid values rather\nthan quietly returning an empty list you might mistake for \"this vocabulary is empty today\".",
+        "schema": {
+          "type": "string",
+          "default": "auction_status,auction_seller",
+          "description": "**Which auction vocabularies to return.** Optional  -  default `auction_status,auction_seller`,\nwhich is both of them and costs no more than asking for one. Comma-separated, order-insensitive.\n\n- `auction_status`  -  the three lifecycle stages: `auction-live` (572), `auction-upcoming` (573),\n  `auction-past` (574)\n- `auction_seller`  -  the two seller planes: `au-infath` (665, the Ministry of Justice enforcement\n  programme) and `au-wasalt` (666, private brokerage events)\n\nEach key you request becomes a key in the response, so a two-key request returns a two-key object\nand the shape is predictable. An unknown key is rejected with a 400 naming the valid values rather\nthan quietly returning an empty list you might mistake for \"this vocabulary is empty today\".",
+          "example": "auction_status,auction_seller"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "types": {
+          "type": "string",
+          "default": "auction_status,auction_seller",
+          "description": "**Which auction vocabularies to return.** Optional  -  default `auction_status,auction_seller`,\nwhich is both of them and costs no more than asking for one. Comma-separated, order-insensitive.\n\n- `auction_status`  -  the three lifecycle stages: `auction-live` (572), `auction-upcoming` (573),\n  `auction-past` (574)\n- `auction_seller`  -  the two seller planes: `au-infath` (665, the Ministry of Justice enforcement\n  programme) and `au-wasalt` (666, private brokerage events)\n\nEach key you request becomes a key in the response, so a two-key request returns a two-key object\nand the shape is predictable. An unknown key is rejected with a 400 naming the valid values rather\nthan quietly returning an empty list you might mistake for \"this vocabulary is empty today\".",
+          "example": "auction_status,auction_seller"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_markets",
+    "method": "GET",
+    "path": "/markets",
+    "summary": "/markets",
+    "description": "The four markets that carry inventory, each split by zone with listing, project and plot counts.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_cities",
+    "method": "GET",
+    "path": "/cities",
+    "summary": "/cities",
+    "description": "The cities the platform publishes a headline listing count for, each with its zones  -  a national heat-map.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_city-list",
+    "method": "GET",
+    "path": "/city-list",
+    "summary": "/city-list",
+    "description": "The complete 453-city register, including cities with no live inventory.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_districts",
+    "method": "GET",
+    "path": "/districts",
+    "summary": "/districts",
+    "description": "Every district of a city with a lat/lng pin  -  filter values and a ready-made geo layer.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": true,
+        "description": "**City id.** Required. Saudi Arabia only  -  this platform does not list outside the Kingdom.\n\n- `273`  -  Riyadh, the largest market\n- `274`  -  Jeddah\n- `329`  -  Abha · `334`  -  Khamis Mushait · `349`  -  Al-Kharj\n\nThe authoritative list with a live listing count per city comes from `/cities`; `/city-list`\nadds every registered city that currently carries no inventory, and `/markets` returns the\ncovered markets already split by zone with a count on each.\n\nAn id that is not a city returns an empty result set rather than an error.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**City id.** Required. Saudi Arabia only  -  this platform does not list outside the Kingdom.\n\n- `273`  -  Riyadh, the largest market\n- `274`  -  Jeddah\n- `329`  -  Abha · `334`  -  Khamis Mushait · `349`  -  Al-Kharj\n\nThe authoritative list with a live listing count per city comes from `/cities`; `/city-list`\nadds every registered city that currently carries no inventory, and `/markets` returns the\ncovered markets already split by zone with a count on each.\n\nAn id that is not a city returns an empty result set rather than an error.",
+          "example": 273
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**City id.** Required. Saudi Arabia only  -  this platform does not list outside the Kingdom.\n\n- `273`  -  Riyadh, the largest market\n- `274`  -  Jeddah\n- `329`  -  Abha · `334`  -  Khamis Mushait · `349`  -  Al-Kharj\n\nThe authoritative list with a live listing count per city comes from `/cities`; `/city-list`\nadds every registered city that currently carries no inventory, and `/markets` returns the\ncovered markets already split by zone with a count on each.\n\nAn id that is not a city returns an empty result set rather than an error.",
+          "example": 273
+        }
+      },
+      "required": [
+        "city_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_neighbourhoods",
+    "method": "GET",
+    "path": "/neighbourhoods",
+    "summary": "/neighbourhoods",
+    "description": "Neighbourhoods of a city with inventory counts and median sale price per m².",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": true,
+        "description": "**City id.** Required. Saudi Arabia only  -  this platform does not list outside the Kingdom.\n\n- `273`  -  Riyadh, the largest market\n- `274`  -  Jeddah\n- `329`  -  Abha · `334`  -  Khamis Mushait · `349`  -  Al-Kharj\n\nThe authoritative list with a live listing count per city comes from `/cities`; `/city-list`\nadds every registered city that currently carries no inventory, and `/markets` returns the\ncovered markets already split by zone with a count on each.\n\nAn id that is not a city returns an empty result set rather than an error.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**City id.** Required. Saudi Arabia only  -  this platform does not list outside the Kingdom.\n\n- `273`  -  Riyadh, the largest market\n- `274`  -  Jeddah\n- `329`  -  Abha · `334`  -  Khamis Mushait · `349`  -  Al-Kharj\n\nThe authoritative list with a live listing count per city comes from `/cities`; `/city-list`\nadds every registered city that currently carries no inventory, and `/markets` returns the\ncovered markets already split by zone with a count on each.\n\nAn id that is not a city returns an empty result set rather than an error.",
+          "example": 273
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**City id.** Required. Saudi Arabia only  -  this platform does not list outside the Kingdom.\n\n- `273`  -  Riyadh, the largest market\n- `274`  -  Jeddah\n- `329`  -  Abha · `334`  -  Khamis Mushait · `349`  -  Al-Kharj\n\nThe authoritative list with a live listing count per city comes from `/cities`; `/city-list`\nadds every registered city that currently carries no inventory, and `/markets` returns the\ncovered markets already split by zone with a count on each.\n\nAn id that is not a city returns an empty result set rather than an error.",
+          "example": 273
+        }
+      },
+      "required": [
+        "city_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_taxonomy",
+    "method": "GET",
+    "path": "/taxonomy",
+    "summary": "/taxonomy",
+    "description": "The platform's own property-type and requirement vocabularies with stable ids and slugs.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "types",
+        "in": "query",
+        "required": false,
+        "description": "**Which vocabularies to return.** Optional. Comma-separated; ask for several in one call.\nOmit it for the three that drive the catalogue filters  -  `property_main_type`,\n`requirement_property_type_residential` and `requirement_property_type_commercial`.\n\nAccepted keys, with what each one holds:\n\n- `property_main_type`  -  the two top-level uses: `residential` (id 1), `commercial` (id 2)\n- `requirement_property_type_residential`  -  11 home types: `apartment` 401, `villa` 402,\n  `palace` 403, `residential-land` 404, `residential-building` 405, `farm` 406, `chalet` 407,\n  `duplex` 408, `rest-house` 409, `floor` 417, `residential-complex` 846\n- `requirement_property_type_commercial`  -  5 types: `office-space` 411, `commercial-building`\n  414, `showroom` 415, `commercial-land` 416, `commercial-complex` 847\n- `requirement_rental_tenure`  -  `short-term` 805, `long-term` 806\n- `requirement_purchase_type`  -  how a buyer pays: `req-cash` 421, `req-mortgage` 422,\n  `req-pre-approved-mortgage` 423, `req-barter` 850\n- `requirement_listing_type`  -  `req-buy` 419, `req-rent` 420\n- `requirement_completion_status`  -  `ready` 809, `off-plan` 810\n- `requirement_timeframe`  -  buyer urgency, 6 bands from `req-immediately` 440 to\n  `req-12-plus-months` 444 and `req-no-time-frame` 445\n- `requirement_commercial_sub_type`  -  a thin one-entry list (`inside-mall` 672); ask for it\n  only if you are mirroring the platform's own forms\n\nKeys are matched case-insensitively and surrounding spaces are trimmed. Anything outside the\nlist above is rejected with a 400, so a typo fails loudly instead of silently returning one\nvocabulary short. Omit the parameter  -  or send it empty  -  to get the three default\nvocabularies (`property_main_type` and the two `requirement_property_type_*` lists).",
+        "schema": {
+          "type": "string",
+          "description": "**Which vocabularies to return.** Optional. Comma-separated; ask for several in one call.\nOmit it for the three that drive the catalogue filters  -  `property_main_type`,\n`requirement_property_type_residential` and `requirement_property_type_commercial`.\n\nAccepted keys, with what each one holds:\n\n- `property_main_type`  -  the two top-level uses: `residential` (id 1), `commercial` (id 2)\n- `requirement_property_type_residential`  -  11 home types: `apartment` 401, `villa` 402,\n  `palace` 403, `residential-land` 404, `residential-building` 405, `farm` 406, `chalet` 407,\n  `duplex` 408, `rest-house` 409, `floor` 417, `residential-complex` 846\n- `requirement_property_type_commercial`  -  5 types: `office-space` 411, `commercial-building`\n  414, `showroom` 415, `commercial-land` 416, `commercial-complex` 847\n- `requirement_rental_tenure`  -  `short-term` 805, `long-term` 806\n- `requirement_purchase_type`  -  how a buyer pays: `req-cash` 421, `req-mortgage` 422,\n  `req-pre-approved-mortgage` 423, `req-barter` 850\n- `requirement_listing_type`  -  `req-buy` 419, `req-rent` 420\n- `requirement_completion_status`  -  `ready` 809, `off-plan` 810\n- `requirement_timeframe`  -  buyer urgency, 6 bands from `req-immediately` 440 to\n  `req-12-plus-months` 444 and `req-no-time-frame` 445\n- `requirement_commercial_sub_type`  -  a thin one-entry list (`inside-mall` 672); ask for it\n  only if you are mirroring the platform's own forms\n\nKeys are matched case-insensitively and surrounding spaces are trimmed. Anything outside the\nlist above is rejected with a 400, so a typo fails loudly instead of silently returning one\nvocabulary short. Omit the parameter  -  or send it empty  -  to get the three default\nvocabularies (`property_main_type` and the two `requirement_property_type_*` lists).",
+          "example": "property_main_type,requirement_property_type_residential"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "types": {
+          "type": "string",
+          "description": "**Which vocabularies to return.** Optional. Comma-separated; ask for several in one call.\nOmit it for the three that drive the catalogue filters  -  `property_main_type`,\n`requirement_property_type_residential` and `requirement_property_type_commercial`.\n\nAccepted keys, with what each one holds:\n\n- `property_main_type`  -  the two top-level uses: `residential` (id 1), `commercial` (id 2)\n- `requirement_property_type_residential`  -  11 home types: `apartment` 401, `villa` 402,\n  `palace` 403, `residential-land` 404, `residential-building` 405, `farm` 406, `chalet` 407,\n  `duplex` 408, `rest-house` 409, `floor` 417, `residential-complex` 846\n- `requirement_property_type_commercial`  -  5 types: `office-space` 411, `commercial-building`\n  414, `showroom` 415, `commercial-land` 416, `commercial-complex` 847\n- `requirement_rental_tenure`  -  `short-term` 805, `long-term` 806\n- `requirement_purchase_type`  -  how a buyer pays: `req-cash` 421, `req-mortgage` 422,\n  `req-pre-approved-mortgage` 423, `req-barter` 850\n- `requirement_listing_type`  -  `req-buy` 419, `req-rent` 420\n- `requirement_completion_status`  -  `ready` 809, `off-plan` 810\n- `requirement_timeframe`  -  buyer urgency, 6 bands from `req-immediately` 440 to\n  `req-12-plus-months` 444 and `req-no-time-frame` 445\n- `requirement_commercial_sub_type`  -  a thin one-entry list (`inside-mall` 672); ask for it\n  only if you are mirroring the platform's own forms\n\nKeys are matched case-insensitively and surrounding spaces are trimmed. Anything outside the\nlist above is rejected with a 400, so a typo fails loudly instead of silently returning one\nvocabulary short. Omit the parameter  -  or send it empty  -  to get the three default\nvocabularies (`property_main_type` and the two `requirement_property_type_*` lists).",
+          "example": "property_main_type,requirement_property_type_residential"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

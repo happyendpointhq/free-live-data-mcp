@@ -1,0 +1,4081 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-search",
+    "method": "GET",
+    "path": "/realestate-search",
+    "summary": "/realestate-search",
+    "description": "Search Israel property listings (for-sale / rent / commercial) with rich filters.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "deal",
+        "in": "query",
+        "required": true,
+        "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        }
+      },
+      {
+        "name": "region",
+        "in": "query",
+        "required": true,
+        "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        }
+      },
+      {
+        "name": "property",
+        "in": "query",
+        "required": false,
+        "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        }
+      },
+      {
+        "name": "roomsMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rooms (e.g. 2.5).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        }
+      },
+      {
+        "name": "roomsMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum rooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        }
+      },
+      {
+        "name": "sqmMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        }
+      },
+      {
+        "name": "sqmMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        }
+      },
+      {
+        "name": "floorMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        }
+      },
+      {
+        "name": "floorMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        }
+      },
+      {
+        "name": "area",
+        "in": "query",
+        "required": false,
+        "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "neighborhood",
+        "in": "query",
+        "required": false,
+        "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort option id (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        }
+      },
+      {
+        "name": "balcony",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a balcony.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        }
+      },
+      {
+        "name": "elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with parking.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        }
+      },
+      {
+        "name": "airConditioner",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furniture",
+        "in": "query",
+        "required": false,
+        "description": "Only furnished listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "renovated",
+        "in": "query",
+        "required": false,
+        "description": "Only renovated listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "accessibility",
+        "in": "query",
+        "required": false,
+        "description": "Only accessibility-friendly listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "shelter",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a safe room / shelter.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "newFromContractor",
+        "in": "query",
+        "required": false,
+        "description": "Only new-from-contractor listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "priceOnly",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that publish a price.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets",
+        "in": "query",
+        "required": false,
+        "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+        "schema": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Ignored by the map view.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        },
+        "region": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        },
+        "property": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        },
+        "priceMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        },
+        "priceMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        },
+        "roomsMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        },
+        "roomsMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        },
+        "sqmMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        },
+        "sqmMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        },
+        "floorMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        },
+        "floorMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        },
+        "city": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        },
+        "area": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "neighborhood": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        },
+        "balcony": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        },
+        "elevator": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        },
+        "parking": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        },
+        "airConditioner": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "furniture": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        },
+        "renovated": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        },
+        "accessibility": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        },
+        "shelter": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        },
+        "newFromContractor": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        },
+        "priceOnly": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        },
+        "pets": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        }
+      },
+      "required": [
+        "deal",
+        "region"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-map",
+    "method": "GET",
+    "path": "/realestate-map",
+    "summary": "/realestate-map",
+    "description": "Map view (listing markers) for a real-estate filter set.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "deal",
+        "in": "query",
+        "required": true,
+        "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        }
+      },
+      {
+        "name": "region",
+        "in": "query",
+        "required": true,
+        "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        }
+      },
+      {
+        "name": "property",
+        "in": "query",
+        "required": false,
+        "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        }
+      },
+      {
+        "name": "roomsMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rooms (e.g. 2.5).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        }
+      },
+      {
+        "name": "roomsMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum rooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        }
+      },
+      {
+        "name": "sqmMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        }
+      },
+      {
+        "name": "sqmMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        }
+      },
+      {
+        "name": "floorMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        }
+      },
+      {
+        "name": "floorMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        }
+      },
+      {
+        "name": "area",
+        "in": "query",
+        "required": false,
+        "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "neighborhood",
+        "in": "query",
+        "required": false,
+        "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort option id (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        }
+      },
+      {
+        "name": "balcony",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a balcony.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        }
+      },
+      {
+        "name": "elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with parking.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        }
+      },
+      {
+        "name": "airConditioner",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furniture",
+        "in": "query",
+        "required": false,
+        "description": "Only furnished listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "renovated",
+        "in": "query",
+        "required": false,
+        "description": "Only renovated listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "accessibility",
+        "in": "query",
+        "required": false,
+        "description": "Only accessibility-friendly listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "shelter",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a safe room / shelter.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "newFromContractor",
+        "in": "query",
+        "required": false,
+        "description": "Only new-from-contractor listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "priceOnly",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that publish a price.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets",
+        "in": "query",
+        "required": false,
+        "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+        "schema": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Ignored by the map view.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        }
+      },
+      {
+        "name": "bBox",
+        "in": "query",
+        "required": false,
+        "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        }
+      },
+      {
+        "name": "zoom",
+        "in": "query",
+        "required": false,
+        "description": "Map zoom level (controls marker vs cluster granularity).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        },
+        "region": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        },
+        "property": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        },
+        "priceMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        },
+        "priceMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        },
+        "roomsMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        },
+        "roomsMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        },
+        "sqmMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        },
+        "sqmMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        },
+        "floorMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        },
+        "floorMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        },
+        "city": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        },
+        "area": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "neighborhood": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        },
+        "balcony": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        },
+        "elevator": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        },
+        "parking": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        },
+        "airConditioner": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "furniture": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        },
+        "renovated": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        },
+        "accessibility": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        },
+        "shelter": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        },
+        "newFromContractor": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        },
+        "priceOnly": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        },
+        "pets": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        },
+        "bBox": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        },
+        "zoom": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      },
+      "required": [
+        "deal",
+        "region"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-map-clusters",
+    "method": "GET",
+    "path": "/realestate-map-clusters",
+    "summary": "/realestate-map-clusters",
+    "description": "Area cluster counts (map aggregates) for a real-estate filter set.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "deal",
+        "in": "query",
+        "required": true,
+        "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        }
+      },
+      {
+        "name": "region",
+        "in": "query",
+        "required": true,
+        "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        }
+      },
+      {
+        "name": "property",
+        "in": "query",
+        "required": false,
+        "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        }
+      },
+      {
+        "name": "roomsMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rooms (e.g. 2.5).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        }
+      },
+      {
+        "name": "roomsMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum rooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        }
+      },
+      {
+        "name": "sqmMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        }
+      },
+      {
+        "name": "sqmMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        }
+      },
+      {
+        "name": "floorMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        }
+      },
+      {
+        "name": "floorMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        }
+      },
+      {
+        "name": "area",
+        "in": "query",
+        "required": false,
+        "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "neighborhood",
+        "in": "query",
+        "required": false,
+        "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort option id (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        }
+      },
+      {
+        "name": "balcony",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a balcony.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        }
+      },
+      {
+        "name": "elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with parking.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        }
+      },
+      {
+        "name": "airConditioner",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furniture",
+        "in": "query",
+        "required": false,
+        "description": "Only furnished listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "renovated",
+        "in": "query",
+        "required": false,
+        "description": "Only renovated listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "accessibility",
+        "in": "query",
+        "required": false,
+        "description": "Only accessibility-friendly listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "shelter",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a safe room / shelter.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "newFromContractor",
+        "in": "query",
+        "required": false,
+        "description": "Only new-from-contractor listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "priceOnly",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that publish a price.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets",
+        "in": "query",
+        "required": false,
+        "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+        "schema": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Ignored by the map view.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        }
+      },
+      {
+        "name": "bBox",
+        "in": "query",
+        "required": false,
+        "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        }
+      },
+      {
+        "name": "zoom",
+        "in": "query",
+        "required": false,
+        "description": "Map zoom level (controls marker vs cluster granularity).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        },
+        "region": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        },
+        "property": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        },
+        "priceMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        },
+        "priceMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        },
+        "roomsMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        },
+        "roomsMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        },
+        "sqmMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        },
+        "sqmMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        },
+        "floorMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        },
+        "floorMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        },
+        "city": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        },
+        "area": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "neighborhood": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        },
+        "balcony": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        },
+        "elevator": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        },
+        "parking": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        },
+        "airConditioner": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "furniture": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        },
+        "renovated": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        },
+        "accessibility": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        },
+        "shelter": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        },
+        "newFromContractor": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        },
+        "priceOnly": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        },
+        "pets": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        },
+        "bBox": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        },
+        "zoom": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      },
+      "required": [
+        "deal",
+        "region"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-details",
+    "method": "GET",
+    "path": "/realestate-details",
+    "summary": "/realestate-details",
+    "description": "Full real-estate ad detail by token.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "token",
+        "in": "query",
+        "required": true,
+        "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+        "schema": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "ubmf0u1l"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "ubmf0u1l"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-details-by-url",
+    "method": "GET",
+    "path": "/realestate-details-by-url",
+    "summary": "/realestate-details-by-url",
+    "description": "Real-estate ad detail from a listing URL.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A yad2 real-estate listing URL. The ad token is read from the URL.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A yad2 real-estate listing URL. The ad token is read from the URL.",
+          "example": "https://www.yad2.co.il/realestate/item/ubmf0u1l"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A yad2 real-estate listing URL. The ad token is read from the URL.",
+          "example": "https://www.yad2.co.il/realestate/item/ubmf0u1l"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-search-options",
+    "method": "GET",
+    "path": "/realestate-search-options",
+    "summary": "/realestate-search-options",
+    "description": "Filter option-lists (property types, cities, …) for real-estate search.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "sub",
+        "in": "query",
+        "required": false,
+        "description": "Deal sub-type: `forsale`, `rent`, or `commercial`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "default": "forsale",
+          "description": "Deal sub-type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        }
+      },
+      {
+        "name": "fields",
+        "in": "query",
+        "required": false,
+        "description": "Fields to return, comma-separated. Available values: `property`, `city`, `area`, `topArea`, `neighborhood`.",
+        "schema": {
+          "type": "string",
+          "default": "property",
+          "description": "Fields to return, comma-separated. Available values: `property`, `city`, `area`, `topArea`, `neighborhood`.",
+          "example": "property"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sub": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "default": "forsale",
+          "description": "Deal sub-type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        },
+        "fields": {
+          "type": "string",
+          "default": "property",
+          "description": "Fields to return, comma-separated. Available values: `property`, `city`, `area`, `topArea`, `neighborhood`.",
+          "example": "property"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-agency-promos",
+    "method": "GET",
+    "path": "/realestate-agency-promos",
+    "summary": "/realestate-agency-promos",
+    "description": "Agency banner cards & promoted agency listings for a search area.",
+    "tags": [
+      "Real Estate"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "deal",
+        "in": "query",
+        "required": true,
+        "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        }
+      },
+      {
+        "name": "region",
+        "in": "query",
+        "required": true,
+        "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        }
+      },
+      {
+        "name": "property",
+        "in": "query",
+        "required": false,
+        "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        }
+      },
+      {
+        "name": "roomsMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rooms (e.g. 2.5).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        }
+      },
+      {
+        "name": "roomsMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum rooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        }
+      },
+      {
+        "name": "sqmMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        }
+      },
+      {
+        "name": "sqmMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        }
+      },
+      {
+        "name": "floorMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        }
+      },
+      {
+        "name": "floorMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        }
+      },
+      {
+        "name": "area",
+        "in": "query",
+        "required": false,
+        "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "neighborhood",
+        "in": "query",
+        "required": false,
+        "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort option id (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        }
+      },
+      {
+        "name": "balcony",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a balcony.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        }
+      },
+      {
+        "name": "elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with parking.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        }
+      },
+      {
+        "name": "airConditioner",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furniture",
+        "in": "query",
+        "required": false,
+        "description": "Only furnished listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "renovated",
+        "in": "query",
+        "required": false,
+        "description": "Only renovated listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "accessibility",
+        "in": "query",
+        "required": false,
+        "description": "Only accessibility-friendly listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "shelter",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a safe room / shelter.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "newFromContractor",
+        "in": "query",
+        "required": false,
+        "description": "Only new-from-contractor listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "priceOnly",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that publish a price.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets",
+        "in": "query",
+        "required": false,
+        "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+        "schema": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Ignored by the map view.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        }
+      },
+      {
+        "name": "bBox",
+        "in": "query",
+        "required": false,
+        "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        }
+      },
+      {
+        "name": "zoom",
+        "in": "query",
+        "required": false,
+        "description": "Map zoom level (controls marker vs cluster granularity).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        },
+        "region": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        },
+        "property": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        },
+        "priceMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        },
+        "priceMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        },
+        "roomsMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        },
+        "roomsMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        },
+        "sqmMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        },
+        "sqmMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        },
+        "floorMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        },
+        "floorMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        },
+        "city": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        },
+        "area": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "neighborhood": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        },
+        "balcony": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        },
+        "elevator": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        },
+        "parking": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        },
+        "airConditioner": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "furniture": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        },
+        "renovated": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        },
+        "accessibility": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        },
+        "shelter": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        },
+        "newFromContractor": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        },
+        "priceOnly": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        },
+        "pets": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        },
+        "bBox": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        },
+        "zoom": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      },
+      "required": [
+        "deal",
+        "region"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-yad1-projects",
+    "method": "GET",
+    "path": "/realestate-yad1-projects",
+    "summary": "/realestate-yad1-projects",
+    "description": "Yad1 new-construction promos & project markers for a search area.",
+    "tags": [
+      "Yad1 New Construction"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "deal",
+        "in": "query",
+        "required": true,
+        "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        }
+      },
+      {
+        "name": "region",
+        "in": "query",
+        "required": true,
+        "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        }
+      },
+      {
+        "name": "property",
+        "in": "query",
+        "required": false,
+        "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        }
+      },
+      {
+        "name": "roomsMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rooms (e.g. 2.5).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        }
+      },
+      {
+        "name": "roomsMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum rooms.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        }
+      },
+      {
+        "name": "sqmMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        }
+      },
+      {
+        "name": "sqmMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum built area (m²).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        }
+      },
+      {
+        "name": "floorMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        }
+      },
+      {
+        "name": "floorMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        }
+      },
+      {
+        "name": "area",
+        "in": "query",
+        "required": false,
+        "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "neighborhood",
+        "in": "query",
+        "required": false,
+        "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort option id (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        }
+      },
+      {
+        "name": "balcony",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a balcony.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        }
+      },
+      {
+        "name": "elevator",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with an elevator.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        }
+      },
+      {
+        "name": "parking",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with parking.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        }
+      },
+      {
+        "name": "airConditioner",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with air conditioning.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        }
+      },
+      {
+        "name": "furniture",
+        "in": "query",
+        "required": false,
+        "description": "Only furnished listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "renovated",
+        "in": "query",
+        "required": false,
+        "description": "Only renovated listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "accessibility",
+        "in": "query",
+        "required": false,
+        "description": "Only accessibility-friendly listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "shelter",
+        "in": "query",
+        "required": false,
+        "description": "Only listings with a safe room / shelter.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "newFromContractor",
+        "in": "query",
+        "required": false,
+        "description": "Only new-from-contractor listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "priceOnly",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that publish a price.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        }
+      },
+      {
+        "name": "pets",
+        "in": "query",
+        "required": false,
+        "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+        "schema": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Ignored by the map view.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        }
+      },
+      {
+        "name": "bBox",
+        "in": "query",
+        "required": false,
+        "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        }
+      },
+      {
+        "name": "zoom",
+        "in": "query",
+        "required": false,
+        "description": "Map zoom level (controls marker vs cluster granularity).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "deal": {
+          "type": "string",
+          "enum": [
+            "forsale",
+            "rent",
+            "commercial"
+          ],
+          "description": "Deal type: `forsale`, `rent`, or `commercial`.",
+          "example": "forsale"
+        },
+        "region": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Region id 1 - 8 (REQUIRED). Get ids/names from `/regions`.",
+          "example": 3
+        },
+        "property": {
+          "type": "string",
+          "description": "Property-type value-ids from `/realestate-search-options` (`property`). Single id or comma-separated ids.",
+          "example": "1,3"
+        },
+        "priceMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 1500000
+        },
+        "priceMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 4000000
+        },
+        "roomsMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum rooms (e.g. 2.5).",
+          "example": 3
+        },
+        "roomsMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum rooms.",
+          "example": 5
+        },
+        "sqmMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum built area (m²).",
+          "example": 60
+        },
+        "sqmMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum built area (m²).",
+          "example": 150
+        },
+        "floorMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum floor.",
+          "example": 1
+        },
+        "floorMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum floor.",
+          "example": 10
+        },
+        "city": {
+          "type": "string",
+          "description": "City ids from `/locations-autocomplete` (`city_id`). Single id or comma-separated ids.",
+          "example": "5000"
+        },
+        "area": {
+          "type": "string",
+          "description": "Area ids from `/locations-autocomplete` (`area_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "neighborhood": {
+          "type": "string",
+          "description": "Neighborhood ids from `/locations-autocomplete` (`hood_id`). Single id or comma-separated ids.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        },
+        "balcony": {
+          "type": "boolean",
+          "description": "Only listings with a balcony.",
+          "example": ""
+        },
+        "elevator": {
+          "type": "boolean",
+          "description": "Only listings with an elevator.",
+          "example": ""
+        },
+        "parking": {
+          "type": "boolean",
+          "description": "Only listings with parking.",
+          "example": ""
+        },
+        "airConditioner": {
+          "type": "boolean",
+          "description": "Only listings with air conditioning.",
+          "example": ""
+        },
+        "furniture": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        },
+        "renovated": {
+          "type": "boolean",
+          "description": "Only renovated listings.",
+          "example": ""
+        },
+        "accessibility": {
+          "type": "boolean",
+          "description": "Only accessibility-friendly listings.",
+          "example": ""
+        },
+        "shelter": {
+          "type": "boolean",
+          "description": "Only listings with a safe room / shelter.",
+          "example": ""
+        },
+        "newFromContractor": {
+          "type": "boolean",
+          "description": "Only new-from-contractor listings.",
+          "example": ""
+        },
+        "priceOnly": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        },
+        "pets": {
+          "type": "boolean",
+          "description": "Pets allowed (rent deal only; ignored for forsale/commercial).",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed). Ignored by the map view.",
+          "example": 1
+        },
+        "bBox": {
+          "type": "string",
+          "description": "Map bounding box `minLon,minLat,maxLon,maxLat` to scope markers (optional).",
+          "example": "34.74,32.03,34.85,32.13"
+        },
+        "zoom": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Map zoom level (controls marker vs cluster granularity).",
+          "example": 13
+        }
+      },
+      "required": [
+        "deal",
+        "region"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-yad1-nearby",
+    "method": "GET",
+    "path": "/realestate-yad1-nearby",
+    "summary": "/realestate-yad1-nearby",
+    "description": "Yad1 new-construction projects & promo ad related to a listing.",
+    "tags": [
+      "Yad1 New Construction"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "token",
+        "in": "query",
+        "required": true,
+        "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+        "schema": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "ubmf0u1l"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "ubmf0u1l"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_vehicles-search",
+    "method": "GET",
+    "path": "/vehicles-search",
+    "summary": "/vehicles-search",
+    "description": "Search vehicle listings (cars, motorcycles, …) with manufacturer/model/range filters.",
+    "tags": [
+      "Vehicles"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "vertical",
+        "in": "query",
+        "required": false,
+        "description": "Vehicle vertical: `cars`, `motorcycles`, `scooters`, `trucks`, `watercraft`, `specials`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "cars",
+            "motorcycles",
+            "scooters",
+            "trucks",
+            "watercraft",
+            "specials"
+          ],
+          "default": "cars",
+          "description": "Vehicle vertical: `cars`, `motorcycles`, `scooters`, `trucks`, `watercraft`, `specials`.",
+          "example": "cars"
+        }
+      },
+      {
+        "name": "manufacturer",
+        "in": "query",
+        "required": false,
+        "description": "Manufacturer id (from `/vehicles-catalog`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Manufacturer id (from `/vehicles-catalog`).",
+          "example": 19
+        }
+      },
+      {
+        "name": "model",
+        "in": "query",
+        "required": false,
+        "description": "Model id (requires `manufacturer`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Model id (requires `manufacturer`).",
+          "example": 10514
+        }
+      },
+      {
+        "name": "subModel",
+        "in": "query",
+        "required": false,
+        "description": "Sub-model id (requires `model`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Sub-model id (requires `model`)."
+        }
+      },
+      {
+        "name": "yearMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum production year.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum production year.",
+          "example": 2018
+        }
+      },
+      {
+        "name": "yearMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum production year.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum production year.",
+          "example": 2022
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 50000
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (₪).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 120000
+        }
+      },
+      {
+        "name": "kmMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum odometer (km).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum odometer (km)."
+        }
+      },
+      {
+        "name": "kmMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum odometer (km).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum odometer (km).",
+          "example": 100000
+        }
+      },
+      {
+        "name": "handMin",
+        "in": "query",
+        "required": false,
+        "description": "Minimum owner-hand number.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum owner-hand number."
+        }
+      },
+      {
+        "name": "handMax",
+        "in": "query",
+        "required": false,
+        "description": "Maximum owner-hand number.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum owner-hand number."
+        }
+      },
+      {
+        "name": "gearBox",
+        "in": "query",
+        "required": false,
+        "description": "Gearbox value-ids. Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Gearbox value-ids. Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "engineType",
+        "in": "query",
+        "required": false,
+        "description": "Engine/fuel-type value-ids. Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Engine/fuel-type value-ids. Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "seats",
+        "in": "query",
+        "required": false,
+        "description": "Seat-count value-ids. Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Seat-count value-ids. Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "color",
+        "in": "query",
+        "required": false,
+        "description": "Color value-ids. Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Color value-ids. Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "carFamilyType",
+        "in": "query",
+        "required": false,
+        "description": "Body/family-type value-ids. Single id or comma-separated ids.",
+        "schema": {
+          "type": "string",
+          "description": "Body/family-type value-ids. Single id or comma-separated ids.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort option id (optional).",
+        "schema": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        }
+      },
+      {
+        "name": "priceOnly",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that publish a price.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        }
+      },
+      {
+        "name": "isPriceDropped",
+        "in": "query",
+        "required": false,
+        "description": "Only price-dropped listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only price-dropped listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "vertical": {
+          "type": "string",
+          "enum": [
+            "cars",
+            "motorcycles",
+            "scooters",
+            "trucks",
+            "watercraft",
+            "specials"
+          ],
+          "default": "cars",
+          "description": "Vehicle vertical: `cars`, `motorcycles`, `scooters`, `trucks`, `watercraft`, `specials`.",
+          "example": "cars"
+        },
+        "manufacturer": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Manufacturer id (from `/vehicles-catalog`).",
+          "example": 19
+        },
+        "model": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Model id (requires `manufacturer`).",
+          "example": 10514
+        },
+        "subModel": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Sub-model id (requires `model`)."
+        },
+        "yearMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum production year.",
+          "example": 2018
+        },
+        "yearMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum production year.",
+          "example": 2022
+        },
+        "priceMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (₪).",
+          "example": 50000
+        },
+        "priceMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (₪).",
+          "example": 120000
+        },
+        "kmMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum odometer (km)."
+        },
+        "kmMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum odometer (km).",
+          "example": 100000
+        },
+        "handMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum owner-hand number."
+        },
+        "handMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum owner-hand number."
+        },
+        "gearBox": {
+          "type": "string",
+          "description": "Gearbox value-ids. Single id or comma-separated ids.",
+          "example": ""
+        },
+        "engineType": {
+          "type": "string",
+          "description": "Engine/fuel-type value-ids. Single id or comma-separated ids.",
+          "example": ""
+        },
+        "seats": {
+          "type": "string",
+          "description": "Seat-count value-ids. Single id or comma-separated ids.",
+          "example": ""
+        },
+        "color": {
+          "type": "string",
+          "description": "Color value-ids. Single id or comma-separated ids.",
+          "example": ""
+        },
+        "carFamilyType": {
+          "type": "string",
+          "description": "Body/family-type value-ids. Single id or comma-separated ids.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort option id (optional).",
+          "example": ""
+        },
+        "priceOnly": {
+          "type": "boolean",
+          "description": "Only listings that publish a price.",
+          "example": ""
+        },
+        "isPriceDropped": {
+          "type": "boolean",
+          "description": "Only price-dropped listings.",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_vehicles-details",
+    "method": "GET",
+    "path": "/vehicles-details",
+    "summary": "/vehicles-details",
+    "description": "Full vehicle ad detail by token.",
+    "tags": [
+      "Vehicles"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "token",
+        "in": "query",
+        "required": true,
+        "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+        "schema": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "62mg90l6"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "62mg90l6"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_vehicles-details-by-url",
+    "method": "GET",
+    "path": "/vehicles-details-by-url",
+    "summary": "/vehicles-details-by-url",
+    "description": "Vehicle ad detail from a listing URL.",
+    "tags": [
+      "Vehicles"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A yad2 vehicle listing URL. The ad token is read from the URL.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A yad2 vehicle listing URL. The ad token is read from the URL.",
+          "example": "https://www.yad2.co.il/vehicles/item/62mg90l6"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A yad2 vehicle listing URL. The ad token is read from the URL.",
+          "example": "https://www.yad2.co.il/vehicles/item/62mg90l6"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_vehicles-catalog",
+    "method": "GET",
+    "path": "/vehicles-catalog",
+    "summary": "/vehicles-catalog",
+    "description": "Manufacturer → model → sub-model catalog (ids for vehicle search).",
+    "tags": [
+      "Vehicles"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "vertical",
+        "in": "query",
+        "required": false,
+        "description": "Catalog vertical: `cars`, `motorcycles`, `scooters`, `watercraft`, `other`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "cars",
+            "motorcycles",
+            "scooters",
+            "watercraft",
+            "other"
+          ],
+          "default": "cars",
+          "description": "Catalog vertical: `cars`, `motorcycles`, `scooters`, `watercraft`, `other`.",
+          "example": "cars"
+        }
+      },
+      {
+        "name": "manufacturer",
+        "in": "query",
+        "required": false,
+        "description": "Manufacturer id  -  drill into its models/sub-models (optional).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Manufacturer id  -  drill into its models/sub-models (optional).",
+          "example": 19
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "vertical": {
+          "type": "string",
+          "enum": [
+            "cars",
+            "motorcycles",
+            "scooters",
+            "watercraft",
+            "other"
+          ],
+          "default": "cars",
+          "description": "Catalog vertical: `cars`, `motorcycles`, `scooters`, `watercraft`, `other`.",
+          "example": "cars"
+        },
+        "manufacturer": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Manufacturer id  -  drill into its models/sub-models (optional).",
+          "example": 19
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_vehicles-models",
+    "method": "GET",
+    "path": "/vehicles-models",
+    "summary": "/vehicles-models",
+    "description": "Model master data with price ranges and sub-models.",
+    "tags": [
+      "Vehicles"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "manufacturer",
+        "in": "query",
+        "required": false,
+        "description": "Manufacturer id (from `/vehicles-catalog`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Manufacturer id (from `/vehicles-catalog`).",
+          "example": 19
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (15 rows/page). Use `pagination.total` to iterate the model list.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (15 rows/page). Use `pagination.total` to iterate the model list.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "manufacturer": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Manufacturer id (from `/vehicles-catalog`).",
+          "example": 19
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (15 rows/page). Use `pagination.total` to iterate the model list.",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_vehicles-agency-ads",
+    "method": "GET",
+    "path": "/vehicles-agency-ads",
+    "summary": "/vehicles-agency-ads",
+    "description": "More ads from the same dealer/agency as a vehicle listing.",
+    "tags": [
+      "Vehicles"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "token",
+        "in": "query",
+        "required": true,
+        "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+        "schema": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "62mg90l6"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "62mg90l6"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_marketplace-listings",
+    "method": "GET",
+    "path": "/marketplace-listings",
+    "summary": "/marketplace-listings",
+    "description": "Second-hand goods listings feed.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_marketplace-details",
+    "method": "GET",
+    "path": "/marketplace-details",
+    "summary": "/marketplace-details",
+    "description": "Full second-hand product detail by token.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "token",
+        "in": "query",
+        "required": true,
+        "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+        "schema": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "sxyikd6t"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "sxyikd6t"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_locations-autocomplete",
+    "method": "GET",
+    "path": "/locations-autocomplete",
+    "summary": "/locations-autocomplete",
+    "description": "Find city/area/neighborhood/street ids for searching.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "text",
+        "in": "query",
+        "required": true,
+        "description": "Free-text query (Hebrew or English) to match cities/areas/neighborhoods/streets.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text query (Hebrew or English) to match cities/areas/neighborhoods/streets.",
+          "example": "תל אביב"
+        }
+      },
+      {
+        "name": "entities",
+        "in": "query",
+        "required": false,
+        "description": "Entity kinds to return. Options:-  `top-areas,areas,cities,hoods,streets,house-number,regions`.",
+        "schema": {
+          "type": "string",
+          "default": "cities",
+          "description": "Entity kinds to return. Options:-  `top-areas,areas,cities,hoods,streets,house-number,regions`.",
+          "example": "cities"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Max matches per entity kind (1 - 200, default 25). Raise it to get more suggestions.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 25,
+          "description": "Max matches per entity kind (1 - 200, default 25). Raise it to get more suggestions.",
+          "example": 25
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Free-text query (Hebrew or English) to match cities/areas/neighborhoods/streets.",
+          "example": "תל אביב"
+        },
+        "entities": {
+          "type": "string",
+          "default": "cities",
+          "description": "Entity kinds to return. Options:-  `top-areas,areas,cities,hoods,streets,house-number,regions`.",
+          "example": "cities"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 25,
+          "description": "Max matches per entity kind (1 - 200, default 25). Raise it to get more suggestions.",
+          "example": 25
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_regions",
+    "method": "GET",
+    "path": "/regions",
+    "summary": "/regions",
+    "description": "The 8 yad2 regions (region id is required for real-estate search).",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_cities",
+    "method": "GET",
+    "path": "/cities",
+    "summary": "/cities",
+    "description": "Cities (optionally within a region).",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_neighborhoods",
+    "method": "GET",
+    "path": "/neighborhoods",
+    "summary": "/neighborhoods",
+    "description": "Neighborhoods of a city.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city",
+        "in": "query",
+        "required": true,
+        "description": "City id  -  the `city_id` from `/cities` or `/locations-autocomplete`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "City id  -  the `city_id` from `/cities` or `/locations-autocomplete`.",
+          "example": "5000"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "minLength": 1,
+          "description": "City id  -  the `city_id` from `/cities` or `/locations-autocomplete`.",
+          "example": "5000"
+        }
+      },
+      "required": [
+        "city"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_categories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "/categories",
+    "description": "Full category / sub-category tree (all verticals).",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_latest-deals",
+    "method": "GET",
+    "path": "/latest-deals",
+    "summary": "/latest-deals",
+    "description": "Recent government-registered completed real-estate deals (actual sale prices).",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_realestate-nearby-deals",
+    "method": "GET",
+    "path": "/realestate-nearby-deals",
+    "summary": "/realestate-nearby-deals",
+    "description": "Recent registered sale prices (comps) around a listing.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "token",
+        "in": "query",
+        "required": true,
+        "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+        "schema": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "ubmf0u1l"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 20,
+          "pattern": "^[A-Za-z0-9]+$",
+          "description": "yad2 ad token (e.g. `crz4qhiy`). Get one from any search result (`token` field).",
+          "example": "ubmf0u1l"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

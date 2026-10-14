@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "free-live-data": {
+      "command": "node",
+      "args": ["/absolute/path/free-live-data-mcp/src/server.mjs"],
+      "env": { "RAPIDAPI_KEY": "YOUR_RAPIDAPI_KEY" }
+    }
+  }
+}

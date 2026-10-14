@@ -1,0 +1,1917 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-14",
+  "provider": "Happy Endpoint",
+  "apis": [
+    {
+      "id": "uae-realestate-api",
+      "name": "UAE Real Estate API",
+      "platform": "uae-realestate",
+      "category": "real-estate",
+      "description": "Bayut and PropertyFinder in one UAE real estate API - 450K+ Dubai and Abu Dhabi listings, agent profiles, agencies, and transaction records as JSON.",
+      "host": "uae-real-estate-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/uae-real-estate-api",
+      "websiteUrl": "https://happyendpoint.com/library/uae-realestate-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/6a48745a-2fee-4460-8cb4-b77fbb086bf2.png",
+      "tags": [
+        "historical-data",
+        "property-search",
+        "property-details",
+        "market-trends"
+      ],
+      "features": [
+        "Bayut and PropertyFinder Data",
+        "Property Search",
+        "Agent Search",
+        "Agency Search",
+        "Transaction History",
+        "Single API Key",
+        "Location Autocomplete",
+        "450,000+ Listings"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 11,
+      "dataOperationCount": 10,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "bayut-api",
+      "name": "Bayut UAE Data",
+      "platform": "bayut",
+      "category": "real-estate",
+      "description": "Bayut API for UAE property data - 500K+ Dubai and Abu Dhabi listings, agent and agency profiles, off-plan projects, and transaction history.",
+      "host": "uae-real-estate3.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/uae-real-estate3",
+      "websiteUrl": "https://happyendpoint.com/library/bayut-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/414d2f9d-a7b4-4219-8979-10e608963f99.png",
+      "tags": [
+        "map-search",
+        "property-search",
+        "property-details",
+        "market-trends"
+      ],
+      "features": [
+        "Property Search",
+        "Off-Plan Projects",
+        "Agent Directory",
+        "Agency Search",
+        "Amenities Filter",
+        "Location Autocomplete",
+        "No Proxies Required",
+        "JSON Responses"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 17,
+      "dataOperationCount": 16,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "propertyfinder-api",
+      "name": "PropertyFinder UAE Data",
+      "platform": "propertyfinder",
+      "category": "real-estate",
+      "description": "PropertyFinder API for live UAE real estate data - 500K+ listings with price trends, agent data, and new projects, as structured JSON via RapidAPI.",
+      "host": "uae-real-estate-property.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/uae-real-estate-property",
+      "websiteUrl": "https://happyendpoint.com/library/propertyfinder-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/05b8ee7f-e368-448c-bd7c-92d355544b8d.png",
+      "tags": [
+        "map-search",
+        "property-search",
+        "property-details",
+        "market-trends"
+      ],
+      "features": [
+        "Property Search",
+        "Agent Directory",
+        "Broker Database",
+        "Market Intelligence",
+        "Transaction History",
+        "Price Trends",
+        "New Projects",
+        "Commercial Listings",
+        "Developer Directory",
+        "Redis Caching"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 21,
+      "dataOperationCount": 20,
+      "sourceVersion": "live-mcp-2026-10-14",
+      "schemaSource": "RapidAPI live MCP tool metadata"
+    },
+    {
+      "id": "rightmove-uk",
+      "name": "Rightmove UK API",
+      "platform": "rightmove",
+      "category": "real-estate",
+      "description": "Rightmove API for UK property data - sale and rental listings, sold price history, new homes, and student accommodation, with full filtering.",
+      "host": "rightmove-uk-real-estate-data.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/rightmove-uk-real-estate-data/",
+      "websiteUrl": "https://happyendpoint.com/library/rightmove-uk",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/efa96cc5-4b02-4a72-9328-348c1feae435.png",
+      "tags": [
+        "sales",
+        "rentals",
+        "sold-prices",
+        "student-housing"
+      ],
+      "features": [
+        "Sales Listings",
+        "Rental Listings",
+        "Sold Price History",
+        "New Homes",
+        "Student Housing",
+        "Commercial Properties",
+        "Estate Agent Search",
+        "Location Autocomplete",
+        "Property Detail Pages"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 12,
+      "dataOperationCount": 11,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "sephora-api",
+      "name": "Sephora API",
+      "platform": "sephora",
+      "category": "beauty",
+      "description": "Sephora scraper API for live product data - US catalog with brands, prices, star ratings, review counts, and store stock levels, as structured JSON.",
+      "host": "real-time-sephora-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/real-time-sephora-api",
+      "websiteUrl": "https://happyendpoint.com/library/sephora-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/929ea64a-578a-4210-ada0-f1ceb65244d4.jpg",
+      "tags": [
+        "reviews",
+        "ratings",
+        "stock",
+        "store-finder"
+      ],
+      "features": [
+        "Product Search",
+        "Product Reviews",
+        "Brand Directory",
+        "Category Browse",
+        "Real-Time Availability",
+        "Store Locator",
+        "Keyword Autocomplete",
+        "Sub-400ms Responses"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 12,
+      "dataOperationCount": 11,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "morningstar",
+      "name": "Morningstar API",
+      "platform": "morningstar",
+      "category": "finance",
+      "description": "Morningstar API for financial data - real-time equity and ETF quotes, fundamentals, valuation metrics, and ESG risk ratings for research tools.",
+      "host": "morningstar13.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/morningstar13",
+      "websiteUrl": "https://happyendpoint.com/library/morningstar",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/a6d9ef2c-fe8f-47f1-8966-78d6e0cbe222.jpg",
+      "tags": [
+        "real-time-quotes",
+        "financials",
+        "etfs",
+        "esg-ratings"
+      ],
+      "features": [
+        "Real-Time Quotes",
+        "Financial Statements",
+        "ESG Risk Ratings",
+        "ETF and Fund Data",
+        "Valuation Metrics",
+        "Earnings Transcripts",
+        "Ownership Data",
+        "Dividend History"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 21,
+      "dataOperationCount": 20,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "ikea-pro",
+      "name": "Ikea Pro API",
+      "platform": "ikea",
+      "category": "retail",
+      "description": "IKEA API for product data - 12,000+ items with live pricing, dimensions, ratings, category paths, and per-store stock levels across every market.",
+      "host": "ikea-api-pro.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/ikea-api-pro/",
+      "websiteUrl": "https://happyendpoint.com/library/ikea-pro",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/4fbbbe2c-9928-44b9-9f44-7e457eebaf5f.jpg",
+      "tags": [
+        "stock-check",
+        "catalog",
+        "store-finder",
+        "global-coverage"
+      ],
+      "features": [
+        "Keyword Product Search",
+        "Category Browse",
+        "Product Details",
+        "Store Locator",
+        "Multi-Country Support",
+        "12,000+ Products",
+        "Real-Time Catalog",
+        "Category Filters"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 9,
+      "dataOperationCount": 8,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "klarna-ecom",
+      "name": "Klarna Ecom API",
+      "platform": "klarna",
+      "category": "aggregator",
+      "description": "Klarna API for shopping data - multi-store price comparison and price history across Amazon, Walmart, Target and more, in 13 regions.",
+      "host": "klarna7.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/klarna7/",
+      "websiteUrl": "https://happyendpoint.com/library/klarna-ecom",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/c30f02b4-22d8-41e6-ad7a-1c878d9ce1d0.jpg",
+      "tags": [
+        "price-history",
+        "multi-store",
+        "discount-tracking",
+        "comparison"
+      ],
+      "features": [
+        "Multi-Store Coverage",
+        "Price History Charts",
+        "Product Reviews",
+        "13 Regions Supported",
+        "Cross-Platform Search",
+        "Deal Discovery",
+        "Category Intelligence",
+        "Store and Category Data"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 20,
+      "dataOperationCount": 19,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "tesco-data",
+      "name": "Tesco Data API",
+      "platform": "tesco",
+      "category": "grocery",
+      "description": "Tesco grocery API for UK and Ireland - 300K+ SKUs with live pricing, Clubcard offers, nutrition, promotions, and store-level availability as JSON.",
+      "host": "tesco-data-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/tesco-data-api/",
+      "websiteUrl": "https://happyendpoint.com/library/tesco-data",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/4f4b110d-fc24-4070-9562-d544fbdee641.jpg",
+      "tags": [
+        "product-search",
+        "categories",
+        "nutrition",
+        "clubcard-offers"
+      ],
+      "features": [
+        "UK Product Search",
+        "Ireland Product Search",
+        "Product Details",
+        "Nutritional Data",
+        "Category Browsing",
+        "Category Taxonomy",
+        "Pricing and Offers",
+        "300,000+ SKUs"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 8,
+      "dataOperationCount": 7,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "hm-api",
+      "name": "H&M API",
+      "platform": "hm",
+      "category": "fashion",
+      "description": "H&M API for fashion product data - global catalog with prices, colours, sizes, stock levels, supplier detail, and store locations, as clean JSON.",
+      "host": "h-m-hennes-mauritz1.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/h-m-hennes-mauritz1/",
+      "websiteUrl": "https://happyendpoint.com/library/hm-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/ddf47459-9eff-4eaf-a68c-ffc476e03b69.jpg",
+      "tags": [
+        "trend-analysis",
+        "global-stores",
+        "product-search",
+        "supplier-data"
+      ],
+      "features": [
+        "Product Search",
+        "Category Browse",
+        "Store Locator",
+        "Supplier Details",
+        "Multi-Country Support",
+        "Search Autocomplete",
+        "JSON Responses",
+        "Near Real-Time Data"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 7,
+      "dataOperationCount": 6,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "kohls-data",
+      "name": "Kohls Data API",
+      "platform": "kohls",
+      "category": "retail",
+      "description": "Kohl's API for US retail data - product catalog with live pricing, promotions, ratings, customer reviews, Q&A, and store inventory as JSON.",
+      "host": "kohls-com.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/kohls-com/",
+      "websiteUrl": "https://happyendpoint.com/library/kohls-data",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/a20a3696-1391-48a5-9a79-b774dc44cfdb.png",
+      "tags": [
+        "reviews",
+        "inventory",
+        "q-and-a",
+        "pricing"
+      ],
+      "features": [
+        "Product Search",
+        "Product Details",
+        "Customer Reviews",
+        "Q and A Data",
+        "Category Tree",
+        "Store Locator",
+        "Pricing Data",
+        "Inventory Status"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 6,
+      "dataOperationCount": 5,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "priceline-pro",
+      "name": "Priceline Pro API",
+      "platform": "priceline",
+      "category": "travel",
+      "description": "Priceline API for travel data - real-time hotel rates and availability, room-level pricing, flight search, and car rental rates from one endpoint.",
+      "host": "priceline-api-pro.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/priceline-api-pro/playground",
+      "websiteUrl": "https://happyendpoint.com/library/priceline-pro",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/2b29545f-d55b-4c9f-94cf-c0d73015628e.png",
+      "tags": [
+        "hotels",
+        "flights",
+        "cars",
+        "vacation-packages"
+      ],
+      "features": [
+        "Hotel Search",
+        "Hotel Details and Rooms",
+        "Real-Time Room Pricing",
+        "Flight Search",
+        "Car Rentals",
+        "Location Autocomplete",
+        "Real-Time Availability",
+        "Fast and Reliable"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 10,
+      "dataOperationCount": 9,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "fotocasa-api",
+      "name": "Fotocasa API",
+      "platform": "fotocasa",
+      "category": "real-estate",
+      "description": "Fotocasa scraper API for Spain - 1.5M+ property listings across the mainland, Balearics and Andorra, with prices, photos, and granular filters.",
+      "host": "fotocasa3.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/fotocasa3",
+      "websiteUrl": "https://happyendpoint.com/library/fotocasa-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/42b173bd-1b93-4334-b2e6-9c5dcd40ec12.png",
+      "tags": [
+        "map-search",
+        "analytics",
+        "property-details",
+        "market-trends"
+      ],
+      "features": [
+        "Property Search",
+        "Location Autocomplete",
+        "Detailed Listings",
+        "Market Analytics",
+        "Spain and Andorra Coverage",
+        "Balearic Islands",
+        "Real-Time Updates",
+        "RESTful JSON API"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 4,
+      "dataOperationCount": 3,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "idealista-api",
+      "name": "Idealista API",
+      "platform": "idealista",
+      "category": "real-estate",
+      "description": "Idealista API for live property data across Spain, Italy, and Portugal - detailed listings, agent intelligence, and market analytics via RapidAPI.",
+      "host": "idealista17.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/idealista17",
+      "websiteUrl": "https://happyendpoint.com/library/idealista-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/aa2f871e-ea58-457e-b814-cbd2505753e1.png",
+      "tags": [
+        "real-estate",
+        "map-search",
+        "property-details",
+        "analytics"
+      ],
+      "features": [
+        "Advanced Property Search",
+        "AI-Powered Smart Search",
+        "Geo & ZIP-Based Search",
+        "Comprehensive Property Intelligence",
+        "Listing Analytics & Engagement",
+        "Agent & Agency Intelligence"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 15,
+      "dataOperationCount": 14,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "propertyfinder-api-2",
+      "name": "PropertyFinder - Search by URL",
+      "platform": "propertyfinder",
+      "category": "real-estate",
+      "description": "PropertyFinder API - pass any PropertyFinder search URL and get live UAE property listings back as structured JSON. No scraping to maintain.",
+      "host": "propertyfinder1.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/propertyfinder1",
+      "websiteUrl": "https://happyendpoint.com/library/propertyfinder-api-2",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/05b8ee7f-e368-448c-bd7c-92d355544b8d.png",
+      "tags": [
+        "property-search",
+        "property-details",
+        "map-search",
+        "market-trends"
+      ],
+      "features": [
+        "URL to JSON Conversion",
+        "500K+ Live Listings",
+        "Agent and Broker Contacts",
+        "Geo-Coordinates Included",
+        "Pagination Support",
+        "Redis Caching",
+        "Sub-500ms Latency",
+        "No Proxies Required"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 2,
+      "dataOperationCount": 1,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "99co-api",
+      "name": "99.co Singapore API",
+      "platform": "99co",
+      "category": "real-estate",
+      "description": "Live Singapore property data from 99.co. Search condos, HDB, rentals, and sale listings, plus new launches, transactions, price trends, and agents.",
+      "host": "99-co-sg-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/99-co-sg-api",
+      "websiteUrl": "https://happyendpoint.com/library/99co-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/6fea1ac0-7cd9-4b5b-8243-dc1a24c63960.png",
+      "tags": [
+        "property-search",
+        "property-details",
+        "new-projects",
+        "transactions",
+        "market-trends"
+      ],
+      "features": [
+        "Property Search",
+        "New Launch Projects",
+        "Transaction History",
+        "Price Trends",
+        "Nearby Amenities",
+        "Agent Directory",
+        "URL Resolver",
+        "Location Autocomplete"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 15,
+      "dataOperationCount": 14,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "aqar-api",
+      "name": "Aqar Saudi Arabia API",
+      "platform": "aqar",
+      "category": "real-estate",
+      "description": "Saudi Arabia real estate data from Aqar. Property search, AI natural-language search, district pricing, geographic reference data, and developer projects.",
+      "host": "aqar.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/aqar",
+      "websiteUrl": "https://happyendpoint.com/library/aqar-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/13b7e0fa-7caf-4310-a6e9-9c0e7e62025a.jpg",
+      "tags": [
+        "property-search",
+        "ai-search",
+        "market-trends",
+        "geo-data",
+        "developers"
+      ],
+      "features": [
+        "Property Search",
+        "AI Natural-Language Search",
+        "District Price Stats",
+        "Residential Indicators",
+        "Geographic Reference Data",
+        "Developer and Project Data",
+        "Reverse Geocoding",
+        "Location Autocomplete"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 23,
+      "dataOperationCount": 22,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "hepsiemlak-api",
+      "name": "Hepsiemlak Turkey API",
+      "platform": "hepsiemlak",
+      "category": "real-estate",
+      "description": "Turkey real estate data from Hepsiemlak. Search property listings by city and district, get details, filters, similar listings, and market price index.",
+      "host": "hepsiemlak-turkish-property-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/hepsiemlak-turkish-property-api",
+      "websiteUrl": "https://happyendpoint.com/library/hepsiemlak-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/70f31699-07b8-4f98-a887-0cac399abc08.png",
+      "tags": [
+        "property-search",
+        "property-details",
+        "market-trends",
+        "locations"
+      ],
+      "features": [
+        "Property Search",
+        "Search by URL",
+        "Listing Details",
+        "Similar Properties",
+        "City, County, and District Data",
+        "Location Autocomplete",
+        "Search Filters",
+        "Market Price Index"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 12,
+      "dataOperationCount": 11,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "njuskalo-api",
+      "name": "Njuškalo Croatia API",
+      "platform": "njuskalo",
+      "category": "aggregator",
+      "description": "Marketplace data from Njuškalo, Croatia's largest classifieds site. Search cars, real estate, and listings, plus sellers, categories, and pricing.",
+      "host": "njuskalo.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/njuskalo",
+      "websiteUrl": "https://happyendpoint.com/library/njuskalo-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/07e5aa99-d3f6-4f4a-9151-8691b183b220.jpg",
+      "tags": [
+        "marketplace",
+        "classifieds",
+        "cars",
+        "real-estate",
+        "sellers"
+      ],
+      "features": [
+        "Marketplace Search",
+        "Category Browsing",
+        "Listing Details",
+        "Similar Listings",
+        "Seller Profiles and Reviews",
+        "Trending Categories",
+        "Geocoding",
+        "URL Parser"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 21,
+      "dataOperationCount": 20,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "suumo-api",
+      "name": "SUUMO Japan Real Estate API",
+      "platform": "suumo",
+      "category": "real-estate",
+      "description": "Japan real estate data from SUUMO. Search rentals and sales, station and commute-based discovery, plus address, railway, and agency reference data.",
+      "host": "suumo-japan-real-estate.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/suumo-japan-real-estate",
+      "websiteUrl": "https://happyendpoint.com/library/suumo-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/d26799e0-eddf-472f-84c8-b34cef478813.png",
+      "tags": [
+        "property-search",
+        "property-details",
+        "rentals",
+        "commute-search",
+        "geo-data"
+      ],
+      "features": [
+        "Rental and Sale Search",
+        "Unified Search",
+        "Station and Commute Search",
+        "Property Details",
+        "New Condo Data",
+        "Nearby Facilities (GeoJSON)",
+        "Address and Postal Lookup",
+        "Agency Profiles"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 22,
+      "dataOperationCount": 21,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "emlakjet-api",
+      "name": "Emlakjet Turkey API",
+      "platform": "emlakjet",
+      "category": "real-estate",
+      "description": "Turkey real estate data from Emlakjet. Search property listings, get details and price history, plus nearby places, demographics, agencies, and new projects.",
+      "host": "emlakjet.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/emlakjet",
+      "websiteUrl": "https://happyendpoint.com/library/emlakjet-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/1edd23e2-4b37-430e-a859-61687c5ee3b1.png",
+      "tags": [
+        "property-search",
+        "property-details",
+        "price-history",
+        "locations",
+        "agencies"
+      ],
+      "features": [
+        "Property Search",
+        "Search by URL",
+        "Listing Details",
+        "Similar Listings",
+        "Price History",
+        "Nearby Places",
+        "Area Demographics",
+        "Province, District, and Neighborhood Data",
+        "Location Autocomplete",
+        "Search Filters and Categories",
+        "Agency Profiles and Listings",
+        "New Construction Projects"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 19,
+      "dataOperationCount": 18,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "yad2-api",
+      "name": "Yad2 Israel API",
+      "platform": "yad2",
+      "category": "aggregator",
+      "description": "Israel marketplace data from Yad2. Search real estate, vehicles, and second-hand listings, get details and maps, plus government-registered sale prices.",
+      "host": "yad21.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/yad21",
+      "websiteUrl": "https://happyendpoint.com/library/yad2-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/b9cf10ec-1ffc-4a2f-b2ab-7fa7f48cfed8.png",
+      "tags": [
+        "marketplace",
+        "classifieds",
+        "real-estate",
+        "vehicles",
+        "sale-prices"
+      ],
+      "features": [
+        "Real Estate Search",
+        "Map View and Clusters",
+        "Listing Details",
+        "Government-Registered Sale Prices",
+        "Nearby Deals (Comps)",
+        "New Construction Projects",
+        "Agency and Dealer Ads",
+        "Vehicle Search",
+        "Vehicle Catalog and Models",
+        "Marketplace Listings",
+        "Location Autocomplete",
+        "Regions, Cities, and Neighborhoods"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 25,
+      "dataOperationCount": 24,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "auction-com-api",
+      "name": "Auction.com API",
+      "platform": "auction-com",
+      "category": "real-estate",
+      "description": "US distressed property data from Auction.com. Search foreclosure, bank-owned, and auction listings, get property details, schedules, and live bid status.",
+      "host": "auction-com-real-estate-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/auction-com-real-estate-api",
+      "websiteUrl": "https://happyendpoint.com/library/auction-com-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/ead14ed6-6841-44f9-8b54-e6215b457626.png",
+      "tags": [
+        "real-estate",
+        "foreclosure",
+        "auctions",
+        "property-search",
+        "property-details"
+      ],
+      "features": [
+        "Advanced Property Search",
+        "ZIP Code Search",
+        "Search by URL",
+        "Upcoming Auctions",
+        "Listing Details",
+        "Auction Schedules and Venues",
+        "Live Auction and Bid Status",
+        "Location Autocomplete",
+        "Recommended Listings",
+        "Filter Taxonomies and Enums"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 13,
+      "dataOperationCount": 12,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "gumtree-api",
+      "name": "Gumtree UK API",
+      "platform": "gumtree",
+      "category": "aggregator",
+      "description": "UK classifieds data from Gumtree. Search listings with filters, get ad details, seller profiles and reviews, plus categories, locations, and trends.",
+      "host": "gumtree2.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/gumtree2",
+      "websiteUrl": "https://happyendpoint.com/library/gumtree-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/6889468d-36f0-4de5-9390-8507db6bde0c.png",
+      "tags": [
+        "marketplace",
+        "classifieds",
+        "sellers",
+        "categories",
+        "locations"
+      ],
+      "features": [
+        "Listing Search",
+        "Search by URL",
+        "Search Suggestions",
+        "Trending Searches",
+        "Listing Details",
+        "Similar Listings",
+        "Seller Profiles, Listings, and Reviews",
+        "Category Tree and Filters",
+        "Location Autocomplete",
+        "Reverse Geocoding"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 17,
+      "dataOperationCount": 16,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "realtor-com-api",
+      "name": "Realtor.com Data API",
+      "platform": "realtor-com",
+      "category": "real-estate",
+      "description": "US property data from Realtor.com. Search homes for sale, rent, and sold, get full listing detail, valuations, agents, schools, mortgage rates, and market stats.",
+      "host": "realtor-com-data-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/realtor-com-data-api",
+      "websiteUrl": "https://happyendpoint.com/library/realtor-com-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/d48a460d-0acb-4b9c-96a7-ec994cf022bf.jpg",
+      "tags": [
+        "real-estate",
+        "listings",
+        "valuation",
+        "agents",
+        "schools",
+        "mortgage"
+      ],
+      "features": [
+        "For Sale, For Rent, and Sold Search",
+        "Off-Market and Public Records Search",
+        "Coordinate, Polygon, and Commute Search",
+        "Search by URL",
+        "Full Listing Details",
+        "Details by Address",
+        "Similar Homes and Comps",
+        "RealEstimate Property Valuation",
+        "Environmental and Climate Risk",
+        "New Construction Inventory",
+        "Agent Directory, Reviews, and Listings",
+        "Schools and School Districts",
+        "Live Mortgage and Lender Rates",
+        "Market Hotness and Geo Statistics",
+        "Neighborhood Guides and Map Boundaries"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 38,
+      "dataOperationCount": 37,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "vrbo-api",
+      "name": "Vrbo API",
+      "platform": "vrbo",
+      "category": "travel",
+      "description": "Vacation rental data from Vrbo. Search listings by destination, dates, or map area, plus property detail, amenities, photos, rates, availability, and reviews.",
+      "host": "vrbo2.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/vrbo2",
+      "websiteUrl": "https://happyendpoint.com/library/vrbo-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/933c8d6b-bb9c-48c6-88f6-dcc79cd1185e.png",
+      "tags": [
+        "travel",
+        "vacation-rentals",
+        "listings",
+        "pricing",
+        "reviews"
+      ],
+      "features": [
+        "Destination Search with Dates and Guests",
+        "Coordinate and Map Bounds Search",
+        "Search by URL",
+        "Search Filter Discovery",
+        "Location Autocomplete",
+        "Neighborhood Lookup",
+        "Full Property Details",
+        "Amenities and Room Breakdown",
+        "Full Photo Gallery",
+        "Bookable Rates and Stay Totals",
+        "Day-by-Day Availability Calendar",
+        "Guest Reviews and AI Review Digest",
+        "Host Profiles and Host Listings",
+        "Cancellation and Refund Policies"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 22,
+      "dataOperationCount": 21,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "28hse-api",
+      "name": "28Hse Hong Kong Property API",
+      "platform": "28hse",
+      "category": "real-estate",
+      "description": "Hong Kong property data from 28Hse. Search listings for sale and rent, estates, and new developments, plus transactions, agencies, school nets, and mortgages.",
+      "host": "28hse-property-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/28hse-property-api",
+      "websiteUrl": "https://happyendpoint.com/library/28hse-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/cf557616-f009-47f1-9a78-db4d47eb5bf2.png",
+      "tags": [
+        "real-estate",
+        "listings",
+        "transactions",
+        "hong-kong",
+        "mortgage"
+      ],
+      "features": [
+        "Property Search for Sale and Rent",
+        "Residential Estate Search",
+        "New Development Search",
+        "Listing Details by ID or URL",
+        "Sale and Lease Transaction Records",
+        "Location Autocomplete",
+        "Property Filter Discovery",
+        "Agency Directory",
+        "School Net Directory",
+        "Serviced Apartment Directory",
+        "Bank Mortgage Plans",
+        "Property Market News"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 14,
+      "dataOperationCount": 13,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "allhomes-api",
+      "name": "Allhomes Australia API",
+      "platform": "allhomes",
+      "category": "real-estate",
+      "description": "Allhomes property data for Canberra, ACT and NSW. Listings, past sales, valuations, land values, auctions, suburbs, agents, and schools.",
+      "host": "allhomes-com-au-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/allhomes-com-au-api",
+      "websiteUrl": "https://happyendpoint.com/library/allhomes-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/287b206c-3ccd-4500-bd7c-38f1943dc4bd.png",
+      "tags": [
+        "real-estate",
+        "listings",
+        "valuation",
+        "sales-history",
+        "auctions",
+        "agents",
+        "schools"
+      ],
+      "features": [
+        "For Sale, Rent, Share, and New Development Search",
+        "Search by Allhomes URL",
+        "Map Viewport and Coordinate Search",
+        "Property Details by Listing, Address, or URL",
+        "Sale and Rental History by Address",
+        "Automated Valuation and Rental Yield",
+        "Comparable Sold and Leased Homes",
+        "ACT Unimproved Land Values",
+        "Suburb, District, and Street Profiles",
+        "Weekly Auction Results and Clearance Rates",
+        "Locality Boundaries and Median Prices",
+        "Agent and Agency Profiles with Reviews",
+        "School Catchments and Nearby Amenities",
+        "Property News Feeds"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 40,
+      "dataOperationCount": 39,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "wasalt-api",
+      "name": "Wasalt Saudi Arabia API",
+      "platform": "wasalt",
+      "category": "real-estate",
+      "description": "Wasalt Saudi property data. Sale and rent listings, REGA licences, holiday rentals, off-plan projects, and Infath auctions with live bids.",
+      "host": "wasalt-saudi-data.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/wasalt-saudi-data",
+      "websiteUrl": "https://happyendpoint.com/library/wasalt-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/30cfee5d-739d-4d8f-bc53-dd473ca467b2.png",
+      "tags": [
+        "real-estate",
+        "listings",
+        "auctions",
+        "short-term-rentals",
+        "new-developments",
+        "rega-licence"
+      ],
+      "features": [
+        "Sale and Long-Term Rent Search",
+        "17 Search Filters Including REGA Licence Status",
+        "Search by Wasalt URL",
+        "Full Listing Records with REGA Licence Data",
+        "Map Pin Payloads and Photo Galleries",
+        "Short-Term Holiday Rental Search",
+        "Nightly Rate Calendars and House Rules",
+        "Off-Plan Developer Projects",
+        "Per-Unit-Type Price, Size, and Availability",
+        "Judicial (Infath) and Private Property Auctions",
+        "Live Bid State, Deposits, and Increment Ladders",
+        "Auction Activity Feeds",
+        "District Pins and Neighbourhood Median Price per m2",
+        "Arabic and English Location Names"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 26,
+      "dataOperationCount": 25,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "kaspi-kz-api",
+      "name": "Kaspi.kz API",
+      "platform": "kaspi-kz",
+      "category": "retail",
+      "description": "Kaspi.kz marketplace data for Kazakhstan. Search products, compare seller offers and prices, check stock, and pull reviews and car parts.",
+      "host": "kaspi-kz.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/kaspi-kz",
+      "websiteUrl": "https://happyendpoint.com/library/kaspi-kz-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/eb4a32fa-917b-4e0e-846c-0c8e04adcd8f.png",
+      "tags": [
+        "marketplace",
+        "ecommerce",
+        "pricing",
+        "sellers",
+        "reviews",
+        "automotive"
+      ],
+      "features": [
+        "Product Search with Category and Facet Filters",
+        "Search by Marketplace URL",
+        "Product Details, Specifications, and Variants",
+        "Similar Products",
+        "Seller Offers and Buy-Box Winner",
+        "Multi-Product Stock Checks by City",
+        "Pickup Points and Parcel Lockers",
+        "Seller Discovery by Keyword",
+        "Merchant Profiles and Quality Scores",
+        "Product and Merchant Reviews with Star Histograms",
+        "Automotive Parts Search and Fitment Filters",
+        "VIN Lookup and OEM Cross-Reference",
+        "Tyre Fitment by Make, Model, and Year",
+        "Brand and Seller Share of Shelf",
+        "Trade-In Device Catalog"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 30,
+      "dataOperationCount": 29,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "igraal-api",
+      "name": "iGraal Cashback Coupons API",
+      "platform": "igraal",
+      "category": "aggregator",
+      "description": "iGraal and Shoop cashback and coupon data for France, Germany, Spain and Poland. Merchants, codes, cashback rates and featured offers.",
+      "host": "igraal-cashback-coupons-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/igraal-cashback-coupons-api",
+      "websiteUrl": "https://happyendpoint.com/library/igraal-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/43e4f0db-993e-4e57-b31d-b164bef1b7ea.png",
+      "tags": [
+        "cashback",
+        "coupons",
+        "promo-codes",
+        "merchants",
+        "affiliate",
+        "gift-cards"
+      ],
+      "features": [
+        "Four Markets - France, Germany, Spain, Poland",
+        "Merchant Search and Autocomplete",
+        "Merchant Lookup by Website URL",
+        "Bulk Merchant Catalog Export",
+        "Live Cashback Rates, Tiers, and Conditions",
+        "Previous Cashback Rates",
+        "Market-Wide and Per-Merchant Coupon Feeds",
+        "Coupon Code Re-Check by ID",
+        "Editorial Top Coupons and Featured Offers",
+        "Sponsored Placement Tracking",
+        "In-Store Supermarket Cashback",
+        "Printable Grocery Coupons",
+        "Discounted Gift Cards",
+        "Merchant Search Keywords and Volume",
+        "Affiliate Network Attribution",
+        "Scheduled Cashback Events"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 29,
+      "dataOperationCount": 28,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "ninja-api",
+      "name": "Ninja Saudi Food and Grocery API",
+      "platform": "ninja",
+      "category": "grocery",
+      "description": "Ninja food delivery and grocery data for Saudi Arabia and the GCC - menus, delivery fees, deals, products, and live stock.",
+      "host": "ninja-saudi-arabia.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/ninja-saudi-arabia",
+      "websiteUrl": "https://happyendpoint.com/library/ninja-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/408ddc37-d71e-4930-b523-71ee8e57266d.jpg",
+      "tags": [
+        "grocery",
+        "food-delivery",
+        "restaurants",
+        "menus",
+        "inventory",
+        "promotions"
+      ],
+      "features": [
+        "Delivery-Location Store Discovery",
+        "Restaurant Search with Cuisine and Deal Filters",
+        "Full Menus with Modifiers, Calories, and Allergens",
+        "Current and Original Dish Prices",
+        "Basket-Value Delivery Fee Ladders",
+        "Restaurant Deal Campaigns and Discounted Items",
+        "Search by Restaurant or Cuisine URL",
+        "Grocery, Beauty, and Pharmacy Catalogs",
+        "Product Search by Keyword, Category, or Brand",
+        "Live On-Hand Stock by Store",
+        "Multi-Pack Bundle Composition",
+        "Store Promotions and Sponsored Placements",
+        "Trending and Sponsored Search Phrases",
+        "Smart Lists, Themed Lists, and Retail Stories",
+        "English and Arabic Content"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 37,
+      "dataOperationCount": 36,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "turo-api",
+      "name": "Turo Car Rental Data API",
+      "platform": "turo",
+      "category": "travel",
+      "description": "Turo car rental data - search vehicles, daily prices, availability calendars, itemised trip quotes, hosts, and reviews.",
+      "host": "turo-com-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/turo-com-api",
+      "websiteUrl": "https://happyendpoint.com/library/turo-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/b5bd26ee-4b8f-4098-aee1-df25ed52c89d.jpg",
+      "tags": [
+        "travel",
+        "car-rental",
+        "pricing",
+        "availability",
+        "reviews",
+        "hosts"
+      ],
+      "features": [
+        "Search by Coordinate, Map Area, or Pick-Up Location",
+        "Search by City or Airport Name",
+        "Search by Turo URL",
+        "Price, Make, Model, Year, and Feature Filters",
+        "Make, Model, and Filter Vocabularies",
+        "Full Vehicle Records by ID or URL",
+        "Equipment, Fuel Economy, and Electric Range",
+        "Day-by-Day Price Calendars",
+        "Exact-Window Availability Checks",
+        "Booked and Free Calendar Intervals",
+        "Itemised Trip Quotes with Fees and Taxes",
+        "Bulk Quotes for up to 25 Vehicles",
+        "Vehicle Reviews and Reputation Summaries",
+        "Host Profiles, Fleets, and Guest Feedback",
+        "US, Canada, UK, Australia, and France Markets"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 23,
+      "dataOperationCount": 22,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "bayt-api",
+      "name": "Bayt.com Jobs API",
+      "platform": "bayt",
+      "category": "jobs",
+      "description": "Bayt.com jobs data for the Middle East. Search vacancies by country, city, industry, and salary, with job details and employer openings.",
+      "host": "bayt-com.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/bayt-com",
+      "websiteUrl": "https://happyendpoint.com/library/bayt-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/c855116c-336f-4f62-9d01-5504e5036d1e.png",
+      "tags": [
+        "jobs",
+        "recruitment",
+        "job-listings",
+        "employers",
+        "salary",
+        "middle-east"
+      ],
+      "features": [
+        "Job Search with Location, Industry, and Salary Filters",
+        "Search by Bayt.com URL",
+        "Full Job Details by ID or URL",
+        "Lightweight Job Records with Skills",
+        "Search-Card View with Salary Band",
+        "Similar Jobs",
+        "Employer Job Openings",
+        "Popular Jobs",
+        "Remote and Easy-Apply Filters",
+        "Career Level and Employment Type Filters",
+        "Countries with Job Counts",
+        "City and Province Identifiers",
+        "Job Title Autocomplete",
+        "Filter Taxonomy in One Call",
+        "Live Labour-Market Facets"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 15,
+      "dataOperationCount": 14,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "prizepicks-api",
+      "name": "PrizePicks Player Projections API",
+      "platform": "prizepicks",
+      "category": "sports",
+      "description": "PrizePicks player projections data. Full league boards, player and game lines, live and trending projections, players, teams, and games.",
+      "host": "prizepicks-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/prizepicks-api",
+      "websiteUrl": "https://happyendpoint.com/library/prizepicks-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/7a8f8b64-b093-4924-a76e-21147d9f3bf7.jpg",
+      "tags": [
+        "sports",
+        "fantasy-sports",
+        "player-projections",
+        "player-props",
+        "leagues"
+      ],
+      "features": [
+        "Full League Projection Boards",
+        "Joined Player, Team, Game, and Stat Context",
+        "Projection Details by ID",
+        "Bulk Refresh of Known Projections",
+        "Player Projections by ID or Name",
+        "Game Projections",
+        "Live Event Projections",
+        "Promotional Lines with Original Values",
+        "Trending Projections by Popularity",
+        "League Directory with Board Size",
+        "League-Specific Stat Types",
+        "Player, Team, and Game Directories",
+        "Board Summary with Line Ranges",
+        "Filters by Position, Market, Time Window, and Line Range"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 17,
+      "dataOperationCount": 16,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "4sale-api",
+      "name": "4Sale Kuwait API",
+      "platform": "4sale",
+      "category": "aggregator",
+      "description": "Search 4Sale Kuwait classifieds, used cars, property and electronics. Access listing prices, sellers, districts and business directory data.",
+      "host": "4sale-kuwait-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/4sale-kuwait-api",
+      "websiteUrl": "https://happyendpoint.com/library/4sale-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/c8a34954-1471-40be-af67-1943f43e7ef8.png",
+      "tags": [
+        "aggregator",
+        "kuwait",
+        "classifieds",
+        "used-cars",
+        "property",
+        "q84sale"
+      ],
+      "features": [
+        "Kuwait classifieds search across cars, property and consumer goods",
+        "Price monitoring within a category and district",
+        "Seller inventory and dealer research",
+        "Local business directory search with reviews"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 34,
+      "dataOperationCount": 33,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "cian-api",
+      "name": "Cian API",
+      "platform": "cian",
+      "category": "real-estate",
+      "description": "Access Cian real estate data for Russia: sale and rental listings, new builds, agents, price history, property valuations and daily rentals.",
+      "host": "cian-ru.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/cian-ru",
+      "websiteUrl": "https://happyendpoint.com/library/cian-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/813ea9b1-dfeb-4f08-810c-cfbe0e76c5b4.jpg",
+      "tags": [
+        "real-estate",
+        "russia",
+        "real-estate",
+        "apartments",
+        "price-history",
+        "cian"
+      ],
+      "features": [
+        "Property search for Moscow, Saint Petersburg and other Russian regions",
+        "Monitoring asking prices and listing price history",
+        "Research into new developments, layouts and construction progress",
+        "Agent, developer and daily rental comparison"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 39,
+      "dataOperationCount": 38,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "expedia-api",
+      "name": "Expedia API",
+      "platform": "expedia",
+      "category": "travel",
+      "description": "Search Expedia hotels, flights, car rentals and activities. Access room rates, reviews, price calendars and travel packages across 32 markets.",
+      "host": "expedia18.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/expedia18",
+      "websiteUrl": "https://happyendpoint.com/library/expedia-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/fb159e34-02f6-45fd-8491-81c79f43addb.jpg",
+      "tags": [
+        "travel",
+        "travel",
+        "hotels",
+        "flights",
+        "car-rental",
+        "hotel-prices"
+      ],
+      "features": [
+        "Hotel search and room-rate comparison",
+        "Airfare research across dates and cabin classes",
+        "Car rental and flight-plus-hotel package comparison",
+        "Destination guides with activities and guest reviews"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 38,
+      "dataOperationCount": 37,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "houzz-api",
+      "name": "Houzz API",
+      "platform": "houzz",
+      "category": "retail",
+      "description": "Search Houzz contractors, interior design photos and furniture products. Access professional reviews, projects and home renovation data.",
+      "host": "houzz1.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/houzz1",
+      "websiteUrl": "https://happyendpoint.com/library/houzz-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/d1903bbb-eba5-4ed9-a822-48024db31b8a.png",
+      "tags": [
+        "retail",
+        "home-design",
+        "contractors",
+        "furniture",
+        "reviews",
+        "renovation"
+      ],
+      "features": [
+        "Contractor and interior designer directories",
+        "Home renovation research using reviews and completed projects",
+        "Room and style discovery from design photographs",
+        "Furniture product search and retail price research"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 39,
+      "dataOperationCount": 38,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "hungerstation-api",
+      "name": "HungerStation API",
+      "platform": "hungerstation",
+      "category": "grocery",
+      "description": "Access HungerStation restaurant menus, meal prices, delivery fees, offers and grocery products across Saudi Arabia in English and Arabic.",
+      "host": "hungerstation1.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/hungerstation1",
+      "websiteUrl": "https://happyendpoint.com/library/hungerstation-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/1093d348-9a5b-4391-94ce-49898b00b304.png",
+      "tags": [
+        "grocery",
+        "saudi-arabia",
+        "food-delivery",
+        "restaurant-menus",
+        "grocery-prices",
+        "delivery-fees"
+      ],
+      "features": [
+        "Restaurant discovery in Riyadh, Jeddah, Dammam and other Saudi cities",
+        "Tracking menu prices, meal deals and restaurant offers",
+        "Comparing grocery products and store promotions",
+        "Studying delivery fees and branch coverage by location"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 37,
+      "dataOperationCount": 36,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "livescore-api",
+      "name": "LiveScore API",
+      "platform": "livescore",
+      "category": "sports",
+      "description": "Get LiveScore sports data: live scores, fixtures, match statistics, lineups, standings and player data for football, basketball, cricket and more.",
+      "host": "livescore-api2.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/livescore-api2",
+      "websiteUrl": "https://happyendpoint.com/library/livescore-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/eb8b18fe-3faa-4595-bf2c-0d774cff9a7f.png",
+      "tags": [
+        "sports",
+        "live-scores",
+        "football",
+        "sports-statistics",
+        "fixtures",
+        "standings"
+      ],
+      "features": [
+        "Live scoreboards and match result pages",
+        "Fixture calendars by sport, team or competition",
+        "League standings and player statistics dashboards",
+        "Match preview tools using form and head-to-head records"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 56,
+      "dataOperationCount": 55,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "milanuncios-api",
+      "name": "Milanuncios API",
+      "platform": "milanuncios",
+      "category": "aggregator",
+      "description": "Search Milanuncios classifieds in Spain. Access used cars, property, electronics, listing details, seller profiles and price drops as JSON.",
+      "host": "milanuncios-api.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/milanuncios-api",
+      "websiteUrl": "https://happyendpoint.com/library/milanuncios-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/80f5862e-32d7-4127-b33d-2d86e5e950d8.jpg",
+      "tags": [
+        "aggregator",
+        "spain",
+        "classifieds",
+        "segunda-mano",
+        "used-cars",
+        "price-drops"
+      ],
+      "features": [
+        "Spain used car and motorbike listing search",
+        "Second-hand electronics price monitoring",
+        "Property classifieds research by city and category",
+        "Seller and dealer inventory monitoring"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 22,
+      "dataOperationCount": 21,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "motory-api",
+      "name": "Motory API",
+      "platform": "motory",
+      "category": "aggregator",
+      "description": "Access Motory used and new car listings in Saudi Arabia and Jordan, with prices, makes, models, dealers, offers and vehicle comparison data.",
+      "host": "motory-com.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/motory-com",
+      "websiteUrl": "https://happyendpoint.com/library/motory-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/953f4cd1-733d-4957-85bc-7a2f811beef5.png",
+      "tags": [
+        "aggregator",
+        "saudi-arabia",
+        "jordan",
+        "used-cars",
+        "car-prices",
+        "dealers"
+      ],
+      "features": [
+        "Saudi and Jordan car search and price comparison",
+        "Tracking used vehicle inventory by make and model",
+        "Comparing new car specifications and dealer offers",
+        "Automotive dealer and service directory research"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 46,
+      "dataOperationCount": 45,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "noon-api",
+      "name": "Noon API",
+      "platform": "noon",
+      "category": "retail",
+      "description": "Search Noon products across Middle East markets. Access product prices, Buy Box offers, seller profiles, reviews, deals and category data.",
+      "host": "noon7.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/noon7",
+      "websiteUrl": "https://happyendpoint.com/library/noon-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/fa86e01a-15f6-4fce-a01f-150f83b5e2a0.jpg",
+      "tags": [
+        "retail",
+        "ecommerce",
+        "middle-east",
+        "product-prices",
+        "sellers",
+        "buy-box"
+      ],
+      "features": [
+        "Product search and price comparison for UAE, Saudi and other storefronts",
+        "Buy Box and seller offer research",
+        "Monitoring discounts, deals and category inventories",
+        "Product review analysis and merchant comparison"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 27,
+      "dataOperationCount": 26,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "reed-api",
+      "name": "Reed.co.uk API",
+      "platform": "reed",
+      "category": "jobs",
+      "description": "Search Reed.co.uk jobs, salaries, employers and courses. Access UK job listings, application counts and salary benchmarks through JSON endpoints.",
+      "host": "reed-co-uk.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/reed-co-uk",
+      "websiteUrl": "https://happyendpoint.com/library/reed-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/bbb9f46a-9f3a-4214-b87a-a4d9333a9b09.jpg",
+      "tags": [
+        "jobs",
+        "uk-jobs",
+        "recruitment",
+        "salary-data",
+        "employers",
+        "courses"
+      ],
+      "features": [
+        "UK job boards and role-based vacancy search",
+        "Salary benchmarking by role, sector and location",
+        "Employer hiring activity and application-count research",
+        "Course discovery for recruitment and career products"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 27,
+      "dataOperationCount": 26,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "rent-com-api",
+      "name": "Rent.com API",
+      "platform": "rent-com",
+      "category": "real-estate",
+      "description": "Search Rent.com apartments and houses for rent in the US. Access listing details, floor plans, availability, rent estimates and neighborhood data.",
+      "host": "rent-com1.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/rent-com1",
+      "websiteUrl": "https://happyendpoint.com/library/rent-com-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/cc3f75fa-f5a1-4723-b642-2582fe6c793b.png",
+      "tags": [
+        "real-estate",
+        "us-rentals",
+        "apartments",
+        "rental-listings",
+        "rent-estimates",
+        "floor-plans"
+      ],
+      "features": [
+        "Apartment and house rental discovery across the US",
+        "Rent comparisons using location, bedrooms and amenities",
+        "Building and floor-plan inventory research",
+        "Neighborhood enrichment with utility and walkability data"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 19,
+      "dataOperationCount": 18,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "stocktwits-api",
+      "name": "Stocktwits API",
+      "platform": "stocktwits",
+      "category": "finance",
+      "description": "Access Stocktwits messages, bullish and bearish sentiment, trending tickers, quotes, price charts, financial news and earnings transcripts.",
+      "host": "stocktwits5.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/stocktwits5",
+      "websiteUrl": "https://happyendpoint.com/library/stocktwits-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/187c7338-545b-484d-8870-8ea91f6142c5.png",
+      "tags": [
+        "finance",
+        "stock-sentiment",
+        "investor-sentiment",
+        "stock-messages",
+        "trending-stocks",
+        "market-data"
+      ],
+      "features": [
+        "Retail investor sentiment dashboards",
+        "Trending ticker and market discussion monitoring",
+        "Research combining messages, price charts and company news",
+        "Earnings-event analysis with calls and transcripts"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 56,
+      "dataOperationCount": 55,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    },
+    {
+      "id": "zoopla-api",
+      "name": "Zoopla API",
+      "platform": "zoopla",
+      "category": "real-estate",
+      "description": "Access Zoopla UK property listings, sold house prices, valuations, estate agents and postcode or UPRN lookups for property research tools.",
+      "host": "zoopla8.p.rapidapi.com",
+      "rapidApiUrl": "https://rapidapi.com/happyendpoint/api/zoopla8",
+      "websiteUrl": "https://happyendpoint.com/library/zoopla-api",
+      "documentationUrl": "https://docs.happyendpoint.com/",
+      "logoUrl": "https://rapidapi-prod-apis.s3.amazonaws.com/a569693a-0075-4ca4-bd49-e5a901024d46.png",
+      "tags": [
+        "real-estate",
+        "uk-property",
+        "house-prices",
+        "sold-prices",
+        "property-valuations",
+        "uprn"
+      ],
+      "features": [
+        "UK property portals and listing comparison tools",
+        "Sold house price research by area and property type",
+        "Address and UPRN enrichment for property databases",
+        "Estate agent and new development market research"
+      ],
+      "freeTier": {
+        "maxCalls": 1000,
+        "creditCardRequired": false,
+        "details": "Up to 1,000 free calls. Check the API listing for its allowance, reset period and request limits."
+      },
+      "schemaStatus": "verified-documentation",
+      "operationCount": 33,
+      "dataOperationCount": 32,
+      "sourceVersion": "1.0",
+      "schemaSource": "Provider public OpenAPI documentation"
+    }
+  ]
+}

@@ -1,0 +1,366 @@
+[
+  {
+    "id": "_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "Health check endpoint",
+    "description": "Returns the health status of the H&M API service.",
+    "tags": [],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Product_Search",
+    "method": "GET",
+    "path": "/product-search",
+    "summary": "Search products on H&M",
+    "description": "Search for products on H&M using keywords. Supports pagination, sorting, and filtering by size, color, material, fit, etc.",
+    "tags": [
+      "H&M"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search keyword for products (e.g., 't-shirts', 'jeans', 'dress')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search keyword for products (e.g., 't-shirts', 'jeans', 'dress')",
+          "example": "t-shirts"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": false,
+        "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+        "schema": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number for pagination. Defaults to 1.",
+        "schema": {
+          "type": "integer",
+          "default": 1,
+          "description": "Page number for pagination. Defaults to 1.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "description": "Number of products per page. Defaults to 36.",
+        "schema": {
+          "type": "integer",
+          "default": 36,
+          "description": "Number of products per page. Defaults to 36.",
+          "example": 36,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "Sort type (e.g., RELEVANCE, NEWEST_FIRST, PRICE_ASCENDING, PRICE_DESCENDING). Find available sort options in the response payload under 'sortOptions'. Defaults to RELEVANCE.",
+        "schema": {
+          "type": "string",
+          "default": "RELEVANCE",
+          "description": "Sort type (e.g., RELEVANCE, NEWEST_FIRST, PRICE_ASCENDING, PRICE_DESCENDING). Find available sort options in the response payload under 'sortOptions'. Defaults to RELEVANCE.",
+          "example": "RELEVANCE"
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "**Filter Examples:**\n*   **Single Color:**  `colorWithNames:black_000000`\n*   **Multiple Colors (black OR white):**\n    `colorWithNames:black_000000|white_ffffff`\n*   **Single Size:**  `sizes:menswear;NO_FORMAT[SML];L`\n*   **Multiple Sizes (Large OR Extra Large):**   `sizes:menswear;NO_FORMAT[SML];L|menswear;NO_FORMAT[SML];XL`\n*   **Single Color AND Single Size:**   `colorWithNames:black_000000||sizes:menswear;NO_FORMAT[SML];M`\n*   **Single Fit:**  `fits:Regular%20fit`\n*   **Complex Combination (black OR white color AND large OR medium size AND regular fit):**  `colorWithNames:black_000000|white_ffffff||sizes:menswear;NO_FORMAT[SML];L|menswear;NO_FORMAT[SML];M||fits:Regular%20fit`\n* Available filter IDs can be found in the response body under these JSON paths: `sortOptions` , `searchDepartments` , `facets`",
+        "schema": {
+          "type": "string",
+          "description": "**Filter Examples:**\n*   **Single Color:**  `colorWithNames:black_000000`\n*   **Multiple Colors (black OR white):**\n    `colorWithNames:black_000000|white_ffffff`\n*   **Single Size:**  `sizes:menswear;NO_FORMAT[SML];L`\n*   **Multiple Sizes (Large OR Extra Large):**   `sizes:menswear;NO_FORMAT[SML];L|menswear;NO_FORMAT[SML];XL`\n*   **Single Color AND Single Size:**   `colorWithNames:black_000000||sizes:menswear;NO_FORMAT[SML];M`\n*   **Single Fit:**  `fits:Regular%20fit`\n*   **Complex Combination (black OR white color AND large OR medium size AND regular fit):**  `colorWithNames:black_000000|white_ffffff||sizes:menswear;NO_FORMAT[SML];L|menswear;NO_FORMAT[SML];M||fits:Regular%20fit`\n* Available filter IDs can be found in the response body under these JSON paths: `sortOptions` , `searchDepartments` , `facets`",
+          "example": "sizes:menswear%3BNO_FORMAT%5BSML%5D%3B3XL|menswear%3BNO_FORMAT%5BSML%5D%3BXXL||colorWithNames:black_000000|white_ffffff"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search keyword for products (e.g., 't-shirts', 'jeans', 'dress')",
+          "example": "t-shirts"
+        },
+        "languageCode": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        },
+        "page": {
+          "type": "integer",
+          "default": 1,
+          "description": "Page number for pagination. Defaults to 1.",
+          "example": 1,
+          "exclusiveMinimum": 0
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 36,
+          "description": "Number of products per page. Defaults to 36.",
+          "example": 36,
+          "exclusiveMinimum": 0
+        },
+        "sortType": {
+          "type": "string",
+          "default": "RELEVANCE",
+          "description": "Sort type (e.g., RELEVANCE, NEWEST_FIRST, PRICE_ASCENDING, PRICE_DESCENDING). Find available sort options in the response payload under 'sortOptions'. Defaults to RELEVANCE.",
+          "example": "RELEVANCE"
+        },
+        "filters": {
+          "type": "string",
+          "description": "**Filter Examples:**\n*   **Single Color:**  `colorWithNames:black_000000`\n*   **Multiple Colors (black OR white):**\n    `colorWithNames:black_000000|white_ffffff`\n*   **Single Size:**  `sizes:menswear;NO_FORMAT[SML];L`\n*   **Multiple Sizes (Large OR Extra Large):**   `sizes:menswear;NO_FORMAT[SML];L|menswear;NO_FORMAT[SML];XL`\n*   **Single Color AND Single Size:**   `colorWithNames:black_000000||sizes:menswear;NO_FORMAT[SML];M`\n*   **Single Fit:**  `fits:Regular%20fit`\n*   **Complex Combination (black OR white color AND large OR medium size AND regular fit):**  `colorWithNames:black_000000|white_ffffff||sizes:menswear;NO_FORMAT[SML];L|menswear;NO_FORMAT[SML];M||fits:Regular%20fit`\n* Available filter IDs can be found in the response body under these JSON paths: `sortOptions` , `searchDepartments` , `facets`",
+          "example": "sizes:menswear%3BNO_FORMAT%5BSML%5D%3B3XL|menswear%3BNO_FORMAT%5BSML%5D%3BXXL||colorWithNames:black_000000|white_ffffff"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Countries",
+    "method": "GET",
+    "path": "/countries",
+    "summary": "Get list of available countries and language codes",
+    "description": "Retrieve the complete list of available countries and their language codes that can be used with the product search endpoint.",
+    "tags": [
+      "H&M"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Auto-Complete",
+    "method": "GET",
+    "path": "/auto-complete",
+    "summary": "Get search suggestions / auto-complete",
+    "description": "Get auto-complete suggestions for search queries. Useful for implementing search-as-you-type functionality.",
+    "tags": [
+      "H&M"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search query to get auto-complete suggestions (e.g., 'tshirt', 'jean', 'dres')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search query to get auto-complete suggestions (e.g., 'tshirt', 'jean', 'dres')",
+          "example": "tshirt"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": false,
+        "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+        "schema": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search query to get auto-complete suggestions (e.g., 'tshirt', 'jean', 'dres')",
+          "example": "tshirt"
+        },
+        "languageCode": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Stores",
+    "method": "GET",
+    "path": "/stores",
+    "summary": "Get list of H&M stores by country",
+    "description": "Retrieve the list of H&M stores for a specific country. Returns store details including location, opening hours, and departments.",
+    "tags": [
+      "H&M"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "Two-letter country code (e.g., 'us', 'gb', 'de'). Use the /countries endpoint to get available country codes.",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "Two-letter country code (e.g., 'us', 'gb', 'de'). Use the /countries endpoint to get available country codes.",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": false,
+        "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+        "schema": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "Two-letter country code (e.g., 'us', 'gb', 'de'). Use the /countries endpoint to get available country codes.",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      },
+      "required": [
+        "countryCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Supplier_Details",
+    "method": "GET",
+    "path": "/supplier-details",
+    "summary": "Get supplier details for a product",
+    "description": "Retrieve supplier information for a specific product. Returns details about the manufacturer and production location.",
+    "tags": [
+      "H&M"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "Product ID to get supplier details for (e.g., '1303341009')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID to get supplier details for (e.g., '1303341009')",
+          "example": "1303341009"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": false,
+        "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+        "schema": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID to get supplier details for (e.g., '1303341009')",
+          "example": "1303341009"
+        },
+        "languageCode": {
+          "type": "string",
+          "default": "en_us",
+          "description": "Language/region code (e.g., 'en_us', 'en_gb', 'de_de'). Use the /countries endpoint to get available language codes. Defaults to 'en_us'.",
+          "example": "en_us"
+        }
+      },
+      "required": [
+        "productId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Categories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "Get H&M categories",
+    "description": "Retrieve the complete category structure from H&M. Extracts category data from the website's JSON payload.",
+    "tags": [
+      "H&M"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

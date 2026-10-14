@@ -1,0 +1,1922 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search",
+    "method": "GET",
+    "path": "/search",
+    "summary": "/search",
+    "description": "Search Saudi real-estate listings with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        }
+      },
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "Filter by city id (see `/cities`). e.g. 21=Riyadh.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by city id (see `/cities`). e.g. 21=Riyadh.",
+          "example": 21
+        }
+      },
+      {
+        "name": "district_id",
+        "in": "query",
+        "required": false,
+        "description": "Filter by district id (see `/districts`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by district id (see `/districts`)."
+        }
+      },
+      {
+        "name": "direction_id",
+        "in": "query",
+        "required": false,
+        "description": "Aqar direction id (get from `/directions`). e.g. 1=South, 3=East, 4=North, 6=West, 7=Center.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar direction id (get from `/directions`). e.g. 1=South, 3=East, 4=North, 6=West, 7=Center.",
+          "example": 4
+        }
+      },
+      {
+        "name": "province_id",
+        "in": "query",
+        "required": false,
+        "description": "Filter by province/admin-region id (see `/admin-regions`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by province/admin-region id (see `/admin-regions`)."
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (SAR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price (SAR)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (SAR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price (SAR)."
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum area (m²).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum area (m²)."
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum area (m²).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum area (m²)."
+        }
+      },
+      {
+        "name": "meter_price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price per m² (SAR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price per m² (SAR)."
+        }
+      },
+      {
+        "name": "meter_price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price per m² (SAR).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price per m² (SAR)."
+        }
+      },
+      {
+        "name": "beds_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bedrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum bedrooms."
+        }
+      },
+      {
+        "name": "beds_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bedrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum bedrooms."
+        }
+      },
+      {
+        "name": "rooms_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum rooms."
+        }
+      },
+      {
+        "name": "rooms_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum rooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum rooms."
+        }
+      },
+      {
+        "name": "livings_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum living rooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum living rooms."
+        }
+      },
+      {
+        "name": "livings_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum living rooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum living rooms."
+        }
+      },
+      {
+        "name": "wc_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum bathrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum bathrooms."
+        }
+      },
+      {
+        "name": "wc_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum bathrooms.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum bathrooms."
+        }
+      },
+      {
+        "name": "age_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum building age (years).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum building age (years)."
+        }
+      },
+      {
+        "name": "rent_period",
+        "in": "query",
+        "required": false,
+        "description": "Rental-period code (e.g. 1=daily … 3=yearly).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Rental-period code (e.g. 1=daily … 3=yearly)."
+        }
+      },
+      {
+        "name": "furnished",
+        "in": "query",
+        "required": false,
+        "description": "Only furnished listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "has_video",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that have a video.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that have a video.",
+          "example": ""
+        }
+      },
+      {
+        "name": "verified",
+        "in": "query",
+        "required": false,
+        "description": "Only REGA-verified listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only REGA-verified listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "premium",
+        "in": "query",
+        "required": false,
+        "description": "Only premium/boosted listings.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only premium/boosted listings.",
+          "example": ""
+        }
+      },
+      {
+        "name": "user_id",
+        "in": "query",
+        "required": false,
+        "description": "Filter by advertiser user id.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by advertiser user id."
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "Advanced: a JSON `WhereInput` object merged into the query (escape hatch for unlisted filters).",
+        "schema": {
+          "type": "string",
+          "description": "Advanced: a JSON `WhereInput` object merged into the query (escape hatch for unlisted filters)."
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: newest, oldest, newest_refreshed, price_low_to_high, price_high_to_low, area_small_to_large, area_large_to_small, meter_price_low_to_high, meter_price_high_to_low.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "newest",
+            "oldest",
+            "newest_refreshed",
+            "price_low_to_high",
+            "price_high_to_low",
+            "area_small_to_large",
+            "area_large_to_small",
+            "meter_price_low_to_high",
+            "meter_price_high_to_low"
+          ],
+          "description": "Sort order. One of: newest, oldest, newest_refreshed, price_low_to_high, price_high_to_low, area_small_to_large, area_large_to_small, meter_price_low_to_high, meter_price_high_to_low.",
+          "example": "newest"
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Number of results to return (1 - 50).",
+          "example": 20
+        }
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (number of results to skip).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        },
+        "city_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by city id (see `/cities`). e.g. 21=Riyadh.",
+          "example": 21
+        },
+        "district_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by district id (see `/districts`)."
+        },
+        "direction_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar direction id (get from `/directions`). e.g. 1=South, 3=East, 4=North, 6=West, 7=Center.",
+          "example": 4
+        },
+        "province_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by province/admin-region id (see `/admin-regions`)."
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price (SAR)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price (SAR)."
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum area (m²)."
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum area (m²)."
+        },
+        "meter_price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price per m² (SAR)."
+        },
+        "meter_price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price per m² (SAR)."
+        },
+        "beds_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum bedrooms."
+        },
+        "beds_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum bedrooms."
+        },
+        "rooms_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum rooms."
+        },
+        "rooms_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum rooms."
+        },
+        "livings_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum living rooms."
+        },
+        "livings_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum living rooms."
+        },
+        "wc_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Minimum bathrooms."
+        },
+        "wc_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum bathrooms."
+        },
+        "age_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Maximum building age (years)."
+        },
+        "rent_period": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Rental-period code (e.g. 1=daily … 3=yearly)."
+        },
+        "furnished": {
+          "type": "boolean",
+          "description": "Only furnished listings.",
+          "example": ""
+        },
+        "has_video": {
+          "type": "boolean",
+          "description": "Only listings that have a video.",
+          "example": ""
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Only REGA-verified listings.",
+          "example": ""
+        },
+        "premium": {
+          "type": "boolean",
+          "description": "Only premium/boosted listings.",
+          "example": ""
+        },
+        "user_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Filter by advertiser user id."
+        },
+        "filters": {
+          "type": "string",
+          "description": "Advanced: a JSON `WhereInput` object merged into the query (escape hatch for unlisted filters)."
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "newest",
+            "oldest",
+            "newest_refreshed",
+            "price_low_to_high",
+            "price_high_to_low",
+            "area_small_to_large",
+            "area_large_to_small",
+            "meter_price_low_to_high",
+            "meter_price_high_to_low"
+          ],
+          "description": "Sort order. One of: newest, oldest, newest_refreshed, price_low_to_high, price_high_to_low, area_small_to_large, area_large_to_small, meter_price_low_to_high, meter_price_high_to_low.",
+          "example": "newest"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Number of results to return (1 - 50).",
+          "example": 20
+        },
+        "from": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_ai-search",
+    "method": "GET",
+    "path": "/ai-search",
+    "summary": "/ai-search",
+    "description": "Natural-language search → structured filters + listings.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Natural-language search query, in Arabic or English (e.g. \"3-bedroom apartment for rent in Riyadh\").",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Natural-language search query, in Arabic or English (e.g. \"3-bedroom apartment for rent in Riyadh\").",
+          "example": "شقة للايجار في الرياض ثلاث غرف"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Language of the query: `ar` or `en`. Optional  -  the parser auto-detects.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ar",
+            "en"
+          ],
+          "description": "Language of the query: `ar` or `en`. Optional  -  the parser auto-detects.",
+          "example": "ar"
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Number of results to return (1 - 50).",
+          "example": 20
+        }
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (number of results to skip).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Natural-language search query, in Arabic or English (e.g. \"3-bedroom apartment for rent in Riyadh\").",
+          "example": "شقة للايجار في الرياض ثلاث غرف"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "ar",
+            "en"
+          ],
+          "description": "Language of the query: `ar` or `en`. Optional  -  the parser auto-detects.",
+          "example": "ar"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Number of results to return (1 - 50).",
+          "example": 20
+        },
+        "from": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Offset for pagination (number of results to skip).",
+          "example": 0
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_related-listings",
+    "method": "GET",
+    "path": "/related-listings",
+    "summary": "/related-listings",
+    "description": "Listings similar to a given one.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Aqar listing id (get one from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Aqar listing id (get one from `/search`).",
+          "example": 6601222,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Number of results to return (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Number of results to return (1 - 50).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "Numeric Aqar listing id (get one from `/search`).",
+          "example": 6601222,
+          "exclusiveMinimum": 0
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Number of results to return (1 - 50).",
+          "example": 20
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_autocomplete",
+    "method": "GET",
+    "path": "/autocomplete",
+    "summary": "/autocomplete",
+    "description": "Location autocomplete (place suggestions).",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Location text to autocomplete (Arabic or English). Each result `place_id` can be passed to `/place-bounds`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Location text to autocomplete (Arabic or English). Each result `place_id` can be passed to `/place-bounds`.",
+          "example": "النرجس"
+        }
+      },
+      {
+        "name": "lat",
+        "in": "query",
+        "required": false,
+        "description": "Optional latitude to bias results toward a point.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional latitude to bias results toward a point.",
+          "example": 24.71
+        }
+      },
+      {
+        "name": "lng",
+        "in": "query",
+        "required": false,
+        "description": "Optional longitude to bias results toward a point.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional longitude to bias results toward a point.",
+          "example": 46.67
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Location text to autocomplete (Arabic or English). Each result `place_id` can be passed to `/place-bounds`.",
+          "example": "النرجس"
+        },
+        "lat": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional latitude to bias results toward a point.",
+          "example": 24.71
+        },
+        "lng": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Optional longitude to bias results toward a point.",
+          "example": 46.67
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_place-bounds",
+    "method": "GET",
+    "path": "/place-bounds",
+    "summary": "/place-bounds",
+    "description": "Resolve a place_id into a bounding box.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "place_id",
+        "in": "query",
+        "required": true,
+        "description": "A `place_id` from `/autocomplete`. Returns the place's bounding box.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A `place_id` from `/autocomplete`. Returns the place's bounding box.",
+          "example": "ChIJmZNIDYkDLz4R1Z_nmBxNl7o"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "place_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A `place_id` from `/autocomplete`. Returns the place's bounding box.",
+          "example": "ChIJmZNIDYkDLz4R1Z_nmBxNl7o"
+        }
+      },
+      "required": [
+        "place_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details",
+    "method": "GET",
+    "path": "/listing-details",
+    "summary": "/listing-details",
+    "description": "Full single-listing detail by id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Aqar listing id (get one from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Aqar listing id (get one from `/search`).",
+          "example": 6601222,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "Numeric Aqar listing id (get one from `/search`).",
+          "example": 6601222,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details-by-url",
+    "method": "GET",
+    "path": "/listing-details-by-url",
+    "summary": "/listing-details-by-url",
+    "description": "Full listing detail from a listing URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "An Aqar listing URL (or its `uri` slug). The listing is resolved by id when the URL ends in one, otherwise by slug.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An Aqar listing URL (or its `uri` slug). The listing is resolved by id when the URL ends in one, otherwise by slug.",
+          "example": "https://sa.aqar.fm/شارع-حمود-العنسى-حي-المروج-مدينة-الرياض-منطقة-الرياض-6702552"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An Aqar listing URL (or its `uri` slug). The listing is resolved by id when the URL ends in one, otherwise by slug.",
+          "example": "https://sa.aqar.fm/شارع-حمود-العنسى-حي-المروج-مدينة-الرياض-منطقة-الرياض-6702552"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-views",
+    "method": "GET",
+    "path": "/listing-views",
+    "summary": "/listing-views",
+    "description": "View count for a listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Aqar listing id (get one from `/search`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Aqar listing id (get one from `/search`).",
+          "example": 6601222,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "Numeric Aqar listing id (get one from `/search`).",
+          "example": 6601222,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_categories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "/categories",
+    "description": "Property-category taxonomy (id → name).",
+    "tags": [
+      "Geo & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "Language for localized text: `ar` or `en`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ar",
+            "en"
+          ],
+          "default": "ar",
+          "description": "Language for localized text: `ar` or `en`.",
+          "example": "ar"
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Optional category-group filter. One of: all, for_rent, for_sale, for_booking, for_rent_residential, for_rent_commercial, for_sale_residential, for_sale_commercial.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "all",
+            "for_rent",
+            "for_sale",
+            "for_booking",
+            "for_rent_residential",
+            "for_rent_commercial",
+            "for_sale_residential",
+            "for_sale_commercial"
+          ],
+          "description": "Optional category-group filter. One of: all, for_rent, for_sale, for_booking, for_rent_residential, for_rent_commercial, for_sale_residential, for_sale_commercial.",
+          "example": "for_rent"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lang": {
+          "type": "string",
+          "enum": [
+            "ar",
+            "en"
+          ],
+          "default": "ar",
+          "description": "Language for localized text: `ar` or `en`.",
+          "example": "ar"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "all",
+            "for_rent",
+            "for_sale",
+            "for_booking",
+            "for_rent_residential",
+            "for_rent_commercial",
+            "for_sale_residential",
+            "for_sale_commercial"
+          ],
+          "description": "Optional category-group filter. One of: all, for_rent, for_sale, for_booking, for_rent_residential, for_rent_commercial, for_sale_residential, for_sale_commercial.",
+          "example": "for_rent"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_cities",
+    "method": "GET",
+    "path": "/cities",
+    "summary": "/cities",
+    "description": "Cities with per-category listing counts.",
+    "tags": [
+      "Geo & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        }
+      },
+      {
+        "name": "admin_region_id",
+        "in": "query",
+        "required": false,
+        "description": "Restrict to a province/admin-region (see `/admin-regions`). e.g. 1=Riyadh region.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Restrict to a province/admin-region (see `/admin-regions`). e.g. 1=Riyadh region."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        },
+        "admin_region_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Restrict to a province/admin-region (see `/admin-regions`). e.g. 1=Riyadh region."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_districts",
+    "method": "GET",
+    "path": "/districts",
+    "summary": "/districts",
+    "description": "Districts within a city.",
+    "tags": [
+      "Geo & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        }
+      },
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+          "example": 21
+        }
+      },
+      {
+        "name": "direction_id",
+        "in": "query",
+        "required": false,
+        "description": "Optional: restrict to one direction/zone of the city (see `/directions`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Optional: restrict to one direction/zone of the city (see `/directions`)."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        },
+        "city_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+          "example": 21
+        },
+        "direction_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Optional: restrict to one direction/zone of the city (see `/directions`)."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_directions",
+    "method": "GET",
+    "path": "/directions",
+    "summary": "/directions",
+    "description": "Direction/zone breakdown of a city.",
+    "tags": [
+      "Geo & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        }
+      },
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+          "example": 21
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        },
+        "city_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+          "example": 21
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_admin-regions",
+    "method": "GET",
+    "path": "/admin-regions",
+    "summary": "/admin-regions",
+    "description": "Administrative regions (provinces) of Saudi Arabia.",
+    "tags": [
+      "Geo & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_reverse-geocode",
+    "method": "GET",
+    "path": "/reverse-geocode",
+    "summary": "/reverse-geocode",
+    "description": "Coordinate → city/district/direction ids + names.",
+    "tags": [
+      "Geo & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "lat",
+        "in": "query",
+        "required": false,
+        "description": "Latitude.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude.",
+          "example": 24.7136
+        }
+      },
+      {
+        "name": "lng",
+        "in": "query",
+        "required": false,
+        "description": "Longitude.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude.",
+          "example": 46.6753
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude.",
+          "example": 24.7136
+        },
+        "lng": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude.",
+          "example": 46.6753
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_district-price-stats",
+    "method": "GET",
+    "path": "/district-price-stats",
+    "summary": "/district-price-stats",
+    "description": "Per-district price/transaction time-series.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        }
+      },
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": false,
+        "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+          "example": 21
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        },
+        "city_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar city id (get from `/cities`). e.g. 21=Riyadh, 66=Jeddah, 18=Dammam.",
+          "example": 21
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_residential-indicators",
+    "method": "GET",
+    "path": "/residential-indicators",
+    "summary": "/residential-indicators",
+    "description": "Latest residential price indicator for a district.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "district_id",
+        "in": "query",
+        "required": false,
+        "description": "Aqar district id (get from `/districts`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar district id (get from `/districts`).",
+          "example": 452
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "Room-count bucket (\"0\" - \"5\"). Required for most categories (e.g. category 4); omit it for land (category 2).",
+        "schema": {
+          "type": "string",
+          "description": "Room-count bucket (\"0\" - \"5\"). Required for most categories (e.g. category 4); omit it for land (category 2).",
+          "example": "3"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "district_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar district id (get from `/districts`).",
+          "example": 452
+        },
+        "category": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar property-category id (get the full list from `/categories`). Common: 1=apartment-for-rent, 2=land-for-sale, 3=villa-for-sale, 4=floor-for-rent, 5=villa-for-rent, 6=apartment-for-sale, 9=house-for-sale.",
+          "example": 1
+        },
+        "size": {
+          "type": "string",
+          "description": "Room-count bucket (\"0\" - \"5\"). Required for most categories (e.g. category 4); omit it for land (category 2).",
+          "example": "3"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_district-rating",
+    "method": "GET",
+    "path": "/district-rating",
+    "summary": "/district-rating",
+    "description": "District quality rating + resident comments.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "district_id",
+        "in": "query",
+        "required": false,
+        "description": "Aqar district id (get from `/districts`).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar district id (get from `/districts`).",
+          "example": 452
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Pagination cursor (comments page size is 50). Use the `offset` from the previous response; stop when it is null.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Pagination cursor (comments page size is 50). Use the `offset` from the previous response; stop when it is null.",
+          "example": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "district_id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Aqar district id (get from `/districts`).",
+          "example": 452
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Pagination cursor (comments page size is 50). Use the `offset` from the previous response; stop when it is null.",
+          "example": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_moj-categories",
+    "method": "GET",
+    "path": "/moj-categories",
+    "summary": "/moj-categories",
+    "description": "Ministry-of-Justice category mapping.",
+    "tags": [
+      "Market Data"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-details",
+    "method": "GET",
+    "path": "/project-details",
+    "summary": "/project-details",
+    "description": "Full off-plan/ready project detail.",
+    "tags": [
+      "Projects & Developers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "project_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Aqar real-estate project id (get one from `/developer-projects` or `/projects-by-city`).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Aqar real-estate project id (get one from `/developer-projects` or `/projects-by-city`).",
+          "example": 678,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "integer",
+          "description": "Numeric Aqar real-estate project id (get one from `/developer-projects` or `/projects-by-city`).",
+          "example": 678,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "project_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_developer-details",
+    "method": "GET",
+    "path": "/developer-details",
+    "summary": "/developer-details",
+    "description": "Real-estate developer profile.",
+    "tags": [
+      "Projects & Developers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "developer_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Aqar real-estate developer id (e.g. 100=Roshn).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Aqar real-estate developer id (e.g. 100=Roshn).",
+          "example": 100,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "developer_id": {
+          "type": "integer",
+          "description": "Numeric Aqar real-estate developer id (e.g. 100=Roshn).",
+          "example": 100,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "developer_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_developer-projects",
+    "method": "GET",
+    "path": "/developer-projects",
+    "summary": "/developer-projects",
+    "description": "Paginated projects of a developer.",
+    "tags": [
+      "Projects & Developers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "developer_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric Aqar real-estate developer id (e.g. 100=Roshn).",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric Aqar real-estate developer id (e.g. 100=Roshn).",
+          "example": 100,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (1-based).",
+          "example": 1
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      },
+      {
+        "name": "project_status",
+        "in": "query",
+        "required": false,
+        "description": "Filter by project status: `SOON`, `AVAILABLE`, or `SOLD`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "AVAILABLE",
+            "SOON",
+            "SOLD"
+          ],
+          "description": "Filter by project status: `SOON`, `AVAILABLE`, or `SOLD`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "project_type",
+        "in": "query",
+        "required": false,
+        "description": "Filter by project type: `OFF_PLAN` or `READY`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "OFF_PLAN",
+            "READY"
+          ],
+          "description": "Filter by project type: `OFF_PLAN` or `READY`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort direction: `asc` or `desc`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "description": "Sort direction: `asc` or `desc`.",
+          "example": "desc"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "developer_id": {
+          "type": "integer",
+          "description": "Numeric Aqar real-estate developer id (e.g. 100=Roshn).",
+          "example": 100,
+          "exclusiveMinimum": 0
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (1-based).",
+          "example": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        },
+        "project_status": {
+          "type": "string",
+          "enum": [
+            "AVAILABLE",
+            "SOON",
+            "SOLD"
+          ],
+          "description": "Filter by project status: `SOON`, `AVAILABLE`, or `SOLD`.",
+          "example": ""
+        },
+        "project_type": {
+          "type": "string",
+          "enum": [
+            "OFF_PLAN",
+            "READY"
+          ],
+          "description": "Filter by project type: `OFF_PLAN` or `READY`.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "description": "Sort direction: `asc` or `desc`.",
+          "example": "desc"
+        }
+      },
+      "required": [
+        "developer_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_projects-by-city",
+    "method": "GET",
+    "path": "/projects-by-city",
+    "summary": "/projects-by-city",
+    "description": "Cities ranked by project count.",
+    "tags": [
+      "Projects & Developers"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

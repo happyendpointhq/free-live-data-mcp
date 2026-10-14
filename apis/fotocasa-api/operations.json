@@ -1,0 +1,537 @@
+[
+  {
+    "id": "get_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "/health",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_suggestions",
+    "method": "GET",
+    "path": "/suggestions",
+    "summary": "/suggestions",
+    "description": "",
+    "tags": [
+      "Fotocasa"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Query to get location suggestions for",
+          "example": "madrid"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Query to get location suggestions for",
+          "example": "madrid"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_searchads",
+    "method": "GET",
+    "path": "/searchads",
+    "summary": "/searchads",
+    "description": "",
+    "tags": [
+      "Fotocasa"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "combinedLocations",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Get the Location from /location-suggestion endpoint.",
+          "example": "724,14,28,173,0,28079,0,0,0"
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Get the longitude from /location-suggestion endpoint.",
+          "example": "-3.68624"
+        }
+      },
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Get the latitude from /location-suggestion endpoint.",
+          "example": "40.4096"
+        }
+      },
+      {
+        "name": "pageNumber",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Page number for pagination",
+          "example": "1"
+        }
+      },
+      {
+        "name": "size",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Number of results per page (default: 30)",
+          "example": "30"
+        }
+      },
+      {
+        "name": "transactionType",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "BUY",
+            "RENT"
+          ],
+          "description": "Type of transaction: BUY or RENT",
+          "example": "BUY"
+        }
+      },
+      {
+        "name": "propertyType",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "HOMES",
+            "GARAGES",
+            "LAND",
+            "PREMISES",
+            "OFFICE",
+            "BOX_ROOM",
+            "BUILDING"
+          ],
+          "description": "Type of property: HOMES, GARAGES, LAND, etc.",
+          "example": "HOMES"
+        }
+      },
+      {
+        "name": "isNewConstruction",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Filter for new construction properties (true/false)",
+          "example": "true"
+        }
+      },
+      {
+        "name": "sortOrderDesc",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Sort order: true for descending, false for ascending",
+          "example": "true"
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "RATING",
+            "LATEST",
+            "PRICE",
+            "SURFACE",
+            "PRICE_PER_AREA",
+            "ONLINE_GUIDED_TOUR"
+          ],
+          "description": "Sort criteria: RATING (default), LATEST (newest first), PRICE, SURFACE (area), etc.",
+          "example": "RATING"
+        }
+      },
+      {
+        "name": "conservationStatus",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Property condition: ALMOST_NEW, VERY_GOOD, GOOD, FOR_RENOVATION, REFURBISHED (comma-separated)",
+          "example": "ALMOST_NEW"
+        }
+      },
+      {
+        "name": "publicationDate",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "INDIFFERENT",
+            "TWO_DAYS",
+            "ONE_WEEK",
+            "ONE_MONTH"
+          ],
+          "description": "Filter by listing age: INDIFFERENT, TWO_DAYS, ONE_WEEK, ONE_MONTH",
+          "example": "INDIFFERENT"
+        }
+      },
+      {
+        "name": "propertySubtypes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Specific types of homes (only for HOMES): HOUSE_CHALET, RURAL_PROPERTY, DUPLEX, etc. (comma-separated)"
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Minimum price in euros",
+          "example": "200000"
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Maximum price in euros",
+          "example": "500000"
+        }
+      },
+      {
+        "name": "minSurface",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Minimum property size in square meters",
+          "example": "150"
+        }
+      },
+      {
+        "name": "maxSurface",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Maximum property size in square meters",
+          "example": "1000"
+        }
+      },
+      {
+        "name": "minRooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Minimum number of rooms (bedrooms)",
+          "example": "2"
+        }
+      },
+      {
+        "name": "minBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Minimum number of bathrooms",
+          "example": "1"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "combinedLocations": {
+          "type": "string",
+          "description": "Get the Location from /location-suggestion endpoint.",
+          "example": "724,14,28,173,0,28079,0,0,0"
+        },
+        "longitude": {
+          "type": "string",
+          "description": "Get the longitude from /location-suggestion endpoint.",
+          "example": "-3.68624"
+        },
+        "latitude": {
+          "type": "string",
+          "description": "Get the latitude from /location-suggestion endpoint.",
+          "example": "40.4096"
+        },
+        "pageNumber": {
+          "type": "string",
+          "description": "Page number for pagination",
+          "example": "1"
+        },
+        "size": {
+          "type": "string",
+          "description": "Number of results per page (default: 30)",
+          "example": "30"
+        },
+        "transactionType": {
+          "type": "string",
+          "enum": [
+            "BUY",
+            "RENT"
+          ],
+          "description": "Type of transaction: BUY or RENT",
+          "example": "BUY"
+        },
+        "propertyType": {
+          "type": "string",
+          "enum": [
+            "HOMES",
+            "GARAGES",
+            "LAND",
+            "PREMISES",
+            "OFFICE",
+            "BOX_ROOM",
+            "BUILDING"
+          ],
+          "description": "Type of property: HOMES, GARAGES, LAND, etc.",
+          "example": "HOMES"
+        },
+        "isNewConstruction": {
+          "type": "string",
+          "description": "Filter for new construction properties (true/false)",
+          "example": "true"
+        },
+        "sortOrderDesc": {
+          "type": "string",
+          "description": "Sort order: true for descending, false for ascending",
+          "example": "true"
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "RATING",
+            "LATEST",
+            "PRICE",
+            "SURFACE",
+            "PRICE_PER_AREA",
+            "ONLINE_GUIDED_TOUR"
+          ],
+          "description": "Sort criteria: RATING (default), LATEST (newest first), PRICE, SURFACE (area), etc.",
+          "example": "RATING"
+        },
+        "conservationStatus": {
+          "type": "string",
+          "description": "Property condition: ALMOST_NEW, VERY_GOOD, GOOD, FOR_RENOVATION, REFURBISHED (comma-separated)",
+          "example": "ALMOST_NEW"
+        },
+        "publicationDate": {
+          "type": "string",
+          "enum": [
+            "INDIFFERENT",
+            "TWO_DAYS",
+            "ONE_WEEK",
+            "ONE_MONTH"
+          ],
+          "description": "Filter by listing age: INDIFFERENT, TWO_DAYS, ONE_WEEK, ONE_MONTH",
+          "example": "INDIFFERENT"
+        },
+        "propertySubtypes": {
+          "type": "string",
+          "description": "Specific types of homes (only for HOMES): HOUSE_CHALET, RURAL_PROPERTY, DUPLEX, etc. (comma-separated)"
+        },
+        "minPrice": {
+          "type": "string",
+          "description": "Minimum price in euros",
+          "example": "200000"
+        },
+        "maxPrice": {
+          "type": "string",
+          "description": "Maximum price in euros",
+          "example": "500000"
+        },
+        "minSurface": {
+          "type": "string",
+          "description": "Minimum property size in square meters",
+          "example": "150"
+        },
+        "maxSurface": {
+          "type": "string",
+          "description": "Maximum property size in square meters",
+          "example": "1000"
+        },
+        "minRooms": {
+          "type": "string",
+          "description": "Minimum number of rooms (bedrooms)",
+          "example": "2"
+        },
+        "minBathrooms": {
+          "type": "string",
+          "description": "Minimum number of bathrooms",
+          "example": "1"
+        }
+      },
+      "required": [
+        "combinedLocations",
+        "longitude",
+        "latitude",
+        "pageNumber",
+        "transactionType",
+        "propertyType",
+        "sortType",
+        "publicationDate"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_property_details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "/property-details",
+    "description": "",
+    "tags": [
+      "Fotocasa"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "transactionType",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "BUY",
+            "RENT"
+          ],
+          "description": "Make sure to match the transaction type with the propertyID"
+        }
+      },
+      {
+        "name": "propertyId",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Property ID from search-ads endpoint",
+          "example": "185617904"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "es",
+            "de",
+            "ca"
+          ]
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "transactionType": {
+          "type": "string",
+          "enum": [
+            "BUY",
+            "RENT"
+          ],
+          "description": "Make sure to match the transaction type with the propertyID"
+        },
+        "propertyId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Property ID from search-ads endpoint",
+          "example": "185617904"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "es",
+            "de",
+            "ca"
+          ]
+        }
+      },
+      "required": [
+        "transactionType",
+        "propertyId",
+        "language"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

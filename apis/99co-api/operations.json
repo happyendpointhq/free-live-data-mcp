@@ -1,0 +1,1538 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-property",
+    "method": "GET",
+    "path": "/search-property",
+    "summary": "/search-property",
+    "description": "Search Singapore sale/rent listings with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_type",
+        "in": "query",
+        "required": true,
+        "description": "Search intent: `sale` or `rent`. Required.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "description": "Search intent: `sale` or `rent`. Required.",
+          "example": "sale"
+        }
+      },
+      {
+        "name": "query_ids",
+        "in": "query",
+        "required": false,
+        "description": "Location id(s) from `/autocomplete` (the `id` field), comma-separated  -  e.g. `dtdistrict09` (a district), `zoorchard` (an area), `sg-mrt-orchard` (an MRT). `singapore` (default) = the whole island. To scope correctly you also need `query_type`  -  it is auto-derived from the id, so usually you can just pass `query_ids`.",
+        "schema": {
+          "type": "string",
+          "default": "singapore",
+          "description": "Location id(s) from `/autocomplete` (the `id` field), comma-separated  -  e.g. `dtdistrict09` (a district), `zoorchard` (an area), `sg-mrt-orchard` (an MRT). `singapore` (default) = the whole island. To scope correctly you also need `query_type`  -  it is auto-derived from the id, so usually you can just pass `query_ids`.",
+          "example": "dtdistrict09"
+        }
+      },
+      {
+        "name": "query_type",
+        "in": "query",
+        "required": false,
+        "description": "The *kind* of place in `query_ids`. Optional  -  leave it blank and it is auto-derived from the id prefix (recommended; works for nearly every id). Override only if you need to, using the `type` from `/autocomplete`: `district`, `zone`, `subway_station`, `cluster` (a project, street or landed group), or `city`. Location scoping only takes effect once this is set or auto-derived.",
+        "schema": {
+          "type": "string",
+          "description": "The *kind* of place in `query_ids`. Optional  -  leave it blank and it is auto-derived from the id prefix (recommended; works for nearly every id). Override only if you need to, using the `type` from `/autocomplete`: `district`, `zone`, `subway_station`, `cluster` (a project, street or landed group), or `city`. Location scoping only takes effect once this is set or auto-derived.",
+          "example": ""
+        }
+      },
+      {
+        "name": "main_category",
+        "in": "query",
+        "required": false,
+        "description": "Property type. For sale: hdb, condo, landed. (Server-driven; varies by listing_type/segment.)",
+        "schema": {
+          "type": "string",
+          "description": "Property type. For sale: hdb, condo, landed. (Server-driven; varies by listing_type/segment.)",
+          "example": ""
+        }
+      },
+      {
+        "name": "sub_category",
+        "in": "query",
+        "required": false,
+        "description": "Finer property sub-type (server-driven).",
+        "schema": {
+          "type": "string",
+          "description": "Finer property sub-type (server-driven).",
+          "example": ""
+        }
+      },
+      {
+        "name": "property_segments",
+        "in": "query",
+        "required": false,
+        "description": "Property segment(s), comma-separated. One or more of: residential, commercial, industrial, land.",
+        "schema": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated. One or more of: residential, commercial, industrial, land.",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (S$).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (S$)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (S$).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (S$)."
+        }
+      },
+      {
+        "name": "rooms",
+        "in": "query",
+        "required": false,
+        "description": "Bedrooms range as `min,max` (e.g. `2,2` for exactly 2, `2,3` for 2 - 3). `0` = studio.",
+        "schema": {
+          "type": "string",
+          "description": "Bedrooms range as `min,max` (e.g. `2,2` for exactly 2, `2,3` for 2 - 3). `0` = studio.",
+          "example": "2,3"
+        }
+      },
+      {
+        "name": "bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "Bathrooms range as `min,max` (e.g. `2,2`).",
+        "schema": {
+          "type": "string",
+          "description": "Bathrooms range as `min,max` (e.g. `2,2`).",
+          "example": ""
+        }
+      },
+      {
+        "name": "furnishing",
+        "in": "query",
+        "required": false,
+        "description": "Furnishing filter (e.g. `fully`). Server-driven.",
+        "schema": {
+          "type": "string",
+          "description": "Furnishing filter (e.g. `fully`). Server-driven.",
+          "example": ""
+        }
+      },
+      {
+        "name": "tenure",
+        "in": "query",
+        "required": false,
+        "description": "Tenure range as `min,max` years (leasehold/freehold span).",
+        "schema": {
+          "type": "string",
+          "description": "Tenure range as `min,max` years (leasehold/freehold span).",
+          "example": ""
+        }
+      },
+      {
+        "name": "rental_type",
+        "in": "query",
+        "required": false,
+        "description": "Rental type, e.g. `room` for room rentals.",
+        "schema": {
+          "type": "string",
+          "description": "Rental type, e.g. `room` for room rentals.",
+          "example": ""
+        }
+      },
+      {
+        "name": "usp_tags",
+        "in": "query",
+        "required": false,
+        "description": "Unique-selling-point tags, comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Unique-selling-point tags, comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "query_coords",
+        "in": "query",
+        "required": false,
+        "description": "`lat,lng` centre point for a radius search.",
+        "schema": {
+          "type": "string",
+          "description": "`lat,lng` centre point for a radius search.",
+          "example": ""
+        }
+      },
+      {
+        "name": "radius_max",
+        "in": "query",
+        "required": false,
+        "description": "Radius bound (used with query_coords).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Radius bound (used with query_coords)."
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order: `relevance` (default) or `distance` (needs a point/area).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "distance"
+          ],
+          "description": "Sort order: `relevance` (default) or `distance` (needs a point/area).",
+          "example": "relevance"
+        }
+      },
+      {
+        "name": "page_num",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "description": "Search intent: `sale` or `rent`. Required.",
+          "example": "sale"
+        },
+        "query_ids": {
+          "type": "string",
+          "default": "singapore",
+          "description": "Location id(s) from `/autocomplete` (the `id` field), comma-separated  -  e.g. `dtdistrict09` (a district), `zoorchard` (an area), `sg-mrt-orchard` (an MRT). `singapore` (default) = the whole island. To scope correctly you also need `query_type`  -  it is auto-derived from the id, so usually you can just pass `query_ids`.",
+          "example": "dtdistrict09"
+        },
+        "query_type": {
+          "type": "string",
+          "description": "The *kind* of place in `query_ids`. Optional  -  leave it blank and it is auto-derived from the id prefix (recommended; works for nearly every id). Override only if you need to, using the `type` from `/autocomplete`: `district`, `zone`, `subway_station`, `cluster` (a project, street or landed group), or `city`. Location scoping only takes effect once this is set or auto-derived.",
+          "example": ""
+        },
+        "main_category": {
+          "type": "string",
+          "description": "Property type. For sale: hdb, condo, landed. (Server-driven; varies by listing_type/segment.)",
+          "example": ""
+        },
+        "sub_category": {
+          "type": "string",
+          "description": "Finer property sub-type (server-driven).",
+          "example": ""
+        },
+        "property_segments": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated. One or more of: residential, commercial, industrial, land.",
+          "example": "residential"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (S$)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (S$)."
+        },
+        "rooms": {
+          "type": "string",
+          "description": "Bedrooms range as `min,max` (e.g. `2,2` for exactly 2, `2,3` for 2 - 3). `0` = studio.",
+          "example": "2,3"
+        },
+        "bathrooms": {
+          "type": "string",
+          "description": "Bathrooms range as `min,max` (e.g. `2,2`).",
+          "example": ""
+        },
+        "furnishing": {
+          "type": "string",
+          "description": "Furnishing filter (e.g. `fully`). Server-driven.",
+          "example": ""
+        },
+        "tenure": {
+          "type": "string",
+          "description": "Tenure range as `min,max` years (leasehold/freehold span).",
+          "example": ""
+        },
+        "rental_type": {
+          "type": "string",
+          "description": "Rental type, e.g. `room` for room rentals.",
+          "example": ""
+        },
+        "usp_tags": {
+          "type": "string",
+          "description": "Unique-selling-point tags, comma-separated.",
+          "example": ""
+        },
+        "query_coords": {
+          "type": "string",
+          "description": "`lat,lng` centre point for a radius search.",
+          "example": ""
+        },
+        "radius_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Radius bound (used with query_coords)."
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "distance"
+          ],
+          "description": "Sort order: `relevance` (default) or `distance` (needs a point/area).",
+          "example": "relevance"
+        },
+        "page_num": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      },
+      "required": [
+        "listing_type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-count",
+    "method": "GET",
+    "path": "/search-count",
+    "summary": "/search-count",
+    "description": "Count listings matching filters (cheap).",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_type",
+        "in": "query",
+        "required": true,
+        "description": "Search intent: `sale` or `rent`. Required.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "description": "Search intent: `sale` or `rent`. Required.",
+          "example": "sale"
+        }
+      },
+      {
+        "name": "query_ids",
+        "in": "query",
+        "required": false,
+        "description": "Location id(s) from `/autocomplete` (the `id` field), comma-separated  -  e.g. `dtdistrict09` (a district), `zoorchard` (an area), `sg-mrt-orchard` (an MRT). `singapore` (default) = the whole island. To scope correctly you also need `query_type`  -  it is auto-derived from the id, so usually you can just pass `query_ids`.",
+        "schema": {
+          "type": "string",
+          "default": "singapore",
+          "description": "Location id(s) from `/autocomplete` (the `id` field), comma-separated  -  e.g. `dtdistrict09` (a district), `zoorchard` (an area), `sg-mrt-orchard` (an MRT). `singapore` (default) = the whole island. To scope correctly you also need `query_type`  -  it is auto-derived from the id, so usually you can just pass `query_ids`.",
+          "example": "dtdistrict09"
+        }
+      },
+      {
+        "name": "query_type",
+        "in": "query",
+        "required": false,
+        "description": "The *kind* of place in `query_ids`. Optional  -  leave it blank and it is auto-derived from the id prefix (recommended; works for nearly every id). Override only if you need to, using the `type` from `/autocomplete`: `district`, `zone`, `subway_station`, `cluster` (a project, street or landed group), or `city`. Location scoping only takes effect once this is set or auto-derived.",
+        "schema": {
+          "type": "string",
+          "description": "The *kind* of place in `query_ids`. Optional  -  leave it blank and it is auto-derived from the id prefix (recommended; works for nearly every id). Override only if you need to, using the `type` from `/autocomplete`: `district`, `zone`, `subway_station`, `cluster` (a project, street or landed group), or `city`. Location scoping only takes effect once this is set or auto-derived.",
+          "example": ""
+        }
+      },
+      {
+        "name": "main_category",
+        "in": "query",
+        "required": false,
+        "description": "Property type. For sale: hdb, condo, landed. (Server-driven; varies by listing_type/segment.)",
+        "schema": {
+          "type": "string",
+          "description": "Property type. For sale: hdb, condo, landed. (Server-driven; varies by listing_type/segment.)",
+          "example": ""
+        }
+      },
+      {
+        "name": "sub_category",
+        "in": "query",
+        "required": false,
+        "description": "Finer property sub-type (server-driven).",
+        "schema": {
+          "type": "string",
+          "description": "Finer property sub-type (server-driven).",
+          "example": ""
+        }
+      },
+      {
+        "name": "property_segments",
+        "in": "query",
+        "required": false,
+        "description": "Property segment(s), comma-separated. One or more of: residential, commercial, industrial, land.",
+        "schema": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated. One or more of: residential, commercial, industrial, land.",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (S$).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (S$)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (S$).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (S$)."
+        }
+      },
+      {
+        "name": "rooms",
+        "in": "query",
+        "required": false,
+        "description": "Bedrooms range as `min,max` (e.g. `2,2` for exactly 2, `2,3` for 2 - 3). `0` = studio.",
+        "schema": {
+          "type": "string",
+          "description": "Bedrooms range as `min,max` (e.g. `2,2` for exactly 2, `2,3` for 2 - 3). `0` = studio.",
+          "example": "2,3"
+        }
+      },
+      {
+        "name": "bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "Bathrooms range as `min,max` (e.g. `2,2`).",
+        "schema": {
+          "type": "string",
+          "description": "Bathrooms range as `min,max` (e.g. `2,2`).",
+          "example": ""
+        }
+      },
+      {
+        "name": "furnishing",
+        "in": "query",
+        "required": false,
+        "description": "Furnishing filter (e.g. `fully`). Server-driven.",
+        "schema": {
+          "type": "string",
+          "description": "Furnishing filter (e.g. `fully`). Server-driven.",
+          "example": ""
+        }
+      },
+      {
+        "name": "tenure",
+        "in": "query",
+        "required": false,
+        "description": "Tenure range as `min,max` years (leasehold/freehold span).",
+        "schema": {
+          "type": "string",
+          "description": "Tenure range as `min,max` years (leasehold/freehold span).",
+          "example": ""
+        }
+      },
+      {
+        "name": "rental_type",
+        "in": "query",
+        "required": false,
+        "description": "Rental type, e.g. `room` for room rentals.",
+        "schema": {
+          "type": "string",
+          "description": "Rental type, e.g. `room` for room rentals.",
+          "example": ""
+        }
+      },
+      {
+        "name": "usp_tags",
+        "in": "query",
+        "required": false,
+        "description": "Unique-selling-point tags, comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Unique-selling-point tags, comma-separated.",
+          "example": ""
+        }
+      },
+      {
+        "name": "query_coords",
+        "in": "query",
+        "required": false,
+        "description": "`lat,lng` centre point for a radius search.",
+        "schema": {
+          "type": "string",
+          "description": "`lat,lng` centre point for a radius search.",
+          "example": ""
+        }
+      },
+      {
+        "name": "radius_max",
+        "in": "query",
+        "required": false,
+        "description": "Radius bound (used with query_coords).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Radius bound (used with query_coords)."
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order: `relevance` (default) or `distance` (needs a point/area).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "distance"
+          ],
+          "description": "Sort order: `relevance` (default) or `distance` (needs a point/area).",
+          "example": "relevance"
+        }
+      },
+      {
+        "name": "page_num",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "description": "Search intent: `sale` or `rent`. Required.",
+          "example": "sale"
+        },
+        "query_ids": {
+          "type": "string",
+          "default": "singapore",
+          "description": "Location id(s) from `/autocomplete` (the `id` field), comma-separated  -  e.g. `dtdistrict09` (a district), `zoorchard` (an area), `sg-mrt-orchard` (an MRT). `singapore` (default) = the whole island. To scope correctly you also need `query_type`  -  it is auto-derived from the id, so usually you can just pass `query_ids`.",
+          "example": "dtdistrict09"
+        },
+        "query_type": {
+          "type": "string",
+          "description": "The *kind* of place in `query_ids`. Optional  -  leave it blank and it is auto-derived from the id prefix (recommended; works for nearly every id). Override only if you need to, using the `type` from `/autocomplete`: `district`, `zone`, `subway_station`, `cluster` (a project, street or landed group), or `city`. Location scoping only takes effect once this is set or auto-derived.",
+          "example": ""
+        },
+        "main_category": {
+          "type": "string",
+          "description": "Property type. For sale: hdb, condo, landed. (Server-driven; varies by listing_type/segment.)",
+          "example": ""
+        },
+        "sub_category": {
+          "type": "string",
+          "description": "Finer property sub-type (server-driven).",
+          "example": ""
+        },
+        "property_segments": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated. One or more of: residential, commercial, industrial, land.",
+          "example": "residential"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (S$)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (S$)."
+        },
+        "rooms": {
+          "type": "string",
+          "description": "Bedrooms range as `min,max` (e.g. `2,2` for exactly 2, `2,3` for 2 - 3). `0` = studio.",
+          "example": "2,3"
+        },
+        "bathrooms": {
+          "type": "string",
+          "description": "Bathrooms range as `min,max` (e.g. `2,2`).",
+          "example": ""
+        },
+        "furnishing": {
+          "type": "string",
+          "description": "Furnishing filter (e.g. `fully`). Server-driven.",
+          "example": ""
+        },
+        "tenure": {
+          "type": "string",
+          "description": "Tenure range as `min,max` years (leasehold/freehold span).",
+          "example": ""
+        },
+        "rental_type": {
+          "type": "string",
+          "description": "Rental type, e.g. `room` for room rentals.",
+          "example": ""
+        },
+        "usp_tags": {
+          "type": "string",
+          "description": "Unique-selling-point tags, comma-separated.",
+          "example": ""
+        },
+        "query_coords": {
+          "type": "string",
+          "description": "`lat,lng` centre point for a radius search.",
+          "example": ""
+        },
+        "radius_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Radius bound (used with query_coords)."
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "distance"
+          ],
+          "description": "Sort order: `relevance` (default) or `distance` (needs a point/area).",
+          "example": "relevance"
+        },
+        "page_num": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      },
+      "required": [
+        "listing_type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details",
+    "method": "GET",
+    "path": "/listing-details",
+    "summary": "/listing-details",
+    "description": "Full listing detail by id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Id of a single property listing (opaque base62, e.g. `ETiouv2zEQGYGALYKoVp5z`). Get one from a `/search-property` result (`listings[].id`) or `/similar-listings`. (`/autocomplete` does not return listing ids.)",
+        "schema": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a single property listing (opaque base62, e.g. `ETiouv2zEQGYGALYKoVp5z`). Get one from a `/search-property` result (`listings[].id`) or `/similar-listings`. (`/autocomplete` does not return listing ids.)",
+          "example": "ETiouv2zEQGYGALYKoVp5z"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a single property listing (opaque base62, e.g. `ETiouv2zEQGYGALYKoVp5z`). Get one from a `/search-property` result (`listings[].id`) or `/similar-listings`. (`/autocomplete` does not return listing ids.)",
+          "example": "ETiouv2zEQGYGALYKoVp5z"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-details-by-url",
+    "method": "GET",
+    "path": "/listing-details-by-url",
+    "summary": "/listing-details-by-url",
+    "description": "Listing detail from a 99.co listing URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A 99.co listing URL. The listing id is read from the end of the URL automatically.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A 99.co listing URL. The listing id is read from the end of the URL automatically.",
+          "example": "https://www.99.co/singapore/sale/property/watten-estate-landed-kBcf82h62LbAoJRVbi9ggw"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A 99.co listing URL. The listing id is read from the end of the URL automatically.",
+          "example": "https://www.99.co/singapore/sale/property/watten-estate-landed-kBcf82h62LbAoJRVbi9ggw"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-listings",
+    "method": "GET",
+    "path": "/similar-listings",
+    "summary": "/similar-listings",
+    "description": "Comparable listings for a given listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Id of a single property listing (opaque base62, e.g. `ETiouv2zEQGYGALYKoVp5z`). Get one from a `/search-property` result (`listings[].id`) or `/similar-listings`. (`/autocomplete` does not return listing ids.)",
+        "schema": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a single property listing (opaque base62, e.g. `ETiouv2zEQGYGALYKoVp5z`). Get one from a `/search-property` result (`listings[].id`) or `/similar-listings`. (`/autocomplete` does not return listing ids.)",
+          "example": "ETiouv2zEQGYGALYKoVp5z"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a single property listing (opaque base62, e.g. `ETiouv2zEQGYGALYKoVp5z`). Get one from a `/search-property` result (`listings[].id`) or `/similar-listings`. (`/autocomplete` does not return listing ids.)",
+          "example": "ETiouv2zEQGYGALYKoVp5z"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_new-projects",
+    "method": "GET",
+    "path": "/new-projects",
+    "summary": "/new-projects",
+    "description": "Browse new-launch & upcoming developments (newly launched / under-construction projects) with price ranges + latest transactions. Pass a returned project id to /project-details. (For an existing development, find its id via /autocomplete.)",
+    "tags": [
+      "Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_type",
+        "in": "query",
+        "required": false,
+        "description": "Intent for the new-launch projects: `sale` (default) or `rent`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale",
+          "description": "Intent for the new-launch projects: `sale` (default) or `rent`.",
+          "example": "sale"
+        }
+      },
+      {
+        "name": "query_ids",
+        "in": "query",
+        "required": false,
+        "description": "Optional location id to scope the results to a district/area/region  -  the `id` of a *location* result from `/autocomplete` (e.g. `dtdistrict09`), comma-separated. Omit for all of Singapore.",
+        "schema": {
+          "type": "string",
+          "description": "Optional location id to scope the results to a district/area/region  -  the `id` of a *location* result from `/autocomplete` (e.g. `dtdistrict09`), comma-separated. Omit for all of Singapore.",
+          "example": ""
+        }
+      },
+      {
+        "name": "item_offset",
+        "in": "query",
+        "required": false,
+        "description": "Pagination offset (number of projects to skip).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Pagination offset (number of projects to skip).",
+          "example": 0
+        }
+      },
+      {
+        "name": "item_limit",
+        "in": "query",
+        "required": false,
+        "description": "Projects per page (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Projects per page (1 - 50).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale",
+          "description": "Intent for the new-launch projects: `sale` (default) or `rent`.",
+          "example": "sale"
+        },
+        "query_ids": {
+          "type": "string",
+          "description": "Optional location id to scope the results to a district/area/region  -  the `id` of a *location* result from `/autocomplete` (e.g. `dtdistrict09`), comma-separated. Omit for all of Singapore.",
+          "example": ""
+        },
+        "item_offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Pagination offset (number of projects to skip).",
+          "example": 0
+        },
+        "item_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Projects per page (1 - 50).",
+          "example": 20
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-details",
+    "method": "GET",
+    "path": "/project-details",
+    "summary": "/project-details",
+    "description": "Full detail for one project by its id  -  key facts, description, facilities, floor plans, and the active sale & rent units within it.",
+    "tags": [
+      "Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "cluster_id",
+        "in": "query",
+        "required": true,
+        "description": "Id of a project / development (opaque base62, e.g. `deGCf9CT83sWPVxWaGQGy7w5`). Get one from `/autocomplete` (a Project result  -  `type: cluster`), `/new-projects` (`projects[].id`), or any listing's `clusterId`.",
+        "schema": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a project / development (opaque base62, e.g. `deGCf9CT83sWPVxWaGQGy7w5`). Get one from `/autocomplete` (a Project result  -  `type: cluster`), `/new-projects` (`projects[].id`), or any listing's `clusterId`.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "cluster_id": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a project / development (opaque base62, e.g. `deGCf9CT83sWPVxWaGQGy7w5`). Get one from `/autocomplete` (a Project result  -  `type: cluster`), `/new-projects` (`projects[].id`), or any listing's `clusterId`.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      },
+      "required": [
+        "cluster_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-details-by-url",
+    "method": "GET",
+    "path": "/project-details-by-url",
+    "summary": "/project-details-by-url",
+    "description": "Same as /project-details, but resolved from a 99.co project URL.",
+    "tags": [
+      "Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A 99.co project/development URL ending in its id. The id is read from the URL automatically.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A 99.co project/development URL ending in its id. The id is read from the URL automatically.",
+          "example": "https://www.99.co/singapore/landed/watten-estate-deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A 99.co project/development URL ending in its id. The id is read from the URL automatically.",
+          "example": "https://www.99.co/singapore/landed/watten-estate-deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-nearby",
+    "method": "GET",
+    "path": "/project-nearby",
+    "summary": "/project-nearby",
+    "description": "Nearby amenities for a project (MRT, schools, supermarkets, parks…) with walk/drive/taxi commute times.",
+    "tags": [
+      "Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "cluster_id",
+        "in": "query",
+        "required": true,
+        "description": "Id of a project / development (opaque base62, e.g. `deGCf9CT83sWPVxWaGQGy7w5`). Get one from `/autocomplete` (a Project result  -  `type: cluster`), `/new-projects` (`projects[].id`), or any listing's `clusterId`.",
+        "schema": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a project / development (opaque base62, e.g. `deGCf9CT83sWPVxWaGQGy7w5`). Get one from `/autocomplete` (a Project result  -  `type: cluster`), `/new-projects` (`projects[].id`), or any listing's `clusterId`.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "cluster_id": {
+          "type": "string",
+          "minLength": 6,
+          "description": "Id of a project / development (opaque base62, e.g. `deGCf9CT83sWPVxWaGQGy7w5`). Get one from `/autocomplete` (a Project result  -  `type: cluster`), `/new-projects` (`projects[].id`), or any listing's `clusterId`.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      },
+      "required": [
+        "cluster_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_transactions",
+    "method": "GET",
+    "path": "/transactions",
+    "summary": "/transactions",
+    "description": "Sold/rent transaction history for a project, area or district.",
+    "tags": [
+      "Transactions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query_ids",
+        "in": "query",
+        "required": true,
+        "description": "Location id from `/autocomplete`  -  a project (`de…`), area (`zo…`) or district (`dtdistrict…`). The whole-Singapore scope is not supported here. Required.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Location id from `/autocomplete`  -  a project (`de…`), area (`zo…`) or district (`dtdistrict…`). The whole-Singapore scope is not supported here. Required.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      },
+      {
+        "name": "query_type",
+        "in": "query",
+        "required": false,
+        "description": "The kind of location in `query_ids` (`cluster` for a project, `district`, `zone`). Leave blank to auto-derive it from the id.",
+        "schema": {
+          "type": "string",
+          "description": "The kind of location in `query_ids` (`cluster` for a project, `district`, `zone`). Leave blank to auto-derive it from the id.",
+          "example": ""
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Transaction intent: `sale` (sold/caveat prices) or `rent` (rental contracts).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale",
+          "description": "Transaction intent: `sale` (sold/caveat prices) or `rent` (rental contracts).",
+          "example": "sale"
+        }
+      },
+      {
+        "name": "property_segments",
+        "in": "query",
+        "required": false,
+        "description": "Property segment(s), comma-separated: residential, commercial, industrial, land.",
+        "schema": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated: residential, commercial, industrial, land.",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "page_num",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed; 20 transactions per page).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed; 20 transactions per page).",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query_ids": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Location id from `/autocomplete`  -  a project (`de…`), area (`zo…`) or district (`dtdistrict…`). The whole-Singapore scope is not supported here. Required.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        },
+        "query_type": {
+          "type": "string",
+          "description": "The kind of location in `query_ids` (`cluster` for a project, `district`, `zone`). Leave blank to auto-derive it from the id.",
+          "example": ""
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale",
+          "description": "Transaction intent: `sale` (sold/caveat prices) or `rent` (rental contracts).",
+          "example": "sale"
+        },
+        "property_segments": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated: residential, commercial, industrial, land.",
+          "example": "residential"
+        },
+        "page_num": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 1,
+          "description": "Page number (1-indexed; 20 transactions per page).",
+          "example": 1
+        }
+      },
+      "required": [
+        "query_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_transaction-trends",
+    "method": "GET",
+    "path": "/transaction-trends",
+    "summary": "/transaction-trends",
+    "description": "Price trend + summary stats for a project, area or district.",
+    "tags": [
+      "Transactions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query_ids",
+        "in": "query",
+        "required": true,
+        "description": "Location id from `/autocomplete`  -  a project (`de…`), area (`zo…`) or district (`dtdistrict…`). The whole-Singapore scope is not supported here. Required.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Location id from `/autocomplete`  -  a project (`de…`), area (`zo…`) or district (`dtdistrict…`). The whole-Singapore scope is not supported here. Required.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        }
+      },
+      {
+        "name": "query_type",
+        "in": "query",
+        "required": false,
+        "description": "The kind of location in `query_ids` (`cluster` for a project, `district`, `zone`). Leave blank to auto-derive it from the id.",
+        "schema": {
+          "type": "string",
+          "description": "The kind of location in `query_ids` (`cluster` for a project, `district`, `zone`). Leave blank to auto-derive it from the id.",
+          "example": ""
+        }
+      },
+      {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "description": "Transaction intent: `sale` (sold/caveat prices) or `rent` (rental contracts).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale",
+          "description": "Transaction intent: `sale` (sold/caveat prices) or `rent` (rental contracts).",
+          "example": "sale"
+        }
+      },
+      {
+        "name": "property_segments",
+        "in": "query",
+        "required": false,
+        "description": "Property segment(s), comma-separated: residential, commercial, industrial, land.",
+        "schema": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated: residential, commercial, industrial, land.",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "time_frame",
+        "in": "query",
+        "required": false,
+        "description": "Trend window: `10y`, `5y`, `1y`, `6m`, `3m` or `1m`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "10y",
+            "5y",
+            "1y",
+            "6m",
+            "3m",
+            "1m"
+          ],
+          "default": "5y",
+          "description": "Trend window: `10y`, `5y`, `1y`, `6m`, `3m` or `1m`.",
+          "example": "5y"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query_ids": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Location id from `/autocomplete`  -  a project (`de…`), area (`zo…`) or district (`dtdistrict…`). The whole-Singapore scope is not supported here. Required.",
+          "example": "deGCf9CT83sWPVxWaGQGy7w5"
+        },
+        "query_type": {
+          "type": "string",
+          "description": "The kind of location in `query_ids` (`cluster` for a project, `district`, `zone`). Leave blank to auto-derive it from the id.",
+          "example": ""
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale",
+          "description": "Transaction intent: `sale` (sold/caveat prices) or `rent` (rental contracts).",
+          "example": "sale"
+        },
+        "property_segments": {
+          "type": "string",
+          "default": "residential",
+          "description": "Property segment(s), comma-separated: residential, commercial, industrial, land.",
+          "example": "residential"
+        },
+        "time_frame": {
+          "type": "string",
+          "enum": [
+            "10y",
+            "5y",
+            "1y",
+            "6m",
+            "3m",
+            "1m"
+          ],
+          "default": "5y",
+          "description": "Trend window: `10y`, `5y`, `1y`, `6m`, `3m` or `1m`.",
+          "example": "5y"
+        }
+      },
+      "required": [
+        "query_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agents",
+    "method": "GET",
+    "path": "/agents",
+    "summary": "/agents",
+    "description": "Search the agent directory (name, agency, contact, listing/transaction counts).",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "search",
+        "in": "query",
+        "required": false,
+        "description": "Name / keyword to search agents by. Omit to browse the whole directory (28k+ agents).",
+        "schema": {
+          "type": "string",
+          "description": "Name / keyword to search agents by. Omit to browse the whole directory (28k+ agents).",
+          "example": "tan"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "search": {
+          "type": "string",
+          "description": "Name / keyword to search agents by. Omit to browse the whole directory (28k+ agents).",
+          "example": "tan"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000,
+          "default": 1,
+          "description": "Page number (1-indexed).",
+          "example": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20,
+          "description": "Results per page (1 - 50).",
+          "example": 20
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agent-details",
+    "method": "GET",
+    "path": "/agent-details",
+    "summary": "/agent-details",
+    "description": "Full public agent profile (contact, agency, listings breakdown).",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "Agent profile slug (from `/agents` `slug`/`profileUrl`), e.g. `R017619F-lee-ling-dorris-tan`. A full 99.co agent profile URL also works  -  the slug is read off the end. Note: this is the URL slug, NOT the agent `id` token.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Agent profile slug (from `/agents` `slug`/`profileUrl`), e.g. `R017619F-lee-ling-dorris-tan`. A full 99.co agent profile URL also works  -  the slug is read off the end. Note: this is the URL slug, NOT the agent `id` token.",
+          "example": "R017619F-lee-ling-dorris-tan"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Agent profile slug (from `/agents` `slug`/`profileUrl`), e.g. `R017619F-lee-ling-dorris-tan`. A full 99.co agent profile URL also works  -  the slug is read off the end. Note: this is the URL slug, NOT the agent `id` token.",
+          "example": "R017619F-lee-ling-dorris-tan"
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_autocomplete",
+    "method": "GET",
+    "path": "/autocomplete",
+    "summary": "/autocomplete",
+    "description": "Find location & project ids to search by.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search term  -  a location, MRT, district, area, street or project name.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search term  -  a location, MRT, district, area, street or project name.",
+          "example": "orchard"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search term  -  a location, MRT, district, area, street or project name.",
+          "example": "orchard"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

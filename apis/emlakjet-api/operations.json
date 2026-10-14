@@ -1,0 +1,1164 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-property",
+    "method": "GET",
+    "path": "/search-property",
+    "summary": "/search-property",
+    "description": "Search Türkiye property listings with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "trade_type",
+        "in": "query",
+        "required": false,
+        "description": "- Trade type slug: `satilik` (sale), `kiralik` (rent), `gunluk-kiralik` (daily rent), `devren` (transfer), `kat-karsiligi` (land-for-flats).\n- get it from the \"/categories\" endpoint, the \"tradeTypeSlug\"",
+        "schema": {
+          "type": "string",
+          "default": "satilik",
+          "description": "- Trade type slug: `satilik` (sale), `kiralik` (rent), `gunluk-kiralik` (daily rent), `devren` (transfer), `kat-karsiligi` (land-for-flats).\n- get it from the \"/categories\" endpoint, the \"tradeTypeSlug\"",
+          "example": "satilik"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Category slug: konut (residential), isyeri (commercial), arsa (land), turistik-tesis (tourism). See /categories.",
+        "schema": {
+          "type": "string",
+          "default": "konut",
+          "description": "Category slug: konut (residential), isyeri (commercial), arsa (land), turistik-tesis (tourism). See /categories.",
+          "example": "konut"
+        }
+      },
+      {
+        "name": "estate_type",
+        "in": "query",
+        "required": false,
+        "description": "Estate-type slug, e.g. daire, villa, mustakil-ev, residence (optional; see /categories).",
+        "schema": {
+          "type": "string",
+          "description": "Estate-type slug, e.g. daire, villa, mustakil-ev, residence (optional; see /categories).",
+          "example": "daire"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City slug (e.g. istanbul) or numeric id (from /cities).",
+        "schema": {
+          "type": "string",
+          "description": "City slug (e.g. istanbul) or numeric id (from /cities).",
+          "example": "istanbul"
+        }
+      },
+      {
+        "name": "districts",
+        "in": "query",
+        "required": false,
+        "description": "District slugs or names within the city, e.g. kadikoy or istanbul-kadikoy (from /districts). Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "District slugs or names within the city, e.g. kadikoy or istanbul-kadikoy (from /districts). Comma-separated.",
+          "example": "kadikoy"
+        }
+      },
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": false,
+        "description": "Free-text keyword. Valid as the sole criterion (no category needed).",
+        "schema": {
+          "type": "string",
+          "description": "Free-text keyword. Valid as the sole criterion (no category needed).",
+          "example": ""
+        }
+      },
+      {
+        "name": "rooms",
+        "in": "query",
+        "required": false,
+        "description": "Room layouts, e.g. 2+1,3+1 (also studyo, 1+1, 4+2). Applies to residential. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Room layouts, e.g. 2+1,3+1 (also studyo, 1+1, 4+2). Applies to residential. Comma-separated.",
+          "example": "2+1,3+1"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price (TRY).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (TRY)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price (TRY).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (TRY)."
+        }
+      },
+      {
+        "name": "sqm_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum gross area (m²).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum gross area (m²)."
+        }
+      },
+      {
+        "name": "sqm_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum gross area (m²).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum gross area (m²)."
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: recommended, price_high_to_low, price_low_to_high, newest.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_high_to_low",
+            "price_low_to_high",
+            "newest"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, price_high_to_low, price_low_to_high, newest.",
+          "example": "recommended"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 1,
+          "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+          "example": 1
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "Advanced: a JSON array of extra filter groups merged verbatim into the search, e.g. `[{\"key\":\"heating_type\",\"value\":[{\"id\":\"5\"}]}]`. Discover keys/values via /search-filters.",
+        "schema": {
+          "type": "string",
+          "description": "Advanced: a JSON array of extra filter groups merged verbatim into the search, e.g. `[{\"key\":\"heating_type\",\"value\":[{\"id\":\"5\"}]}]`. Discover keys/values via /search-filters."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "trade_type": {
+          "type": "string",
+          "default": "satilik",
+          "description": "- Trade type slug: `satilik` (sale), `kiralik` (rent), `gunluk-kiralik` (daily rent), `devren` (transfer), `kat-karsiligi` (land-for-flats).\n- get it from the \"/categories\" endpoint, the \"tradeTypeSlug\"",
+          "example": "satilik"
+        },
+        "category": {
+          "type": "string",
+          "default": "konut",
+          "description": "Category slug: konut (residential), isyeri (commercial), arsa (land), turistik-tesis (tourism). See /categories.",
+          "example": "konut"
+        },
+        "estate_type": {
+          "type": "string",
+          "description": "Estate-type slug, e.g. daire, villa, mustakil-ev, residence (optional; see /categories).",
+          "example": "daire"
+        },
+        "city": {
+          "type": "string",
+          "description": "City slug (e.g. istanbul) or numeric id (from /cities).",
+          "example": "istanbul"
+        },
+        "districts": {
+          "type": "string",
+          "description": "District slugs or names within the city, e.g. kadikoy or istanbul-kadikoy (from /districts). Comma-separated.",
+          "example": "kadikoy"
+        },
+        "keyword": {
+          "type": "string",
+          "description": "Free-text keyword. Valid as the sole criterion (no category needed).",
+          "example": ""
+        },
+        "rooms": {
+          "type": "string",
+          "description": "Room layouts, e.g. 2+1,3+1 (also studyo, 1+1, 4+2). Applies to residential. Comma-separated.",
+          "example": "2+1,3+1"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price (TRY)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price (TRY)."
+        },
+        "sqm_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum gross area (m²)."
+        },
+        "sqm_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum gross area (m²)."
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_high_to_low",
+            "price_low_to_high",
+            "newest"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, price_high_to_low, price_low_to_high, newest.",
+          "example": "recommended"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 1,
+          "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+          "example": 1
+        },
+        "filters": {
+          "type": "string",
+          "description": "Advanced: a JSON array of extra filter groups merged verbatim into the search, e.g. `[{\"key\":\"heating_type\",\"value\":[{\"id\":\"5\"}]}]`. Discover keys/values via /search-filters."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-url",
+    "method": "GET",
+    "path": "/search-by-url",
+    "summary": "/search-by-url",
+    "description": "Run a search from an Emlakjet search URL.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "An Emlakjet search/results URL (or path). The encoded category + location are resolved and the matching listings are returned.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An Emlakjet search/results URL (or path). The encoded category + location are resolved and the matching listings are returned.",
+          "example": "https://www.emlakjet.com/satilik-konut/istanbul-kadikoy"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 1,
+          "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An Emlakjet search/results URL (or path). The encoded category + location are resolved and the matching listings are returned.",
+          "example": "https://www.emlakjet.com/satilik-konut/istanbul-kadikoy"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 1,
+          "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+          "example": 1
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "/property-details",
+    "description": "Full listing detail by id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details-by-url",
+    "method": "GET",
+    "path": "/property-details-by-url",
+    "summary": "/property-details-by-url",
+    "description": "Listing detail from a listing URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "An Emlakjet listing detail URL. The listing id is read from the URL.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An Emlakjet listing detail URL. The listing id is read from the URL.",
+          "example": "https://www.emlakjet.com/ilan/atasehir-gardenya-1de-satilik-3-1-daire-19478566/"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "An Emlakjet listing detail URL. The listing id is read from the URL.",
+          "example": "https://www.emlakjet.com/ilan/atasehir-gardenya-1de-satilik-3-1-daire-19478566/"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-listings",
+    "method": "GET",
+    "path": "/similar-listings",
+    "summary": "/similar-listings",
+    "description": "Listings similar to a given listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Max similar listings to return (1 - 20, default 8). Emlakjet serves at most 20  -  and silently returns an empty list for anything higher, so values above 20 are rejected here.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 8,
+          "description": "Max similar listings to return (1 - 20, default 8). Emlakjet serves at most 20  -  and silently returns an empty list for anything higher, so values above 20 are rejected here.",
+          "example": 8
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "default": 8,
+          "description": "Max similar listings to return (1 - 20, default 8). Emlakjet serves at most 20  -  and silently returns an empty list for anything higher, so values above 20 are rejected here.",
+          "example": 8
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_price-history",
+    "method": "GET",
+    "path": "/price-history",
+    "summary": "/price-history",
+    "description": "Price-change history for a listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_nearby-places",
+    "method": "GET",
+    "path": "/nearby-places",
+    "summary": "/nearby-places",
+    "description": "Points of interest near a listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Max POIs per category (1 - 50).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Max POIs per category (1 - 50).",
+          "example": 10
+        }
+      },
+      {
+        "name": "categories",
+        "in": "query",
+        "required": false,
+        "description": "Restrict to POI categories (optional; omit for all). Accepts readable keys  -  MALL, SCHOOL, AMUSEMENT, RELIGIOUS, CAFE_RESTAURANT, CULTURAL_ACTIVITY, MARKET, HEALTH, SPORTS, HISTORY, TRANSPORTATION, RESIDENCE, COMMERCIAL_FIELD, FOOD_CATERING  -  or their numeric ids (1 - 14). Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Restrict to POI categories (optional; omit for all). Accepts readable keys  -  MALL, SCHOOL, AMUSEMENT, RELIGIOUS, CAFE_RESTAURANT, CULTURAL_ACTIVITY, MARKET, HEALTH, SPORTS, HISTORY, TRANSPORTATION, RESIDENCE, COMMERCIAL_FIELD, FOOD_CATERING  -  or their numeric ids (1 - 14). Comma-separated.",
+          "example": "MALL,TRANSPORTATION"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 10,
+          "description": "Max POIs per category (1 - 50).",
+          "example": 10
+        },
+        "categories": {
+          "type": "string",
+          "description": "Restrict to POI categories (optional; omit for all). Accepts readable keys  -  MALL, SCHOOL, AMUSEMENT, RELIGIOUS, CAFE_RESTAURANT, CULTURAL_ACTIVITY, MARKET, HEALTH, SPORTS, HISTORY, TRANSPORTATION, RESIDENCE, COMMERCIAL_FIELD, FOOD_CATERING  -  or their numeric ids (1 - 14). Comma-separated.",
+          "example": "MALL,TRANSPORTATION"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_area-demographics",
+    "method": "GET",
+    "path": "/area-demographics",
+    "summary": "/area-demographics",
+    "description": "Neighborhood demographics for a listing’s area.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "Emlakjet listing id (numeric, e.g. `19478566`). Get one from any search result.",
+          "example": "19478566"
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_locations-autocomplete",
+    "method": "GET",
+    "path": "/locations-autocomplete",
+    "summary": "/locations-autocomplete",
+    "description": "Find location slugs / POIs for searching.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search text (city / district / neighborhood / street / POI name). Returns matching locations and nearby POIs, each with the slug to feed into /search-property (city, districts) or the ready-made url for /search-by-url.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search text (city / district / neighborhood / street / POI name). Returns matching locations and nearby POIs, each with the slug to feed into /search-property (city, districts) or the ready-made url for /search-by-url.",
+          "example": "kadıköy"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search text (city / district / neighborhood / street / POI name). Returns matching locations and nearby POIs, each with the slug to feed into /search-property (city, districts) or the ready-made url for /search-by-url.",
+          "example": "kadıköy"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_cities",
+    "method": "GET",
+    "path": "/cities",
+    "summary": "/cities",
+    "description": "All 81 Turkish provinces with ids.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_districts",
+    "method": "GET",
+    "path": "/districts",
+    "summary": "/districts",
+    "description": "Districts of a city.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "city_id",
+        "in": "query",
+        "required": true,
+        "description": "Numeric city id (from /cities), e.g. 34 for İstanbul.",
+        "schema": {
+          "type": "integer",
+          "description": "Numeric city id (from /cities), e.g. 34 for İstanbul.",
+          "example": 34,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city_id": {
+          "type": "integer",
+          "description": "Numeric city id (from /cities), e.g. 34 for İstanbul.",
+          "example": 34,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "city_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_neighborhoods",
+    "method": "GET",
+    "path": "/neighborhoods",
+    "summary": "/neighborhoods",
+    "description": "Neighborhoods (mahalle) of districts.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "district_ids",
+        "in": "query",
+        "required": false,
+        "description": "Numeric district ids (from /districts), comma-separated, e.g. 2049,2050. Comma-separated.",
+        "schema": {
+          "type": "string",
+          "description": "Numeric district ids (from /districts), comma-separated, e.g. 2049,2050. Comma-separated.",
+          "example": "2049"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "district_ids": {
+          "type": "string",
+          "description": "Numeric district ids (from /districts), comma-separated, e.g. 2049,2050. Comma-separated.",
+          "example": "2049"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_categories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "/categories",
+    "description": "Full category taxonomy (tradeType/category/estateType).",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-filters",
+    "method": "GET",
+    "path": "/search-filters",
+    "summary": "/search-filters",
+    "description": "Filter taxonomy / valid filter values for a category.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "Category id (from /categories), e.g. 2 for konut (residential).",
+        "schema": {
+          "type": "integer",
+          "description": "Category id (from /categories), e.g. 2 for konut (residential).",
+          "example": 2,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "trade_type_id",
+        "in": "query",
+        "required": true,
+        "description": "Trade-type id (from /categories), e.g. 2 for satilik-konut, 6 for kiralik-konut.",
+        "schema": {
+          "type": "integer",
+          "description": "Trade-type id (from /categories), e.g. 2 for satilik-konut, 6 for kiralik-konut.",
+          "example": 2,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "estate_type_id",
+        "in": "query",
+        "required": false,
+        "description": "Optional estate-type id, e.g. 19 for daire.",
+        "schema": {
+          "type": "integer",
+          "description": "Optional estate-type id, e.g. 19 for daire.",
+          "example": 19,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "Category id (from /categories), e.g. 2 for konut (residential).",
+          "example": 2,
+          "exclusiveMinimum": 0
+        },
+        "trade_type_id": {
+          "type": "integer",
+          "description": "Trade-type id (from /categories), e.g. 2 for satilik-konut, 6 for kiralik-konut.",
+          "example": 2,
+          "exclusiveMinimum": 0
+        },
+        "estate_type_id": {
+          "type": "integer",
+          "description": "Optional estate-type id, e.g. 19 for daire.",
+          "example": 19,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "category_id",
+        "trade_type_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agents-autocomplete",
+    "method": "GET",
+    "path": "/agents-autocomplete",
+    "summary": "/agents-autocomplete",
+    "description": "Find real-estate agencies/offices.",
+    "tags": [
+      "Agencies & Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Agency/office name to search. Returns accountId + slug to use with /agency-listings.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Agency/office name to search. Returns accountId + slug to use with /agency-listings.",
+          "example": "turyap"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Agency/office name to search. Returns accountId + slug to use with /agency-listings.",
+          "example": "turyap"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agency-listings",
+    "method": "GET",
+    "path": "/agency-listings",
+    "summary": "/agency-listings",
+    "description": "Agency profile + its active listings.",
+    "tags": [
+      "Agencies & Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "account_id",
+        "in": "query",
+        "required": true,
+        "description": "Agency account id (from /agents-autocomplete).",
+        "schema": {
+          "type": "integer",
+          "description": "Agency account id (from /agents-autocomplete).",
+          "example": 1577571,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "account_slug",
+        "in": "query",
+        "required": true,
+        "description": "Agency slug (from /agents-autocomplete). Required together with account_id.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Agency slug (from /agents-autocomplete). Required together with account_id.",
+          "example": "turyap-olive"
+        }
+      },
+      {
+        "name": "trade_type",
+        "in": "query",
+        "required": false,
+        "description": "Optional: narrow to a trade type slug (satilik, kiralik…). Omit for all.",
+        "schema": {
+          "type": "string",
+          "description": "Optional: narrow to a trade type slug (satilik, kiralik…). Omit for all.",
+          "example": ""
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Optional: narrow to a category slug (konut, isyeri…). Requires trade_type.",
+        "schema": {
+          "type": "string",
+          "description": "Optional: narrow to a category slug (konut, isyeri…). Requires trade_type.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: recommended, price_high_to_low, price_low_to_high, newest.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_high_to_low",
+            "price_low_to_high",
+            "newest"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, price_high_to_low, price_low_to_high, newest.",
+          "example": "recommended"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 1,
+          "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "integer",
+          "description": "Agency account id (from /agents-autocomplete).",
+          "example": 1577571,
+          "exclusiveMinimum": 0
+        },
+        "account_slug": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Agency slug (from /agents-autocomplete). Required together with account_id.",
+          "example": "turyap-olive"
+        },
+        "trade_type": {
+          "type": "string",
+          "description": "Optional: narrow to a trade type slug (satilik, kiralik…). Omit for all.",
+          "example": ""
+        },
+        "category": {
+          "type": "string",
+          "description": "Optional: narrow to a category slug (konut, isyeri…). Requires trade_type.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_high_to_low",
+            "price_low_to_high",
+            "newest"
+          ],
+          "default": "recommended",
+          "description": "Sort order. One of: recommended, price_high_to_low, price_low_to_high, newest.",
+          "example": "recommended"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 1,
+          "description": "Page number (1-indexed). Each page contains 24 listings. Searches return up to 50 pages (approximately 1,200 matching properties) per query. To discover additional listings, refine your search using filters such as district, price range, property type, or room count.",
+          "example": 1
+        }
+      },
+      "required": [
+        "account_id",
+        "account_slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-details",
+    "method": "GET",
+    "path": "/project-details",
+    "summary": "/project-details",
+    "description": "New-construction project detail.",
+    "tags": [
+      "Agencies & Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "New-construction project slug (e.g. `zen-life-konutlari`). Found in a search result’s `projects[]` or via /project-search.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "New-construction project slug (e.g. `zen-life-konutlari`). Found in a search result’s `projects[]` or via /project-search.",
+          "example": "zen-life-konutlari"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "description": "New-construction project slug (e.g. `zen-life-konutlari`). Found in a search result’s `projects[]` or via /project-search.",
+          "example": "zen-life-konutlari"
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_project-search",
+    "method": "GET",
+    "path": "/project-search",
+    "summary": "/project-search",
+    "description": "Find new-construction projects/developers.",
+    "tags": [
+      "Agencies & Projects"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Text to match against new-construction projects, developers, and locations.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Text to match against new-construction projects, developers, and locations.",
+          "example": "istanbul"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Text to match against new-construction projects, developers, and locations.",
+          "example": "istanbul"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

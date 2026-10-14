@@ -1,0 +1,3218 @@
+[
+  {
+    "id": "Auto_Complete",
+    "method": "GET",
+    "path": "/auto-complete",
+    "summary": "Get Location Suggestion",
+    "description": "Returns autocomplete location suggestions based on partial input.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Search query for location suggestions (e.g., 'Leeds', 'Manchester')",
+          "example": "london"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10,
+          "description": "Maximum number of suggestions to return",
+          "example": 10
+        }
+      },
+      {
+        "name": "exclude",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Category to exclude from suggestions (e.g., 'STREET')",
+          "example": "STREET"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Search query for location suggestions (e.g., 'Leeds', 'Manchester')",
+          "example": "london"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10,
+          "description": "Maximum number of suggestions to return",
+          "example": 10
+        },
+        "exclude": {
+          "type": "string",
+          "description": "Category to exclude from suggestions (e.g., 'STREET')",
+          "example": "STREET"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Property_for_Sale",
+    "method": "GET",
+    "path": "/property-for-sale",
+    "summary": "Get properties listed for sale",
+    "description": "This endpoint retrieves a list of properties currently available for sale on Rightmove based on provided filters such as location, price range, and number of bedrooms.",
+    "tags": [
+      "For Sale"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP"
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP"
+        }
+      },
+      {
+        "name": "minBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        }
+      },
+      {
+        "name": "minBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        }
+      },
+      {
+        "name": "keywords",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        }
+      },
+      {
+        "name": "propertyTypes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat"
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with gardens",
+          "example": "true"
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "true"
+        }
+      },
+      {
+        "name": "has_new_home",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include new homes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_retirement_home",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include retirement homes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_buying_schemes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with buying schemes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_auction_property",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include auction properties",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_include_under_offer_sold_stc",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties under offer or sold subject to contract",
+          "example": "false"
+        }
+      },
+      {
+        "name": "do_not_show_new_home",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude new homes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "do_not_show_retirement_home",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude retirement homes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "do_not_show_buying_schemes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude properties with buying schemes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "added_to_site",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "3"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        },
+        "radius": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        },
+        "minPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP"
+        },
+        "maxPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP"
+        },
+        "minBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        },
+        "maxBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        },
+        "minBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        },
+        "maxBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        },
+        "keywords": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        },
+        "propertyTypes": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat"
+        },
+        "has_garden": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with gardens",
+          "example": "true"
+        },
+        "has_parking": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "true"
+        },
+        "has_new_home": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include new homes",
+          "example": "false"
+        },
+        "has_retirement_home": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include retirement homes",
+          "example": "false"
+        },
+        "has_buying_schemes": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with buying schemes",
+          "example": "false"
+        },
+        "has_auction_property": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include auction properties",
+          "example": "false"
+        },
+        "has_include_under_offer_sold_stc": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties under offer or sold subject to contract",
+          "example": "false"
+        },
+        "do_not_show_new_home": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude new homes",
+          "example": "false"
+        },
+        "do_not_show_retirement_home": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude retirement homes",
+          "example": "false"
+        },
+        "do_not_show_buying_schemes": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude properties with buying schemes",
+          "example": "false"
+        },
+        "added_to_site": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "3"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "New_Home_for_Sale",
+    "method": "GET",
+    "path": "/new-home-for-sale",
+    "summary": "Get new homes listed for sale",
+    "description": "Fetches new-build properties that are listed for sale, allowing clients to target newly constructed homes on Rightmove.",
+    "tags": [
+      "For Sale"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP"
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP"
+        }
+      },
+      {
+        "name": "minBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        }
+      },
+      {
+        "name": "minBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        }
+      },
+      {
+        "name": "keywords",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        }
+      },
+      {
+        "name": "propertyTypes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat,land,park-home,bungalow"
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with gardens",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_retirement_home",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include retirement homes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_buying_schemes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with buying schemes",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_include_under_offer_sold_stc",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties under offer or sold subject to contract",
+          "example": "false"
+        }
+      },
+      {
+        "name": "added_to_site",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "14"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        },
+        "radius": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        },
+        "minPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP"
+        },
+        "maxPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP"
+        },
+        "minBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        },
+        "maxBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        },
+        "minBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        },
+        "maxBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        },
+        "keywords": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        },
+        "propertyTypes": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat,land,park-home,bungalow"
+        },
+        "has_garden": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with gardens",
+          "example": "false"
+        },
+        "has_parking": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "false"
+        },
+        "has_retirement_home": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include retirement homes",
+          "example": "false"
+        },
+        "has_buying_schemes": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with buying schemes",
+          "example": "false"
+        },
+        "has_include_under_offer_sold_stc": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties under offer or sold subject to contract",
+          "example": "false"
+        },
+        "added_to_site": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "14"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Property_to_Rent",
+    "method": "GET",
+    "path": "/property-to-rent",
+    "summary": "Get properties available to rent",
+    "description": "Returns a list of rental properties available on Rightmove, filtered by criteria such as location, price range, and property type.",
+    "tags": [
+      "For Rent"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum monthly rent in GBP",
+          "example": 500
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum monthly rent in GBP",
+          "example": 3000
+        }
+      },
+      {
+        "name": "minBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        }
+      },
+      {
+        "name": "minBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        }
+      },
+      {
+        "name": "keywords",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        }
+      },
+      {
+        "name": "propertyTypes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat,land"
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have a garden.",
+          "example": "true"
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have parking.",
+          "example": "true"
+        }
+      },
+      {
+        "name": "furnished_type",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "partFurnished",
+            "unfurnished"
+          ],
+          "description": "Furnished type (furnished, partFurnished, unfurnished)",
+          "example": "furnished"
+        }
+      },
+      {
+        "name": "let_type",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "longTerm",
+            "shortTerm"
+          ],
+          "description": "Let type (longTerm, shortTerm)",
+          "example": "longTerm"
+        }
+      },
+      {
+        "name": "move_in_by_date",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Date by which the tenant wants to move in (YYYY-MM-DD)"
+        }
+      },
+      {
+        "name": "added_to_site",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "7"
+        }
+      },
+      {
+        "name": "include_let_agreed",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are let agreed (optional)",
+          "example": "false"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        },
+        "radius": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        },
+        "minPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum monthly rent in GBP",
+          "example": 500
+        },
+        "maxPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum monthly rent in GBP",
+          "example": 3000
+        },
+        "minBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        },
+        "maxBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        },
+        "minBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        },
+        "maxBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        },
+        "keywords": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        },
+        "propertyTypes": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat,land"
+        },
+        "has_garden": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have a garden.",
+          "example": "true"
+        },
+        "has_parking": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have parking.",
+          "example": "true"
+        },
+        "furnished_type": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "partFurnished",
+            "unfurnished"
+          ],
+          "description": "Furnished type (furnished, partFurnished, unfurnished)",
+          "example": "furnished"
+        },
+        "let_type": {
+          "type": "string",
+          "enum": [
+            "longTerm",
+            "shortTerm"
+          ],
+          "description": "Let type (longTerm, shortTerm)",
+          "example": "longTerm"
+        },
+        "move_in_by_date": {
+          "type": "string",
+          "description": "Date by which the tenant wants to move in (YYYY-MM-DD)"
+        },
+        "added_to_site": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "7"
+        },
+        "include_let_agreed": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are let agreed (optional)",
+          "example": "false"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Student_Property_to_Rent",
+    "method": "GET",
+    "path": "/student-property-to-rent",
+    "summary": "Get student properties available to rent",
+    "description": "Returns a list of student-specific rental properties available on Rightmove, tailored for student accommodation needs with filters for location, price range, and property features.",
+    "tags": [
+      "For Rent"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sortType",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum monthly rent in GBP",
+          "example": 500
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum monthly rent in GBP",
+          "example": 3000
+        }
+      },
+      {
+        "name": "minBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBedrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        }
+      },
+      {
+        "name": "minBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        }
+      },
+      {
+        "name": "maxBathrooms",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        }
+      },
+      {
+        "name": "keywords",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        }
+      },
+      {
+        "name": "propertyTypes",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat,student-halls"
+        }
+      },
+      {
+        "name": "has_garden",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have a garden.",
+          "example": "true"
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have parking.",
+          "example": "true"
+        }
+      },
+      {
+        "name": "has_house_share",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include house shares",
+          "example": "true"
+        }
+      },
+      {
+        "name": "do_not_show_house_share",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude house shares",
+          "example": "false"
+        }
+      },
+      {
+        "name": "furnished_type",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "partFurnished",
+            "unfurnished"
+          ],
+          "description": "Furnished type (furnished, partFurnished, unfurnished)",
+          "example": "furnished"
+        }
+      },
+      {
+        "name": "move_in_by_date",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Date by which the tenant wants to move in (YYYY-MM-DD)"
+        }
+      },
+      {
+        "name": "added_to_site",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "7"
+        }
+      },
+      {
+        "name": "include_let_agreed",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are let agreed (optional)",
+          "example": "false"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        },
+        "sortType": {
+          "type": "string",
+          "enum": [
+            "highest_price",
+            "lowest_price",
+            "newest_listed",
+            "oldest_listed"
+          ],
+          "default": "highest_price",
+          "description": "How to sort the results. Available options: highest_price (default), lowest_price, newest_listed, oldest_listed",
+          "example": "highest_price"
+        },
+        "radius": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "default": 0,
+          "description": "Search radius in miles from the location (0.0, 0.25, 0.5, 1.0, 3.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0)",
+          "example": 3
+        },
+        "minPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum monthly rent in GBP",
+          "example": 500
+        },
+        "maxPrice": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum monthly rent in GBP",
+          "example": 3000
+        },
+        "minBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bedrooms",
+          "example": 1
+        },
+        "maxBedrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bedrooms",
+          "example": 4
+        },
+        "minBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum number of bathrooms",
+          "example": 1
+        },
+        "maxBathrooms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of bathrooms",
+          "example": 3
+        },
+        "keywords": {
+          "type": "string",
+          "description": "Keywords to search for, comma-separated (e.g., 'pool,garden')",
+          "example": "pool,garden"
+        },
+        "propertyTypes": {
+          "type": "string",
+          "description": "Types of property to include in the search (comma-separated)",
+          "example": "detached,semi-detached,terraced,flat,student-halls"
+        },
+        "has_garden": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have a garden.",
+          "example": "true"
+        },
+        "has_parking": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Filter for properties that have parking.",
+          "example": "true"
+        },
+        "has_house_share": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include house shares",
+          "example": "true"
+        },
+        "do_not_show_house_share": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude house shares",
+          "example": "false"
+        },
+        "furnished_type": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "partFurnished",
+            "unfurnished"
+          ],
+          "description": "Furnished type (furnished, partFurnished, unfurnished)",
+          "example": "furnished"
+        },
+        "move_in_by_date": {
+          "type": "string",
+          "description": "Date by which the tenant wants to move in (YYYY-MM-DD)"
+        },
+        "added_to_site": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site (1, 3, 7, 14)",
+          "example": "7"
+        },
+        "include_let_agreed": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are let agreed (optional)",
+          "example": "false"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Commercial_Property_to_Rent",
+    "method": "GET",
+    "path": "/commercial-properties-to-rent",
+    "summary": "Get commercial properties available to rent",
+    "description": "Returns a list of commercial properties available for rent on Rightmove, filtered by criteria such as location, size, price range, and property type.",
+    "tags": [
+      "Commercial"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number starting with 1",
+          "example": 1
+        }
+      },
+      {
+        "name": "sort_by",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "largest_first",
+            "smallest_first",
+            "highest_price",
+            "lowest_price"
+          ],
+          "default": "relevance",
+          "description": "How to sort the results (relevance, largest_first, smallest_first, highest_price, lowest_price)",
+          "example": "relevance"
+        }
+      },
+      {
+        "name": "search_radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "0",
+            "0.25",
+            "0.5",
+            "1",
+            "3",
+            "5",
+            "10",
+            "15",
+            "20",
+            "30",
+            "40"
+          ],
+          "default": "0",
+          "description": "Search radius in miles from the location",
+          "example": "3"
+        }
+      },
+      {
+        "name": "size_unit",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "square_feet",
+            "square_meters",
+            "acres",
+            "hectares"
+          ],
+          "description": "Unit for the size values (defaults to square feet if not provided)",
+          "example": "square_feet"
+        }
+      },
+      {
+        "name": "min_size",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum size in the specified unit",
+          "example": 500
+        }
+      },
+      {
+        "name": "max_size",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum size in the specified unit",
+          "example": 10000
+        }
+      },
+      {
+        "name": "price_type",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "price_per_month",
+            "price_per_unit"
+          ],
+          "description": "Price type (price per calendar month or price per unit)",
+          "example": "price_per_month"
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP",
+          "example": 100
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP",
+          "example": 1500
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Types of commercial property to include in the search (comma-separated)",
+          "example": "office,business_park,land,mixed_use,commercial_property,showroom"
+        }
+      },
+      {
+        "name": "added_to_site",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site",
+          "example": "7"
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "true"
+        }
+      },
+      {
+        "name": "type_of_let",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "long_term",
+            "short_term",
+            "any"
+          ],
+          "description": "Type of let (long term or short term)",
+          "example": "any"
+        }
+      },
+      {
+        "name": "has_include_let_agreed",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are let agreed",
+          "example": "false"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number starting with 1",
+          "example": 1
+        },
+        "sort_by": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "largest_first",
+            "smallest_first",
+            "highest_price",
+            "lowest_price"
+          ],
+          "default": "relevance",
+          "description": "How to sort the results (relevance, largest_first, smallest_first, highest_price, lowest_price)",
+          "example": "relevance"
+        },
+        "search_radius": {
+          "type": "string",
+          "enum": [
+            "0",
+            "0.25",
+            "0.5",
+            "1",
+            "3",
+            "5",
+            "10",
+            "15",
+            "20",
+            "30",
+            "40"
+          ],
+          "default": "0",
+          "description": "Search radius in miles from the location",
+          "example": "3"
+        },
+        "size_unit": {
+          "type": "string",
+          "enum": [
+            "square_feet",
+            "square_meters",
+            "acres",
+            "hectares"
+          ],
+          "description": "Unit for the size values (defaults to square feet if not provided)",
+          "example": "square_feet"
+        },
+        "min_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum size in the specified unit",
+          "example": 500
+        },
+        "max_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum size in the specified unit",
+          "example": 10000
+        },
+        "price_type": {
+          "type": "string",
+          "enum": [
+            "price_per_month",
+            "price_per_unit"
+          ],
+          "description": "Price type (price per calendar month or price per unit)",
+          "example": "price_per_month"
+        },
+        "min_price": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP",
+          "example": 100
+        },
+        "max_price": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP",
+          "example": 1500
+        },
+        "property_type": {
+          "type": "string",
+          "description": "Types of commercial property to include in the search (comma-separated)",
+          "example": "office,business_park,land,mixed_use,commercial_property,showroom"
+        },
+        "added_to_site": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site",
+          "example": "7"
+        },
+        "has_parking": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "true"
+        },
+        "type_of_let": {
+          "type": "string",
+          "enum": [
+            "long_term",
+            "short_term",
+            "any"
+          ],
+          "description": "Type of let (long term or short term)",
+          "example": "any"
+        },
+        "has_include_let_agreed": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are let agreed",
+          "example": "false"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_commercial_properties_for_sale",
+    "method": "GET",
+    "path": "/commercial-properties-for-sale",
+    "summary": "Get commercial properties available for sale",
+    "description": "Returns a list of commercial properties available for sale on Rightmove, filtered by criteria such as location, size, price range, and property type.",
+    "tags": [
+      "Commercial"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sort_by",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "largest_first",
+            "smallest_first",
+            "highest_price",
+            "lowest_price"
+          ],
+          "default": "relevance",
+          "description": "How to sort the results (relevance, largest_first, smallest_first, highest_price, lowest_price)",
+          "example": "relevance"
+        }
+      },
+      {
+        "name": "search_radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "0",
+            "0.25",
+            "0.5",
+            "1",
+            "3",
+            "5",
+            "10",
+            "15",
+            "20",
+            "30",
+            "40"
+          ],
+          "default": "0",
+          "description": "Search radius in miles from the location",
+          "example": "3"
+        }
+      },
+      {
+        "name": "size_unit",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "square_feet",
+            "square_meters",
+            "acres",
+            "hectares"
+          ],
+          "description": "Unit for the size values (defaults to square feet if not provided)",
+          "example": "square_feet"
+        }
+      },
+      {
+        "name": "min_size",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum size in the specified unit",
+          "example": 500
+        }
+      },
+      {
+        "name": "max_size",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum size in the specified unit",
+          "example": 10000
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP",
+          "example": 60000
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP",
+          "example": 1000000
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "description": "Types of commercial property to include in the search (comma-separated)",
+          "example": "office,business_park,land,mixed_use,commercial_property,showroom"
+        }
+      },
+      {
+        "name": "added_to_site",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site",
+          "example": "7"
+        }
+      },
+      {
+        "name": "has_parking",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "true"
+        }
+      },
+      {
+        "name": "has_auction_property",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include auction properties",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_business_for_sale",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with a business for sale",
+          "example": "false"
+        }
+      },
+      {
+        "name": "do_not_show_business_for_sale",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude properties with a business for sale",
+          "example": "false"
+        }
+      },
+      {
+        "name": "has_include_under_offer_sold_stc",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are under offer or sold subject to contract",
+          "example": "false"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        },
+        "sort_by": {
+          "type": "string",
+          "enum": [
+            "relevance",
+            "largest_first",
+            "smallest_first",
+            "highest_price",
+            "lowest_price"
+          ],
+          "default": "relevance",
+          "description": "How to sort the results (relevance, largest_first, smallest_first, highest_price, lowest_price)",
+          "example": "relevance"
+        },
+        "search_radius": {
+          "type": "string",
+          "enum": [
+            "0",
+            "0.25",
+            "0.5",
+            "1",
+            "3",
+            "5",
+            "10",
+            "15",
+            "20",
+            "30",
+            "40"
+          ],
+          "default": "0",
+          "description": "Search radius in miles from the location",
+          "example": "3"
+        },
+        "size_unit": {
+          "type": "string",
+          "enum": [
+            "square_feet",
+            "square_meters",
+            "acres",
+            "hectares"
+          ],
+          "description": "Unit for the size values (defaults to square feet if not provided)",
+          "example": "square_feet"
+        },
+        "min_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum size in the specified unit",
+          "example": 500
+        },
+        "max_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum size in the specified unit",
+          "example": 10000
+        },
+        "min_price": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in GBP",
+          "example": 60000
+        },
+        "max_price": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in GBP",
+          "example": 1000000
+        },
+        "property_type": {
+          "type": "string",
+          "description": "Types of commercial property to include in the search (comma-separated)",
+          "example": "office,business_park,land,mixed_use,commercial_property,showroom"
+        },
+        "added_to_site": {
+          "type": "string",
+          "enum": [
+            "1",
+            "3",
+            "7",
+            "14"
+          ],
+          "description": "Filter by days since added to site",
+          "example": "7"
+        },
+        "has_parking": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with parking",
+          "example": "true"
+        },
+        "has_auction_property": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include auction properties",
+          "example": "false"
+        },
+        "has_business_for_sale": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties with a business for sale",
+          "example": "false"
+        },
+        "do_not_show_business_for_sale": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Exclude properties with a business for sale",
+          "example": "false"
+        },
+        "has_include_under_offer_sold_stc": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Include properties that are under offer or sold subject to contract",
+          "example": "false"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_property_details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "Get detailed information for a specific property",
+    "description": "Retrieves comprehensive details for a specific property listing including full 'description', images, floor plans, energy ratings, and other detailed property information.",
+    "tags": [
+      "House Prices"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "propertyId",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "The property ID to get details for",
+          "example": "161135492"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "propertyId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "The property ID to get details for",
+          "example": "161135492"
+        }
+      },
+      "required": [
+        "propertyId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_estate_agents",
+    "method": "GET",
+    "path": "/estate-agents",
+    "summary": "Get estate agents in a specific area",
+    "description": "Returns a list of estate agents operating in a specified location, including their contact information, ratings, and property listings count.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationIdentifier",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 40,
+          "default": 1,
+          "description": "Search radius in miles",
+          "example": 1
+        }
+      },
+      {
+        "name": "branchType",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "SALES",
+            "LETTINGS"
+          ],
+          "description": "Type of branch (SALES or LETTINGS)",
+          "example": "SALES"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationIdentifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"REGION^87490\")",
+          "example": "REGION^87490"
+        },
+        "radius": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 40,
+          "default": 1,
+          "description": "Search radius in miles",
+          "example": 1
+        },
+        "branchType": {
+          "type": "string",
+          "enum": [
+            "SALES",
+            "LETTINGS"
+          ],
+          "description": "Type of branch (SALES or LETTINGS)",
+          "example": "SALES"
+        }
+      },
+      "required": [
+        "locationIdentifier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_sold_house_prices",
+    "method": "GET",
+    "path": "/sold-house-prices",
+    "summary": "Get sold house prices in an area",
+    "description": "Returns historical sold house price data for properties in a specified location, including sale dates, prices, and property details for market analysis.",
+    "tags": [
+      "House Prices"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "location",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"87490\")",
+          "example": "87490"
+        }
+      },
+      {
+        "name": "pageNumber",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sortBy",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "address",
+            "lowest_price",
+            "highest_price"
+          ],
+          "description": "Sort option for the results",
+          "example": "highest_price"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 40,
+          "description": "Search radius in miles",
+          "example": 1
+        }
+      },
+      {
+        "name": "soldIn",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "description": "Filter by properties sold within the specified number of years",
+          "example": "1"
+        }
+      },
+      {
+        "name": "propertyType",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "FLAT",
+            "DETACHED",
+            "SEMI_DETACHED",
+            "TERRACED",
+            "OTHER"
+          ],
+          "description": "Filter by property type",
+          "example": "DETACHED"
+        }
+      },
+      {
+        "name": "tenure",
+        "in": "query",
+        "required": false,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "LEASEHOLD",
+            "FREEHOLD"
+          ],
+          "description": "Filter by tenure type",
+          "example": "FREEHOLD"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The location identifier from the suggestions endpoint (e.g., \"87490\")",
+          "example": "87490"
+        },
+        "pageNumber": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "The page number (1-based)",
+          "example": 1
+        },
+        "sortBy": {
+          "type": "string",
+          "enum": [
+            "address",
+            "lowest_price",
+            "highest_price"
+          ],
+          "description": "Sort option for the results",
+          "example": "highest_price"
+        },
+        "radius": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 40,
+          "description": "Search radius in miles",
+          "example": 1
+        },
+        "soldIn": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "description": "Filter by properties sold within the specified number of years",
+          "example": "1"
+        },
+        "propertyType": {
+          "type": "string",
+          "enum": [
+            "FLAT",
+            "DETACHED",
+            "SEMI_DETACHED",
+            "TERRACED",
+            "OTHER"
+          ],
+          "description": "Filter by property type",
+          "example": "DETACHED"
+        },
+        "tenure": {
+          "type": "string",
+          "enum": [
+            "LEASEHOLD",
+            "FREEHOLD"
+          ],
+          "description": "Filter by tenure type",
+          "example": "FREEHOLD"
+        }
+      },
+      "required": [
+        "location"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_sold_house_prices_details",
+    "method": "GET",
+    "path": "/sold-house-prices-details",
+    "summary": "Get detailed information for a sold property",
+    "description": "Retrieves comprehensive details for a specific sold property including sale price, sale date, property features, and historical price changes.",
+    "tags": [
+      "House Prices"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "uuid",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The UUID of the sold property",
+          "example": "e24cb588-1c65-40d2-aa4f-3bd92edc9e92"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The UUID of the sold property",
+          "example": "e24cb588-1c65-40d2-aa4f-3bd92edc9e92"
+        }
+      },
+      "required": [
+        "uuid"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

@@ -1,0 +1,2214 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_autocomplete",
+    "method": "GET",
+    "path": "/autocomplete",
+    "summary": "/autocomplete",
+    "description": "Job-title suggestions for a partial keyword.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "**Partial job title to complete.** Required; examples: `eng`, `nurse`.\n\nSuggestions contain `{keyword, type}`. Feed a returned `keyword` into `/job-search` for a\nhigher hit rate. Matching is case-insensitive prefix/substring matching; blank input returns 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Partial job title to complete.** Required; examples: `eng`, `nurse`.\n\nSuggestions contain `{keyword, type}`. Feed a returned `keyword` into `/job-search` for a\nhigher hit rate. Matching is case-insensitive prefix/substring matching; blank input returns 400.",
+          "example": "eng"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Partial job title to complete.** Required; examples: `eng`, `nurse`.\n\nSuggestions contain `{keyword, type}`. Feed a returned `keyword` into `/job-search` for a\nhigher hit rate. Matching is case-insensitive prefix/substring matching; blank input returns 400.",
+          "example": "eng"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "keyword"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_countries",
+    "method": "GET",
+    "path": "/countries",
+    "summary": "/countries",
+    "description": "Countries with live job counts.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_cities",
+    "method": "GET",
+    "path": "/cities",
+    "summary": "/cities",
+    "description": "Cities in one country, with the ids the city filter takes.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": true,
+        "description": "**2-letter ISO country code.** Required and case-insensitive (`AE` = `ae`).\n\nExamples: `ae` (UAE), `sa` (Saudi Arabia), `eg` (Egypt).\n\nGet the full live list from `/countries`. A non-market code returns 404.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[A-Za-z]{2}$",
+          "description": "**2-letter ISO country code.** Required and case-insensitive (`AE` = `ae`).\n\nExamples: `ae` (UAE), `sa` (Saudi Arabia), `eg` (Egypt).\n\nGet the full live list from `/countries`. A non-market code returns 404.",
+          "example": "ae"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Za-z]{2}$",
+          "description": "**2-letter ISO country code.** Required and case-insensitive (`AE` = `ae`).\n\nExamples: `ae` (UAE), `sa` (Saudi Arabia), `eg` (Egypt).\n\nGet the full live list from `/countries`. A non-market code returns 404.",
+          "example": "ae"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "country"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_taxonomy",
+    "method": "GET",
+    "path": "/taxonomy",
+    "summary": "/taxonomy",
+    "description": "Every filter vocabulary in one call: levels, types, salary bands, industries.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_job-search",
+    "method": "GET",
+    "path": "/job-search",
+    "summary": "/job-search",
+    "description": "Search MENA jobs with every verified filter, newest first.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": false,
+        "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+        "schema": {
+          "type": "string",
+          "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+          "example": ""
+        }
+      },
+      {
+        "name": "province",
+        "in": "query",
+        "required": false,
+        "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+        "schema": {
+          "type": "string",
+          "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+          "example": ""
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+        "schema": {
+          "type": "string",
+          "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+          "example": ""
+        }
+      },
+      {
+        "name": "career_level",
+        "in": "query",
+        "required": false,
+        "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+        "schema": {
+          "type": "string",
+          "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+          "example": ""
+        }
+      },
+      {
+        "name": "employment_type",
+        "in": "query",
+        "required": false,
+        "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+        "schema": {
+          "type": "string",
+          "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+          "example": ""
+        }
+      },
+      {
+        "name": "industry",
+        "in": "query",
+        "required": false,
+        "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+        "schema": {
+          "type": "string",
+          "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+          "example": ""
+        }
+      },
+      {
+        "name": "remote_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+          "example": ""
+        }
+      },
+      {
+        "name": "gender",
+        "in": "query",
+        "required": false,
+        "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+          "example": ""
+        }
+      },
+      {
+        "name": "citizenship",
+        "in": "query",
+        "required": false,
+        "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+          "example": ""
+        }
+      },
+      {
+        "name": "company",
+        "in": "query",
+        "required": false,
+        "description": "**Employer slug:** lower-case, hyphenated value such as `accenture`; the display name does not match.\nGet slugs from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse `/company-jobs` when the employer is the primary selector; it requires this parameter.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer slug:** lower-case, hyphenated value such as `accenture`; the display name does not match.\nGet slugs from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse `/company-jobs` when the employer is the primary selector; it requires this parameter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "company_type",
+        "in": "query",
+        "required": false,
+        "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+        "schema": {
+          "type": "string",
+          "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "date_posted",
+        "in": "query",
+        "required": false,
+        "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+        "schema": {
+          "type": "string",
+          "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+          "example": ""
+        }
+      },
+      {
+        "name": "listing_source",
+        "in": "query",
+        "required": false,
+        "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+        "schema": {
+          "type": "string",
+          "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "salary_min_usd",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "salary_max_usd",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "salary_currency",
+        "in": "query",
+        "required": false,
+        "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "salary_specified_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "days_old",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "easy_apply",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "remote_type",
+        "in": "query",
+        "required": false,
+        "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "experience_max_years",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "exclude_confidential",
+        "in": "query",
+        "required": false,
+        "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "scan_pages",
+        "in": "query",
+        "required": false,
+        "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan."
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      {
+        "name": "include_facets",
+        "in": "query",
+        "required": false,
+        "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+          "example": ""
+        },
+        "province": {
+          "type": "string",
+          "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+          "example": ""
+        },
+        "city": {
+          "type": "string",
+          "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+          "example": ""
+        },
+        "career_level": {
+          "type": "string",
+          "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+          "example": ""
+        },
+        "employment_type": {
+          "type": "string",
+          "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+          "example": ""
+        },
+        "industry": {
+          "type": "string",
+          "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+          "example": ""
+        },
+        "remote_only": {
+          "type": "boolean",
+          "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+          "example": ""
+        },
+        "gender": {
+          "type": "string",
+          "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+          "example": ""
+        },
+        "citizenship": {
+          "type": "string",
+          "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+          "example": ""
+        },
+        "company": {
+          "type": "string",
+          "description": "**Employer slug:** lower-case, hyphenated value such as `accenture`; the display name does not match.\nGet slugs from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse `/company-jobs` when the employer is the primary selector; it requires this parameter.",
+          "example": ""
+        },
+        "company_type": {
+          "type": "string",
+          "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+          "example": ""
+        },
+        "date_posted": {
+          "type": "string",
+          "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+          "example": ""
+        },
+        "listing_source": {
+          "type": "string",
+          "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+          "example": ""
+        },
+        "keyword": {
+          "type": "string",
+          "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "salary_min_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "salary_max_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "salary_currency": {
+          "type": "string",
+          "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "salary_specified_only": {
+          "type": "boolean",
+          "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "days_old": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "easy_apply": {
+          "type": "boolean",
+          "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "remote_type": {
+          "type": "string",
+          "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "experience_max_years": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "exclude_confidential": {
+          "type": "boolean",
+          "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "scan_pages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan."
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        },
+        "include_facets": {
+          "type": "boolean",
+          "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_popular-jobs",
+    "method": "GET",
+    "path": "/popular-jobs",
+    "summary": "/popular-jobs",
+    "description": "Currently popular jobs (geography is best-effort).",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_job-search-by-url",
+    "method": "GET",
+    "path": "/job-search-by-url",
+    "summary": "/job-search-by-url",
+    "description": "Run a search from a Bayt.com search URL.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A `www.bayt.com` web URL.** Required. Query strings, trailing slashes and encoded Arabic slugs are\naccepted.\n\nExamples: `https://www.bayt.com/en/uae/jobs/` and `https://www.bayt.com/en/uae/jobs/jobs-in-dubai/`.\n\nThe `/en/` or `/ar/` segment selects language unless `language` is passed explicitly. Use search URLs\nwith `/job-search-by-url` and job-detail URLs with `/job-details-by-url`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "bayt\\.com",
+          "description": "**A `www.bayt.com` web URL.** Required. Query strings, trailing slashes and encoded Arabic slugs are\naccepted.\n\nExamples: `https://www.bayt.com/en/uae/jobs/` and `https://www.bayt.com/en/uae/jobs/jobs-in-dubai/`.\n\nThe `/en/` or `/ar/` segment selects language unless `language` is passed explicitly. Use search URLs\nwith `/job-search-by-url` and job-detail URLs with `/job-details-by-url`.",
+          "example": "https://www.bayt.com/en/uae/jobs/jobs-in-dubai/"
+        }
+      },
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "salary_min_usd",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "salary_max_usd",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "salary_currency",
+        "in": "query",
+        "required": false,
+        "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "salary_specified_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "days_old",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "easy_apply",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "remote_type",
+        "in": "query",
+        "required": false,
+        "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "experience_max_years",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "exclude_confidential",
+        "in": "query",
+        "required": false,
+        "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "scan_pages",
+        "in": "query",
+        "required": false,
+        "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan."
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      {
+        "name": "include_facets",
+        "in": "query",
+        "required": false,
+        "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "bayt\\.com",
+          "description": "**A `www.bayt.com` web URL.** Required. Query strings, trailing slashes and encoded Arabic slugs are\naccepted.\n\nExamples: `https://www.bayt.com/en/uae/jobs/` and `https://www.bayt.com/en/uae/jobs/jobs-in-dubai/`.\n\nThe `/en/` or `/ar/` segment selects language unless `language` is passed explicitly. Use search URLs\nwith `/job-search-by-url` and job-detail URLs with `/job-details-by-url`.",
+          "example": "https://www.bayt.com/en/uae/jobs/jobs-in-dubai/"
+        },
+        "keyword": {
+          "type": "string",
+          "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "salary_min_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "salary_max_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "salary_currency": {
+          "type": "string",
+          "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "salary_specified_only": {
+          "type": "boolean",
+          "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "days_old": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "easy_apply": {
+          "type": "boolean",
+          "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "remote_type": {
+          "type": "string",
+          "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "experience_max_years": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "exclude_confidential": {
+          "type": "boolean",
+          "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "scan_pages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan."
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        },
+        "include_facets": {
+          "type": "boolean",
+          "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_job-details",
+    "method": "GET",
+    "path": "/job-details",
+    "summary": "/job-details",
+    "description": "Full job detail by job id.",
+    "tags": [
+      "Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "job_id",
+        "in": "query",
+        "required": true,
+        "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_job-details-by-url",
+    "method": "GET",
+    "path": "/job-details-by-url",
+    "summary": "/job-details-by-url",
+    "description": "Full job detail from a job URL.",
+    "tags": [
+      "Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A `www.bayt.com` web URL.** Required. Query strings, trailing slashes and encoded Arabic slugs are\naccepted.\n\nExamples: `https://www.bayt.com/en/uae/jobs/` and `https://www.bayt.com/en/uae/jobs/jobs-in-dubai/`.\n\nThe `/en/` or `/ar/` segment selects language unless `language` is passed explicitly. Use search URLs\nwith `/job-search-by-url` and job-detail URLs with `/job-details-by-url`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "bayt\\.com",
+          "description": "**A `www.bayt.com` web URL.** Required. Query strings, trailing slashes and encoded Arabic slugs are\naccepted.\n\nExamples: `https://www.bayt.com/en/uae/jobs/` and `https://www.bayt.com/en/uae/jobs/jobs-in-dubai/`.\n\nThe `/en/` or `/ar/` segment selects language unless `language` is passed explicitly. Use search URLs\nwith `/job-search-by-url` and job-detail URLs with `/job-details-by-url`.",
+          "example": "https://www.bayt.com/en/qatar/jobs/sales-executive-lubricants-automotive-5473846/"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "bayt\\.com",
+          "description": "**A `www.bayt.com` web URL.** Required. Query strings, trailing slashes and encoded Arabic slugs are\naccepted.\n\nExamples: `https://www.bayt.com/en/uae/jobs/` and `https://www.bayt.com/en/uae/jobs/jobs-in-dubai/`.\n\nThe `/en/` or `/ar/` segment selects language unless `language` is passed explicitly. Use search URLs\nwith `/job-search-by-url` and job-detail URLs with `/job-details-by-url`.",
+          "example": "https://www.bayt.com/en/qatar/jobs/sales-executive-lubricants-automotive-5473846/"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_job",
+    "method": "GET",
+    "path": "/job",
+    "summary": "/job",
+    "description": "Lightweight job record: title, role, location, description, skills.",
+    "tags": [
+      "Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "job_id",
+        "in": "query",
+        "required": true,
+        "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_job-listing",
+    "method": "GET",
+    "path": "/job-listing",
+    "summary": "/job-listing",
+    "description": "The search-card view of one job, including salary band and flags.",
+    "tags": [
+      "Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "job_id",
+        "in": "query",
+        "required": true,
+        "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-jobs",
+    "method": "GET",
+    "path": "/similar-jobs",
+    "summary": "/similar-jobs",
+    "description": "Jobs similar to a given job id.",
+    "tags": [
+      "Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "job_id",
+        "in": "query",
+        "required": true,
+        "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "pattern": "^\\d+$",
+          "description": "**Job id  -  required numeric identifier.** Digits only; example `5473846`.\n\nGet it from `jobId` in `/job-search`, `/company-jobs`, `/similar-jobs` or `/popular-jobs`, or let\n`/job-details-by-url` extract it from a posting URL.\n\nAn unknown or withdrawn posting returns 404.",
+          "example": "5473846"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_market-facets",
+    "method": "GET",
+    "path": "/market-facets",
+    "summary": "/market-facets",
+    "description": "Live labour-market counts by industry, seniority, location and employer.",
+    "tags": [
+      "Analytics"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "country",
+        "in": "query",
+        "required": false,
+        "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+        "schema": {
+          "type": "string",
+          "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+          "example": ""
+        }
+      },
+      {
+        "name": "province",
+        "in": "query",
+        "required": false,
+        "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+        "schema": {
+          "type": "string",
+          "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+          "example": ""
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+        "schema": {
+          "type": "string",
+          "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+          "example": ""
+        }
+      },
+      {
+        "name": "career_level",
+        "in": "query",
+        "required": false,
+        "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+        "schema": {
+          "type": "string",
+          "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+          "example": ""
+        }
+      },
+      {
+        "name": "employment_type",
+        "in": "query",
+        "required": false,
+        "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+        "schema": {
+          "type": "string",
+          "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+          "example": ""
+        }
+      },
+      {
+        "name": "industry",
+        "in": "query",
+        "required": false,
+        "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+        "schema": {
+          "type": "string",
+          "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+          "example": ""
+        }
+      },
+      {
+        "name": "remote_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+          "example": ""
+        }
+      },
+      {
+        "name": "gender",
+        "in": "query",
+        "required": false,
+        "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+          "example": ""
+        }
+      },
+      {
+        "name": "citizenship",
+        "in": "query",
+        "required": false,
+        "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+          "example": ""
+        }
+      },
+      {
+        "name": "company",
+        "in": "query",
+        "required": false,
+        "description": "**Employer slug:** lower-case, hyphenated value such as `accenture`; the display name does not match.\nGet slugs from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse `/company-jobs` when the employer is the primary selector; it requires this parameter.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer slug:** lower-case, hyphenated value such as `accenture`; the display name does not match.\nGet slugs from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse `/company-jobs` when the employer is the primary selector; it requires this parameter.",
+          "example": ""
+        }
+      },
+      {
+        "name": "company_type",
+        "in": "query",
+        "required": false,
+        "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+        "schema": {
+          "type": "string",
+          "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "date_posted",
+        "in": "query",
+        "required": false,
+        "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+        "schema": {
+          "type": "string",
+          "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+          "example": ""
+        }
+      },
+      {
+        "name": "listing_source",
+        "in": "query",
+        "required": false,
+        "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+        "schema": {
+          "type": "string",
+          "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "dimension",
+        "in": "query",
+        "required": false,
+        "description": "**Facet dimension to return.** Optional; omit for all dimensions.\nValues: `industries`, `careerLevels`, `employmentTypes`, `companyTypes`, `genders`, `datePosted`,\n`countries`, `provinces`, `cities` or `companies`.\nUse `/taxonomy` for the `facetDimensions` vocabulary.\n\nEach entry includes a filter `value`, label and live count. Location and company lists are capped\nat 25 entries.",
+        "schema": {
+          "type": "string",
+          "description": "**Facet dimension to return.** Optional; omit for all dimensions.\nValues: `industries`, `careerLevels`, `employmentTypes`, `companyTypes`, `genders`, `datePosted`,\n`countries`, `provinces`, `cities` or `companies`.\nUse `/taxonomy` for the `facetDimensions` vocabulary.\n\nEach entry includes a filter `value`, label and live count. Location and company lists are capped\nat 25 entries.",
+          "example": ""
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string",
+          "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+          "example": ""
+        },
+        "province": {
+          "type": "string",
+          "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+          "example": ""
+        },
+        "city": {
+          "type": "string",
+          "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+          "example": ""
+        },
+        "career_level": {
+          "type": "string",
+          "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+          "example": ""
+        },
+        "employment_type": {
+          "type": "string",
+          "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+          "example": ""
+        },
+        "industry": {
+          "type": "string",
+          "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+          "example": ""
+        },
+        "remote_only": {
+          "type": "boolean",
+          "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+          "example": ""
+        },
+        "gender": {
+          "type": "string",
+          "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+          "example": ""
+        },
+        "citizenship": {
+          "type": "string",
+          "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+          "example": ""
+        },
+        "company": {
+          "type": "string",
+          "description": "**Employer slug:** lower-case, hyphenated value such as `accenture`; the display name does not match.\nGet slugs from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse `/company-jobs` when the employer is the primary selector; it requires this parameter.",
+          "example": ""
+        },
+        "company_type": {
+          "type": "string",
+          "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+          "example": ""
+        },
+        "date_posted": {
+          "type": "string",
+          "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+          "example": ""
+        },
+        "listing_source": {
+          "type": "string",
+          "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+          "example": ""
+        },
+        "dimension": {
+          "type": "string",
+          "description": "**Facet dimension to return.** Optional; omit for all dimensions.\nValues: `industries`, `careerLevels`, `employmentTypes`, `companyTypes`, `genders`, `datePosted`,\n`countries`, `provinces`, `cities` or `companies`.\nUse `/taxonomy` for the `facetDimensions` vocabulary.\n\nEach entry includes a filter `value`, label and live count. Location and company lists are capped\nat 25 entries.",
+          "example": ""
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_company-jobs",
+    "method": "GET",
+    "path": "/company-jobs",
+    "summary": "/company-jobs",
+    "description": "All open jobs for one employer.",
+    "tags": [
+      "Company"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "company",
+        "in": "query",
+        "required": true,
+        "description": "**Employer slug  -  required.** Lower case and hyphenated, e.g. `accenture`; display names do not match.\nGet the slug from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate slugs such as `accenture,ibm`; matches are OR-ed.\n\nOther search filters still apply, including country, seniority, contract type and recency.\n\nResults are always **newest first** by posting date; there is no `sort` parameter.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Employer slug  -  required.** Lower case and hyphenated, e.g. `accenture`; display names do not match.\nGet the slug from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate slugs such as `accenture,ibm`; matches are OR-ed.\n\nOther search filters still apply, including country, seniority, contract type and recency.\n\nResults are always **newest first** by posting date; there is no `sort` parameter.",
+          "example": "accenture"
+        }
+      },
+      {
+        "name": "country",
+        "in": "query",
+        "required": false,
+        "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+        "schema": {
+          "type": "string",
+          "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+          "example": ""
+        }
+      },
+      {
+        "name": "province",
+        "in": "query",
+        "required": false,
+        "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+        "schema": {
+          "type": "string",
+          "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+          "example": ""
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+        "schema": {
+          "type": "string",
+          "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+          "example": ""
+        }
+      },
+      {
+        "name": "career_level",
+        "in": "query",
+        "required": false,
+        "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+        "schema": {
+          "type": "string",
+          "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+          "example": ""
+        }
+      },
+      {
+        "name": "employment_type",
+        "in": "query",
+        "required": false,
+        "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+        "schema": {
+          "type": "string",
+          "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+          "example": ""
+        }
+      },
+      {
+        "name": "industry",
+        "in": "query",
+        "required": false,
+        "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+        "schema": {
+          "type": "string",
+          "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+          "example": ""
+        }
+      },
+      {
+        "name": "remote_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+          "example": ""
+        }
+      },
+      {
+        "name": "gender",
+        "in": "query",
+        "required": false,
+        "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+          "example": ""
+        }
+      },
+      {
+        "name": "citizenship",
+        "in": "query",
+        "required": false,
+        "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+        "schema": {
+          "type": "string",
+          "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+          "example": ""
+        }
+      },
+      {
+        "name": "company_type",
+        "in": "query",
+        "required": false,
+        "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+        "schema": {
+          "type": "string",
+          "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "date_posted",
+        "in": "query",
+        "required": false,
+        "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+        "schema": {
+          "type": "string",
+          "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+          "example": ""
+        }
+      },
+      {
+        "name": "listing_source",
+        "in": "query",
+        "required": false,
+        "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+        "schema": {
+          "type": "string",
+          "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "salary_min_usd",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "salary_max_usd",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "salary_currency",
+        "in": "query",
+        "required": false,
+        "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "salary_specified_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "days_old",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "easy_apply",
+        "in": "query",
+        "required": false,
+        "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "remote_type",
+        "in": "query",
+        "required": false,
+        "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "string",
+          "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "experience_max_years",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        }
+      },
+      {
+        "name": "exclude_confidential",
+        "in": "query",
+        "required": false,
+        "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "scan_pages",
+        "in": "query",
+        "required": false,
+        "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan."
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        }
+      },
+      {
+        "name": "include_facets",
+        "in": "query",
+        "required": false,
+        "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+          "example": ""
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "company": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Employer slug  -  required.** Lower case and hyphenated, e.g. `accenture`; display names do not match.\nGet the slug from `/market-facets` → `companies[].value`.\n\n**Multiple values:** comma-separate slugs such as `accenture,ibm`; matches are OR-ed.\n\nOther search filters still apply, including country, seniority, contract type and recency.\n\nResults are always **newest first** by posting date; there is no `sort` parameter.",
+          "example": "accenture"
+        },
+        "country": {
+          "type": "string",
+          "description": "**Country filter:** 2-letter ISO code, e.g. `ae` or `sa`.\nGet valid markets and live counts from `/countries` or `/market-facets` (`countries` facet).\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\n**Different filters combine with AND.** For example, `country=ae&career_level=2` keeps jobs matching\nboth filters.\n\nAn unknown market code returns 0 jobs; check `/countries` when a result is unexpectedly empty.",
+          "example": ""
+        },
+        "province": {
+          "type": "string",
+          "description": "**Province/emirate filter:** composite id `country,province,0`, e.g. `ae,4,0`.\nCopy the exact id from `/cities` or the `provinces` facet of `/market-facets`; names and\ntruncated ids such as `Dubai` or `ae,4` return 400.\n\n**Multiple values:** use a pipe because ids contain commas, e.g. `ae,4,0|eg,2,0`; values are OR-ed.\n\nCombines with other filters using AND.",
+          "example": ""
+        },
+        "city": {
+          "type": "string",
+          "description": "**City filter:** composite id `country,province,city`, e.g. `ae,4,0` (Dubai) or `eg,2,10`.\nCopy the exact id from `/cities` or the `cities` facet of `/market-facets`; names and truncated\nids return 400.\n\n**Multiple values:** use a pipe, e.g. `ae,4,0|eg,2,10`; values are OR-ed.\n\nUse one city at a time to page through a large country.",
+          "example": ""
+        },
+        "career_level": {
+          "type": "string",
+          "description": "**Career level:** one or more ids: `0` Student/Internship, `1` Entry, `2` Mid career, `3` Management,\n`4` Director/Head, `5` Senior executive, `6` Fresh graduate.\nGet values and labels from `/taxonomy` or the `careerLevels` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values such as `ae,sa`; matches are OR-ed.\n\nOnly postings declaring a level match; omit it for maximum recall.",
+          "example": ""
+        },
+        "employment_type": {
+          "type": "string",
+          "description": "**Employment type:** `1` Full time, `2` Internship, `3` Contractor, `4` Temporary, `5` Part time,\n`6` Freelance. Values and labels are available from `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly postings declaring a type match; omit it for maximum recall.",
+          "example": ""
+        },
+        "industry": {
+          "type": "string",
+          "description": "**Industry id:** numeric value, e.g. `33` or `3`.\nGet current ids and labels from `/taxonomy` or the `industries` facet of `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nUse it to split a broad country search into pageable slices.",
+          "example": ""
+        },
+        "remote_only": {
+          "type": "boolean",
+          "description": "**Only jobs advertised as remote.** Optional; default unset.\n\n`true` keeps remote jobs; `false` is equivalent to omitting the parameter. Use post-filter\n`remote_type` for `onsite`, `remote` or `hybrid` values inside a scan.",
+          "example": ""
+        },
+        "gender": {
+          "type": "string",
+          "description": "**Employer-stated gender preference:** `0` unspecified, `1` male only, `2` female only.\nUse `/taxonomy` for the complete `genders` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nThis reports the posting field; it is not a recommendation.",
+          "example": ""
+        },
+        "citizenship": {
+          "type": "string",
+          "description": "**Employer-requested citizenship id.** Numeric value, e.g. `5560` or `6547`.\n\nRead ids from `citizenshipIds` on `/job-search` rows (or `preferredCandidates.jobCitizen` on\n`/job-details`). There is no citizenship vocabulary in `/taxonomy` or `/market-facets`.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nOnly a minority of postings declare this field, so results can be small.",
+          "example": ""
+        },
+        "company_type": {
+          "type": "string",
+          "description": "**Company type:** `1` private employer, `2` recruitment agency, `3` public employer, `6` nonprofit.\nUse `/taxonomy` for the complete `companyTypes` vocabulary and labels.\n\n**Multiple values:** comma-separate values; matches are OR-ed.\n\nIds `4` and `5` are invalid. Example: `company_type=1,3,6`.",
+          "example": ""
+        },
+        "date_posted": {
+          "type": "string",
+          "description": "**Posting-age bucket:** `1` past 30 days, `2` past 7 days, `3` past 24 hours.\nUse `/taxonomy` for the `datePosted` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. For nested windows, the widest value wins.\n\nUse the `days_old` post-filter for an exact integer-day cutoff.",
+          "example": ""
+        },
+        "listing_source": {
+          "type": "string",
+          "description": "**Listing source:** `native` (posted by the employer on Bayt) or `aggregated` (collected from\nan external careers site or board).\nUse `/taxonomy` for the `listingSources` vocabulary.\n\n**Multiple values:** comma-separate values; matches are OR-ed. Passing both is equivalent to omitting the filter.\n\n`native` generally corresponds to in-platform apply; cards echo source fields such as\n`isAggregated` and `isEasyApply`.",
+          "example": ""
+        },
+        "keyword": {
+          "type": "string",
+          "description": "**Free-text post-filter:** case-insensitive match against title, description snippet and summaries.\n\nExamples: `nurse`, `sales manager`, `python`.\n\nAll words in a multi-word value must occur; `sales manager` matches either word order.\n\nThis scans only the requested window, not the full corpus. Narrow with location or taxonomy\nfilters first; use `/autocomplete` to discover job-title terms.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "salary_min_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Minimum monthly salary in normalized USD.** Examples: `1000`, `3000`, `5000`.\nA job matches when its salary band reaches above the value; unpublished salaries do not match.\nSee `/taxonomy` for salary bands; use `salary_specified_only=true` for explicitly stated salaries.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "salary_max_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum monthly salary in normalized USD.** Examples: `2000`, `6000`, `15000`.\n\nCombine with `salary_min_usd` for a range; a job matches when its band starts below this value.\nUnpublished salaries do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "salary_currency": {
+          "type": "string",
+          "description": "**Salary currency:** one ISO 4217 code, e.g. `AED`, `SAR`, `USD`, `QAR` or `INR`.\nUse `/taxonomy` for all supported `currencies`.\nUse `salary_min_usd` / `salary_max_usd` for cross-currency comparisons. Unpublished salaries\nhave no currency and do not match.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "salary_specified_only": {
+          "type": "boolean",
+          "description": "**Only jobs that publish a salary.** Optional; default unset.\n\n`true` keeps postings with salary fields; `false` is equivalent to omitting it.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "days_old": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum posting age in days.** Examples: `1`, `3`, `7`, `30`.\n\nUses the posting timestamp for an exact cutoff; unlike `date_posted`, any integer is accepted.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "easy_apply": {
+          "type": "boolean",
+          "description": "**Only jobs with in-platform application.** Optional; default unset.\n\n`true` keeps in-platform applications; `false` keeps external applications. Omit for both.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "remote_type": {
+          "type": "string",
+          "description": "**Work arrangement:** one of `onsite`, `remote` or `hybrid`.\nUse `/taxonomy` for the `remoteTypes` vocabulary.\nUse `remote_only=true` for the cheaper full-index remote filter; this parameter is a post-filter.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "experience_max_years": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Maximum required experience in years.** Examples: `0`, `3`, `5`, `10`.\n\nMatches jobs whose stated minimum is at or below this value; postings without a requirement stay\neligible. Cards expose `experienceMinYears` and `experienceMaxYears`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`."
+        },
+        "exclude_confidential": {
+          "type": "boolean",
+          "description": "**Exclude confidential employers.** Optional; default unset (confidential jobs included).\n\n`true` keeps jobs with a named employer; `false` is equivalent to omitting it. Cards expose\n`company.isConfidential`.\n\n**Post-filter:** applied to the jobs scanned for this request, not the whole index.\n\nIt scans `scan_pages` pages (default `3`, max `10`) and reports `jobsScanned`, `jobsMatched` and\n`scanTruncated` in `postFilter`. `count` remains the pre-post-filter total.\n\nFor coverage, narrow first with `country`, `city`, `industry`, `career_level` or `date_posted`.",
+          "example": ""
+        },
+        "scan_pages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Pages to scan for post-filters.** Optional; default `3`, maximum `10` (30 jobs per page).\n\nExamples: `1` scans 30 jobs, `3` scans 90, `10` scans 300. It is ignored when no post-filter is\nset; `postFilter.pagesScanned` reports the actual scan."
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en",
+          "description": "**Response language.** Optional; default `en`.\n\n`en` returns English; `ar` returns the platform's Arabic content (for example `دبي`).\n\nIds, codes and counts remain the same in either language. On search endpoints, `language=ar` must\nbe paired with `country`, `province`, `city`, `company`, `industry` or a job id; an unanchored Arabic\nsearch returns 400.",
+          "example": "en"
+        },
+        "include_facets": {
+          "type": "boolean",
+          "description": "**Include facet counts with search results.** Optional; default `false`.\n\n`true` adds current counts and filter values for industries, levels, employers and locations.\nDimensions with no values may be omitted. For aggregates without rows, call `/market-facets`.",
+          "example": ""
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 334,
+          "default": 1,
+          "description": "**1-indexed page number.** Optional; default `1`; range `1` - `334`.\n\nPages contain 30 jobs; page `2` is rows 31 - 60. Responses expose `maxPage` and window flags.\n\n**The result window is capped at 10,000 jobs.** A broad search such as `country=ae` can report a\nlarger `count` while rows stop at the cap; narrow by `country`, `city`, `industry` or `date_posted`.",
+          "example": 1
+        }
+      },
+      "required": [
+        "company"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

@@ -1,0 +1,1570 @@
+[
+  {
+    "id": "_auto-complete-location",
+    "method": "GET",
+    "path": "/auto-complete-location",
+    "summary": "Get Location Suggestion",
+    "description": "Returns autocomplete location suggestions based on partial input.",
+    "tags": [
+      "Helper"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "location",
+        "in": "query",
+        "required": true,
+        "description": "give location or city name. eg.- los an",
+        "schema": {
+          "type": "string",
+          "description": "give location or city name. eg.- los an",
+          "example": "new york"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "give location or city name. eg.- los an",
+          "example": "new york"
+        }
+      },
+      "required": [
+        "location"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_advance-auto-complete-location",
+    "method": "GET",
+    "path": "/advance-auto-complete-location",
+    "summary": "Search for location suggestion with advance control",
+    "description": "Search for location suggestion with advance control",
+    "tags": [
+      "Helper"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "location",
+        "in": "query",
+        "required": true,
+        "description": "Location or city name to search for",
+        "schema": {
+          "type": "string",
+          "description": "Location or city name to search for",
+          "example": "new york"
+        }
+      },
+      {
+        "name": "no_of_cities",
+        "in": "query",
+        "required": false,
+        "description": "Number of cities to return in results",
+        "schema": {
+          "type": "string",
+          "description": "Number of cities to return in results",
+          "example": "6"
+        }
+      },
+      {
+        "name": "no_of_airports",
+        "in": "query",
+        "required": false,
+        "description": "Number of airports to return in results",
+        "schema": {
+          "type": "string",
+          "description": "Number of airports to return in results",
+          "example": "5"
+        }
+      },
+      {
+        "name": "no_of_points_of_interest",
+        "in": "query",
+        "required": false,
+        "description": "Number of points of interest to return in results",
+        "schema": {
+          "type": "string",
+          "description": "Number of points of interest to return in results",
+          "example": "3"
+        }
+      },
+      {
+        "name": "no_of_partner_locations",
+        "in": "query",
+        "required": false,
+        "description": "Number of partner locations to return in results",
+        "schema": {
+          "type": "string",
+          "description": "Number of partner locations to return in results",
+          "example": "4"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Location or city name to search for",
+          "example": "new york"
+        },
+        "no_of_cities": {
+          "type": "string",
+          "description": "Number of cities to return in results",
+          "example": "6"
+        },
+        "no_of_airports": {
+          "type": "string",
+          "description": "Number of airports to return in results",
+          "example": "5"
+        },
+        "no_of_points_of_interest": {
+          "type": "string",
+          "description": "Number of points of interest to return in results",
+          "example": "3"
+        },
+        "no_of_partner_locations": {
+          "type": "string",
+          "description": "Number of partner locations to return in results",
+          "example": "4"
+        }
+      },
+      "required": [
+        "location"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_hotels-search",
+    "method": "GET",
+    "path": "/hotels-search",
+    "summary": "Search hotels with customized search",
+    "description": "Returns available hotels data on a particulat location and customized search.",
+    "tags": [
+      "Hotel Endpoints"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "locationID",
+        "in": "query",
+        "required": true,
+        "description": "locationId can be retrieved from `/Helper/auto-complete-location endpoint`\nEx: 3000016152 (New York, NY)",
+        "schema": {
+          "type": "string",
+          "description": "locationId can be retrieved from `/Helper/auto-complete-location endpoint`\nEx: 3000016152 (New York, NY)",
+          "example": "3000016152"
+        }
+      },
+      {
+        "name": "date_checkin",
+        "in": "query",
+        "required": true,
+        "description": "Check-in date in MM-DD-YYYY format",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-in date in MM-DD-YYYY format",
+          "example": "01-05-2026"
+        }
+      },
+      {
+        "name": "date_checkout",
+        "in": "query",
+        "required": true,
+        "description": "Check-out date in MM-DD-YYYY format",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-out date in MM-DD-YYYY format",
+          "example": "01-07-2026"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination (0 returns first 30 properties, offset 30 return next 30 properties)",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Offset for pagination (0 returns first 30 properties, offset 30 return next 30 properties)",
+          "example": 0
+        }
+      },
+      {
+        "name": "sort_order",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for results\n- Ex:  `HDR`\n- `HDR`: Recommended\n- `PRICE`: Lowest Price\n- `REVIEW_SCORE`: Guest Rating + Number of Reviews\n- `HDR`: Popularity\n- `DEALS`: Deals",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "HDR",
+            "PRICE",
+            "REVIEW_SCORE",
+            "DEALS"
+          ],
+          "description": "Sort order for hotel results. HDR: Recommended, PRICE: Lowest Price, REVIEW_SCORE: Guest Rating + Reviews, DEALS: Deals",
+          "example": "HDR"
+        }
+      },
+      {
+        "name": "bed_counts",
+        "in": "query",
+        "required": false,
+        "description": "Comma-separated bed counts",
+        "schema": {
+          "type": "string",
+          "description": "Comma-separated bed counts",
+          "example": "1,2"
+        }
+      },
+      {
+        "name": "room_count",
+        "in": "query",
+        "required": false,
+        "description": "Number of rooms",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of rooms",
+          "example": 2
+        }
+      },
+      {
+        "name": "adult_person_count",
+        "in": "query",
+        "required": false,
+        "description": "Number of adults",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of adults",
+          "example": 2
+        }
+      },
+      {
+        "name": "children_count",
+        "in": "query",
+        "required": false,
+        "description": "Comma-separated children ages (format: `1-6` for 1 child age of 6)",
+        "schema": {
+          "type": "string",
+          "description": "Comma-separated children ages (format: `1-6` for 1 child age of 6)",
+          "example": "1-6"
+        }
+      },
+      {
+        "name": "star_ratings",
+        "in": "query",
+        "required": false,
+        "description": "Comma-separated star ratings (e.g. - `3,3.5,4,4.5,5` for 3+ star hotel)",
+        "schema": {
+          "type": "string",
+          "description": "Comma-separated star ratings (e.g. - `3,3.5,4,4.5,5` for 3+ star hotel)",
+          "example": "2,2.5,3,3.5,4,4.5,5"
+        }
+      },
+      {
+        "name": "guest_rating",
+        "in": "query",
+        "required": false,
+        "description": "Minimum guest rating (e.g. - 5)",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum guest rating (e.g. - 5)"
+        }
+      },
+      {
+        "name": "available_amenities",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated amenity codes.\n- Some example values\n- `FREE_CANCELLATION`: Free Cancellation\n- `FINTRNT`: Free Internet\n- `FBRKFST`: Free Breakfast\n- `FPRKING`: Free Parking\n- `FITSPA`: Fitness Center\n- `SPOOL`: Pool\n- `AIRSHUTTL`: Airport Shuttle\n- `FAIRSHUTTL`: Free Airport Shuttle\n- `BUSCNTR`: Business Center\n- `CASINO`: Casino\n- `PETALLOW`: Pets Allowed\n- `RESTRNT`: Restaurant\n- `HANDFAC`: Handicapped Rooms/Facilities\n- `NSMKFAC`: No Smoking Rooms/Facilities\n- `SPA`: Spa",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated amenity codes.\n- Some example values\n- `FREE_CANCELLATION`: Free Cancellation\n- `FINTRNT`: Free Internet\n- `FBRKFST`: Free Breakfast\n- `FPRKING`: Free Parking\n- `FITSPA`: Fitness Center\n- `SPOOL`: Pool\n- `AIRSHUTTL`: Airport Shuttle\n- `FAIRSHUTTL`: Free Airport Shuttle\n- `BUSCNTR`: Business Center\n- `CASINO`: Casino\n- `PETALLOW`: Pets Allowed\n- `RESTRNT`: Restaurant\n- `HANDFAC`: Handicapped Rooms/Facilities\n- `NSMKFAC`: No Smoking Rooms/Facilities\n- `SPA`: Spa",
+          "example": "FINTRNT"
+        }
+      },
+      {
+        "name": "rate_option",
+        "in": "query",
+        "required": false,
+        "description": "Comma-separated rate options",
+        "schema": {
+          "type": "string",
+          "description": "Comma-separated rate options",
+          "example": "FREE_CANCELLATION,PAY_LATER"
+        }
+      },
+      {
+        "name": "currency",
+        "in": "query",
+        "required": false,
+        "description": "Currency code",
+        "schema": {
+          "type": "string",
+          "description": "Currency code",
+          "example": "USD"
+        }
+      },
+      {
+        "name": "property_theme",
+        "in": "query",
+        "required": false,
+        "description": "- **Property theme ID**\n- Property Theme Values\n- Family Friendly - `1`\n- Luxury - `4`\n- Comfort - `5`\n- Business Friendly - `6`\n- Spa & Wellness - `7`",
+        "schema": {
+          "type": "string",
+          "description": "- **Property theme ID**\n- Property Theme Values\n- Family Friendly - `1`\n- Luxury - `4`\n- Comfort - `5`\n- Business Friendly - `6`\n- Spa & Wellness - `7`"
+        }
+      },
+      {
+        "name": "set_your_budget",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price budget, e.g - 300",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price budget, e.g - 300"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "locationID": {
+          "type": "string",
+          "description": "locationId can be retrieved from `/Helper/auto-complete-location endpoint`\nEx: 3000016152 (New York, NY)",
+          "example": "3000016152"
+        },
+        "date_checkin": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-in date in MM-DD-YYYY format",
+          "example": "01-05-2026"
+        },
+        "date_checkout": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-out date in MM-DD-YYYY format",
+          "example": "01-07-2026"
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Offset for pagination (0 returns first 30 properties, offset 30 return next 30 properties)",
+          "example": 0
+        },
+        "sort_order": {
+          "type": "string",
+          "enum": [
+            "HDR",
+            "PRICE",
+            "REVIEW_SCORE",
+            "DEALS"
+          ],
+          "description": "- Sort order for results\n- Ex:  `HDR`\n- `HDR`: Recommended\n- `PRICE`: Lowest Price\n- `REVIEW_SCORE`: Guest Rating + Number of Reviews\n- `HDR`: Popularity\n- `DEALS`: Deals",
+          "example": "HDR"
+        },
+        "bed_counts": {
+          "type": "string",
+          "description": "Comma-separated bed counts",
+          "example": "1,2"
+        },
+        "room_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of rooms",
+          "example": 2
+        },
+        "adult_person_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of adults",
+          "example": 2
+        },
+        "children_count": {
+          "type": "string",
+          "description": "Comma-separated children ages (format: `1-6` for 1 child age of 6)",
+          "example": "1-6"
+        },
+        "star_ratings": {
+          "type": "string",
+          "description": "Comma-separated star ratings (e.g. - `3,3.5,4,4.5,5` for 3+ star hotel)",
+          "example": "2,2.5,3,3.5,4,4.5,5"
+        },
+        "guest_rating": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum guest rating (e.g. - 5)"
+        },
+        "available_amenities": {
+          "type": "string",
+          "description": "- Comma-separated amenity codes.\n- Some example values\n- `FREE_CANCELLATION`: Free Cancellation\n- `FINTRNT`: Free Internet\n- `FBRKFST`: Free Breakfast\n- `FPRKING`: Free Parking\n- `FITSPA`: Fitness Center\n- `SPOOL`: Pool\n- `AIRSHUTTL`: Airport Shuttle\n- `FAIRSHUTTL`: Free Airport Shuttle\n- `BUSCNTR`: Business Center\n- `CASINO`: Casino\n- `PETALLOW`: Pets Allowed\n- `RESTRNT`: Restaurant\n- `HANDFAC`: Handicapped Rooms/Facilities\n- `NSMKFAC`: No Smoking Rooms/Facilities\n- `SPA`: Spa",
+          "example": "FINTRNT"
+        },
+        "rate_option": {
+          "type": "string",
+          "description": "Comma-separated rate options",
+          "example": "FREE_CANCELLATION,PAY_LATER"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code",
+          "example": "USD"
+        },
+        "property_theme": {
+          "type": "string",
+          "description": "- **Property theme ID**\n- Property Theme Values\n- Family Friendly - `1`\n- Luxury - `4`\n- Comfort - `5`\n- Business Friendly - `6`\n- Spa & Wellness - `7`"
+        },
+        "set_your_budget": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price budget, e.g - 300"
+        }
+      },
+      "required": [
+        "locationID",
+        "date_checkin",
+        "date_checkout"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_hotel-details",
+    "method": "GET",
+    "path": "/hotel-details",
+    "summary": "Get Hotel details from hotel ID",
+    "description": "Returns hotel details using hotel ID",
+    "tags": [
+      "Hotel Endpoints"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "hotelId",
+        "in": "query",
+        "required": true,
+        "description": "- Hotel ID to get details for\n- Get the `hotelId` from `search-hotel` endpoint.",
+        "schema": {
+          "type": "string",
+          "description": "- Hotel ID to get details for\n- Get the `hotelId` from `search-hotel` endpoint.",
+          "example": "11286903"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "- Hotel ID to get details for\n- Get the `hotelId` from `search-hotel` endpoint.",
+          "example": "11286903"
+        }
+      },
+      "required": [
+        "hotelId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_hotel-room-and-price-details",
+    "method": "GET",
+    "path": "/hotel-room-and-price-details",
+    "summary": "Get hotel rooms and price details",
+    "description": "Returns available rooms details and pricing info",
+    "tags": [
+      "Hotel Endpoints"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "hotelId",
+        "in": "query",
+        "required": true,
+        "description": "Hotel ID to get room and price details for",
+        "schema": {
+          "type": "string",
+          "description": "Hotel ID to get room and price details for",
+          "example": "11286903"
+        }
+      },
+      {
+        "name": "checkIn",
+        "in": "query",
+        "required": true,
+        "description": "Check-in date in MM-DD-YYYY format",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-in date in MM-DD-YYYY format",
+          "example": "01-05-2026"
+        }
+      },
+      {
+        "name": "checkOut",
+        "in": "query",
+        "required": true,
+        "description": "Check-out date in MM-DD-YYYY format",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-out date in MM-DD-YYYY format",
+          "example": "01-07-2026"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": false,
+        "description": "Country code",
+        "schema": {
+          "type": "string",
+          "description": "Country code",
+          "example": "US"
+        }
+      },
+      {
+        "name": "currencyCode",
+        "in": "query",
+        "required": false,
+        "description": "Currency code",
+        "schema": {
+          "type": "string",
+          "description": "Currency code",
+          "example": "USD"
+        }
+      },
+      {
+        "name": "roomCount",
+        "in": "query",
+        "required": false,
+        "description": "Number of rooms",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of rooms",
+          "example": 2
+        }
+      },
+      {
+        "name": "adult_count",
+        "in": "query",
+        "required": false,
+        "description": "Number of adults",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of adults",
+          "example": 2
+        }
+      },
+      {
+        "name": "children_count",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated children with ages (format: 1-7,1-9)\n- One Child of 7 and one child of 9 years: `1-7,1-9`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated children with ages (format: 1-7,1-9)\n- One Child of 7 and one child of 9 years: `1-7,1-9`",
+          "example": "1-7,1-9"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Hotel ID to get room and price details for",
+          "example": "11286903"
+        },
+        "checkIn": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-in date in MM-DD-YYYY format",
+          "example": "01-05-2026"
+        },
+        "checkOut": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Check-out date in MM-DD-YYYY format",
+          "example": "01-07-2026"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "Country code",
+          "example": "US"
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "Currency code",
+          "example": "USD"
+        },
+        "roomCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of rooms",
+          "example": 2
+        },
+        "adult_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Number of adults",
+          "example": 2
+        },
+        "children_count": {
+          "type": "string",
+          "description": "- Comma-separated children with ages (format: 1-7,1-9)\n- One Child of 7 and one child of 9 years: `1-7,1-9`",
+          "example": "1-7,1-9"
+        }
+      },
+      "required": [
+        "hotelId",
+        "checkIn",
+        "checkOut"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_hotel-reviews-by-hotelid",
+    "method": "GET",
+    "path": "/hotel-reviews-by-hotelid",
+    "summary": "Get hotel reviews by hotelID",
+    "description": "Return 30 reviews of an hotel",
+    "tags": [
+      "Hotel Endpoints"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "hotelId",
+        "in": "query",
+        "required": true,
+        "description": "Hotel ID to get reviews for",
+        "schema": {
+          "type": "string",
+          "description": "Hotel ID to get reviews for",
+          "example": "11286903"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination. Starts from 1 and goes like 2, 3, 4. Default limit is 30 reviews per request.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Offset for pagination. Starts from 1 and goes like 2, 3, 4. Default limit is 30 reviews per request.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Hotel ID to get reviews for",
+          "example": "11286903"
+        },
+        "offset": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Offset for pagination. Starts from 1 and goes like 2, 3, 4. Default limit is 30 reviews per request.",
+          "example": 1
+        }
+      },
+      "required": [
+        "hotelId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-rental-car",
+    "method": "GET",
+    "path": "/search-rental-car",
+    "summary": "Search for rental car with location and time",
+    "description": "Search for rental car with location and time",
+    "tags": [
+      "Rental Car Endpoints"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "pick_up_location",
+        "in": "query",
+        "required": true,
+        "description": "- Pick up location (coordinatesm, location name, or Airport Code)\n- `pickUpLocation`  can be retrieved from `advance-auto-complete-location` endpoint\t\n- location can be AIRPORT code or coordinates",
+        "schema": {
+          "type": "string",
+          "description": "- Pick up location (coordinatesm, location name, or Airport Code)\n- `pickUpLocation`  can be retrieved from `advance-auto-complete-location` endpoint\t\n- location can be AIRPORT code or coordinates",
+          "example": "40.758867,-73.9848769999999"
+        }
+      },
+      {
+        "name": "drop_off_location",
+        "in": "query",
+        "required": true,
+        "description": "Drop off location (coordinatesm, location name, or Airport Code)\n- `pickUpLocation`  can be retrieved from `advance-auto-complete-location` endpoint\t\n- location can be AIRPORT code or coordinates",
+        "schema": {
+          "type": "string",
+          "description": "Drop off location (coordinatesm, location name, or Airport Code)\n- `pickUpLocation`  can be retrieved from `advance-auto-complete-location` endpoint\t\n- location can be AIRPORT code or coordinates",
+          "example": "JFK"
+        }
+      },
+      {
+        "name": "pick_up_date",
+        "in": "query",
+        "required": true,
+        "description": "Pick up date in YYYY-MM-DD format",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Pick up date in YYYY-MM-DD format",
+          "example": "2026-01-05"
+        }
+      },
+      {
+        "name": "pick_up_time",
+        "in": "query",
+        "required": true,
+        "description": "Pick up time in HH:MM format (24-hour)",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}:\\d{2}$",
+          "description": "Pick up time in HH:MM format (24-hour)",
+          "example": "12:00"
+        }
+      },
+      {
+        "name": "drop_off_date",
+        "in": "query",
+        "required": true,
+        "description": "Drop off date in YYYY-MM-DD format",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Drop off date in YYYY-MM-DD format",
+          "example": "2026-01-07"
+        }
+      },
+      {
+        "name": "drop_off_time",
+        "in": "query",
+        "required": true,
+        "description": "Drop off time in HH:MM format (24-hour)",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}:\\d{2}$",
+          "description": "Drop off time in HH:MM format (24-hour)",
+          "example": "15:00"
+        }
+      },
+      {
+        "name": "currency",
+        "in": "query",
+        "required": false,
+        "description": "Currency code for pricing",
+        "schema": {
+          "type": "string",
+          "description": "Currency code for pricing",
+          "example": "USD"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "pick_up_location": {
+          "type": "string",
+          "description": "- Pick up location (coordinatesm, location name, or Airport Code)\n- `pickUpLocation`  can be retrieved from `advance-auto-complete-location` endpoint\t\n- location can be AIRPORT code or coordinates",
+          "example": "40.758867,-73.9848769999999"
+        },
+        "drop_off_location": {
+          "type": "string",
+          "description": "Drop off location (coordinatesm, location name, or Airport Code)\n- `pickUpLocation`  can be retrieved from `advance-auto-complete-location` endpoint\t\n- location can be AIRPORT code or coordinates",
+          "example": "JFK"
+        },
+        "pick_up_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Pick up date in YYYY-MM-DD format",
+          "example": "2026-01-05"
+        },
+        "pick_up_time": {
+          "type": "string",
+          "pattern": "^\\d{2}:\\d{2}$",
+          "description": "Pick up time in HH:MM format (24-hour)",
+          "example": "12:00"
+        },
+        "drop_off_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Drop off date in YYYY-MM-DD format",
+          "example": "2026-01-07"
+        },
+        "drop_off_time": {
+          "type": "string",
+          "pattern": "^\\d{2}:\\d{2}$",
+          "description": "Drop off time in HH:MM format (24-hour)",
+          "example": "15:00"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code for pricing",
+          "example": "USD"
+        }
+      },
+      "required": [
+        "pick_up_location",
+        "drop_off_location",
+        "pick_up_date",
+        "pick_up_time",
+        "drop_off_date",
+        "drop_off_time"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-flights",
+    "method": "GET",
+    "path": "/search-flights",
+    "summary": "Search for flight (one-way and round-trip)",
+    "description": "Search for flight (one-way and round-trip)",
+    "tags": [
+      "Flights"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "flight_type",
+        "in": "query",
+        "required": true,
+        "description": "",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ONE_WAY",
+            "ROUND_TRIP"
+          ],
+          "example": "ROUND_TRIP"
+        }
+      },
+      {
+        "name": "origin_airport_code",
+        "in": "query",
+        "required": true,
+        "description": "- IATA code of the departure airport\n- `origin_airport_code` can be retrieved from `/Helper/advance-auto-complete-location` endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "- IATA code of the departure airport\n- `origin_airport_code` can be retrieved from `/Helper/advance-auto-complete-location` endpoint",
+          "example": "JFK"
+        }
+      },
+      {
+        "name": "destination_airport_code",
+        "in": "query",
+        "required": true,
+        "description": "- IATA code of the departure airport\n- `destination_airport_code` can be retrieved from `/Helper/advance-auto-complete-location` endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "- IATA code of the departure airport\n- `destination_airport_code` can be retrieved from `/Helper/advance-auto-complete-location` endpoint",
+          "example": "LAX"
+        }
+      },
+      {
+        "name": "departure_date",
+        "in": "query",
+        "required": true,
+        "description": "- Departure date in `MM-DD-YYYY` format\n- Required for `ROUND_TRIP` flights search",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "- Departure date in `MM-DD-YYYY` format\n- Required for `ROUND_TRIP` flights search",
+          "example": "01-05-2026"
+        }
+      },
+      {
+        "name": "return_date",
+        "in": "query",
+        "required": false,
+        "description": "- Return date in `MM-DD-YYYY` format\n- Required for `ROUND_TRIP` flights search\n- Leave blank for `ONE_WAY` flights search",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "- Return date in `MM-DD-YYYY` format\n- Required for `ROUND_TRIP` flights search\n- Leave blank for `ONE_WAY` flights search",
+          "example": "01-07-2026"
+        }
+      },
+      {
+        "name": "cabin_class",
+        "in": "query",
+        "required": true,
+        "description": "- Cabin class\n- Default value:  `ECO`\n- Select one of the values below\n- `ECO`: Economy\n- `PEC`: Premium Economy\n- `BUS`: Business\n- `FST`: First Class",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ECO",
+            "PEC",
+            "BUS",
+            "FST"
+          ],
+          "description": "- Cabin class\n- Default value:  `ECO`\n- Select one of the values below\n- `ECO`: Economy\n- `PEC`: Premium Economy\n- `BUS`: Business\n- `FST`: First Class",
+          "example": "ECO"
+        }
+      },
+      {
+        "name": "num_adults",
+        "in": "query",
+        "required": true,
+        "description": "Number of adult passengers.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of adult passengers.",
+          "example": 1
+        }
+      },
+      {
+        "name": "num_children",
+        "in": "query",
+        "required": false,
+        "description": "Number of children (2-11 years old).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of children (2-11 years old).",
+          "example": 0
+        }
+      },
+      {
+        "name": "infants_on_lap",
+        "in": "query",
+        "required": false,
+        "description": "Number of infants on lap (under 2 years old).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of infants on lap (under 2 years old).",
+          "example": 0
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "Comma-separated values: CARRY_ON, SEATS",
+        "schema": {
+          "type": "string",
+          "description": "Comma-separated values: CARRY_ON, SEATS",
+          "example": "CARRY_ON,SEATS"
+        }
+      },
+      {
+        "name": "sort_options",
+        "in": "query",
+        "required": false,
+        "description": "Sorting order for the flight results.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "FASTEST",
+            "LOWEST_PRICE",
+            "EARLIEST",
+            "LATEST"
+          ],
+          "description": "Sorting order for the flight results.",
+          "example": "LOWEST_PRICE"
+        }
+      },
+      {
+        "name": "no_of_stops",
+        "in": "query",
+        "required": false,
+        "description": "Maximum number of stops. 0 for non-stop. Values > 7 will be capped at 7. Defaults to 7 if omitted.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of stops. 0 for non-stop. Values > 7 will be capped at 7. Defaults to 7 if omitted.",
+          "example": 0
+        }
+      },
+      {
+        "name": "preferred_airline",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated IATA codes for preferred airlines.\n- Ex.- `'AA,DL,UA'`\n- It can input multiple values.\n- American Airlines: `AA`\n- Alaskan Airlines: `AS`\n- Frontier Airlines: `F9`\n- Hawaiian Airlines: `HA` \n- JetBlue Airlines: `B6`\n- Sun Country Airlines: `SY`\n- United Airlines: `UA`\n- Delta Airlines: `DL`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated IATA codes for preferred airlines.\n- Ex.- `'AA,DL,UA'`\n- It can input multiple values.\n- American Airlines: `AA`\n- Alaskan Airlines: `AS`\n- Frontier Airlines: `F9`\n- Hawaiian Airlines: `HA` \n- JetBlue Airlines: `B6`\n- Sun Country Airlines: `SY`\n- United Airlines: `UA`\n- Delta Airlines: `DL`"
+        }
+      },
+      {
+        "name": "preferred_takeoff_timing",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated values for preferred departure time window.\n- Ex:- `Early Morning,Morning,Afternoon`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred departure time window.\n- Ex:- `Early Morning,Morning,Afternoon`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        }
+      },
+      {
+        "name": "preferred_landing_timing",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated values for preferred arrival time window.\n- Ex:- `Afternoon,Evening`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred arrival time window.\n- Ex:- `Afternoon,Evening`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "flight_type": {
+          "type": "string",
+          "enum": [
+            "ONE_WAY",
+            "ROUND_TRIP"
+          ],
+          "example": "ROUND_TRIP"
+        },
+        "origin_airport_code": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "- IATA code of the departure airport\n- `origin_airport_code` can be retrieved from `/Helper/advance-auto-complete-location` endpoint",
+          "example": "JFK"
+        },
+        "destination_airport_code": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "- IATA code of the departure airport\n- `destination_airport_code` can be retrieved from `/Helper/advance-auto-complete-location` endpoint",
+          "example": "LAX"
+        },
+        "departure_date": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "- Departure date in `MM-DD-YYYY` format\n- Required for `ROUND_TRIP` flights search",
+          "example": "01-05-2026"
+        },
+        "return_date": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "- Return date in `MM-DD-YYYY` format\n- Required for `ROUND_TRIP` flights search\n- Leave blank for `ONE_WAY` flights search",
+          "example": "01-07-2026"
+        },
+        "cabin_class": {
+          "type": "string",
+          "enum": [
+            "ECO",
+            "PEC",
+            "BUS",
+            "FST"
+          ],
+          "description": "- Cabin class\n- Default value:  `ECO`\n- Select one of the values below\n- `ECO`: Economy\n- `PEC`: Premium Economy\n- `BUS`: Business\n- `FST`: First Class",
+          "example": "ECO"
+        },
+        "num_adults": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of adult passengers.",
+          "example": 1
+        },
+        "num_children": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of children (2-11 years old).",
+          "example": 0
+        },
+        "infants_on_lap": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of infants on lap (under 2 years old).",
+          "example": 0
+        },
+        "attributes": {
+          "type": "string",
+          "description": "Comma-separated values: CARRY_ON, SEATS",
+          "example": "CARRY_ON,SEATS"
+        },
+        "sort_options": {
+          "type": "string",
+          "enum": [
+            "FASTEST",
+            "LOWEST_PRICE",
+            "EARLIEST",
+            "LATEST"
+          ],
+          "description": "Sorting order for the flight results.",
+          "example": "LOWEST_PRICE"
+        },
+        "no_of_stops": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of stops. 0 for non-stop. Values > 7 will be capped at 7. Defaults to 7 if omitted.",
+          "example": 0
+        },
+        "preferred_airline": {
+          "type": "string",
+          "description": "- Comma-separated IATA codes for preferred airlines.\n- Ex.- `'AA,DL,UA'`\n- It can input multiple values.\n- American Airlines: `AA`\n- Alaskan Airlines: `AS`\n- Frontier Airlines: `F9`\n- Hawaiian Airlines: `HA` \n- JetBlue Airlines: `B6`\n- Sun Country Airlines: `SY`\n- United Airlines: `UA`\n- Delta Airlines: `DL`"
+        },
+        "preferred_takeoff_timing": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred departure time window.\n- Ex:- `Early Morning,Morning,Afternoon`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        },
+        "preferred_landing_timing": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred arrival time window.\n- Ex:- `Afternoon,Evening`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        }
+      },
+      "required": [
+        "flight_type",
+        "origin_airport_code",
+        "destination_airport_code",
+        "departure_date",
+        "cabin_class",
+        "num_adults"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_round-trip-search-flights",
+    "method": "GET",
+    "path": "/round-trip-search-flights",
+    "summary": "Search for Round Trip Flights",
+    "description": "Search for Round Trip Flights",
+    "tags": [
+      "Flights"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slice_key",
+        "in": "query",
+        "required": true,
+        "description": "REQUIRED. The `sliceKey` obtained from the `search-flight` endpoint response (found inside `slices[0].sliceKey`). This identifies the specific outbound flight the user selected.",
+        "schema": {
+          "type": "string",
+          "description": "REQUIRED. The `sliceKey` obtained from the `search-flight` endpoint response (found inside `slices[0].sliceKey`). This identifies the specific outbound flight the user selected.",
+          "example": "312025-12-01T16:29ASASJFKSEA0-13902025-12-01T21:15ASASSEALAX0"
+        }
+      },
+      {
+        "name": "flight_type",
+        "in": "query",
+        "required": false,
+        "description": "Must be 'ROUND_TRIP' for this endpoint.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ROUND_TRIP"
+          ],
+          "default": "ROUND_TRIP",
+          "description": "Must be 'ROUND_TRIP' for this endpoint.",
+          "example": "ROUND_TRIP"
+        }
+      },
+      {
+        "name": "origin_airport_code",
+        "in": "query",
+        "required": true,
+        "description": "IATA code of the Origin Airport (e.g., JFK).",
+        "schema": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "IATA code of the Origin Airport (e.g., JFK).",
+          "example": "JFK"
+        }
+      },
+      {
+        "name": "destination_airport_code",
+        "in": "query",
+        "required": true,
+        "description": "IATA code of the Destination Airport (e.g., LAX).",
+        "schema": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "IATA code of the Destination Airport (e.g., LAX).",
+          "example": "LAX"
+        }
+      },
+      {
+        "name": "departure_date",
+        "in": "query",
+        "required": true,
+        "description": "Departure date (MM-DD-YYYY). Must match the date used in the initial search.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Departure date (MM-DD-YYYY). Must match the date used in the initial search.",
+          "example": "01-05-2026"
+        }
+      },
+      {
+        "name": "return_date",
+        "in": "query",
+        "required": true,
+        "description": "Return date (MM-DD-YYYY). Required for fetching return flights.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Return date (MM-DD-YYYY). Required for fetching return flights.",
+          "example": "01-07-2026"
+        }
+      },
+      {
+        "name": "cabin_class",
+        "in": "query",
+        "required": true,
+        "description": "- Cabin class\n- Default value:  `ECO`\n- Select one of the values below\n- `ECO`: Economy\n- `PEC`: Premium Economy\n- `BUS`: Business\n- `FST`: First Class",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ECO",
+            "PEC",
+            "BUS",
+            "FST"
+          ],
+          "description": "- Cabin class\n- Default value:  `ECO`\n- Select one of the values below\n- `ECO`: Economy\n- `PEC`: Premium Economy\n- `BUS`: Business\n- `FST`: First Class",
+          "example": "ECO"
+        }
+      },
+      {
+        "name": "num_adults",
+        "in": "query",
+        "required": true,
+        "description": "Number of adult passengers.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of adult passengers.",
+          "example": 1
+        }
+      },
+      {
+        "name": "num_children",
+        "in": "query",
+        "required": false,
+        "description": "Number of children (2-11 years old).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of children (2-11 years old).",
+          "example": 0
+        }
+      },
+      {
+        "name": "infants_on_lap",
+        "in": "query",
+        "required": false,
+        "description": "Number of infants on lap (under 2 years old).",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of infants on lap (under 2 years old).",
+          "example": 0
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "Comma-separated values: CARRY_ON, SEATS",
+        "schema": {
+          "type": "string",
+          "description": "Comma-separated values: CARRY_ON, SEATS",
+          "example": "CARRY_ON,SEATS"
+        }
+      },
+      {
+        "name": "sort_options",
+        "in": "query",
+        "required": false,
+        "description": "Sorting order for the flight results.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "FASTEST",
+            "LOWEST_PRICE",
+            "EARLIEST",
+            "LATEST"
+          ],
+          "description": "Sorting order for the flight results.",
+          "example": "LOWEST_PRICE"
+        }
+      },
+      {
+        "name": "no_of_stops",
+        "in": "query",
+        "required": false,
+        "description": "Maximum number of stops. 0 for non-stop. Values > 7 will be capped at 7. Defaults to 7 if omitted.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of stops. 0 for non-stop. Values > 7 will be capped at 7. Defaults to 7 if omitted.",
+          "example": 0
+        }
+      },
+      {
+        "name": "preferred_airline",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated IATA codes for preferred airlines.\n- Ex.- `'AA,DL,UA'`\n- It can input multiple values.\n- American Airlines: `AA`\n- Alaskan Airlines: `AS`\n- Frontier Airlines: `F9`\n- Hawaiian Airlines: `HA` \n- JetBlue Airlines: `B6`\n- Sun Country Airlines: `SY`\n- United Airlines: `UA`\n- Delta Airlines: `DL`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated IATA codes for preferred airlines.\n- Ex.- `'AA,DL,UA'`\n- It can input multiple values.\n- American Airlines: `AA`\n- Alaskan Airlines: `AS`\n- Frontier Airlines: `F9`\n- Hawaiian Airlines: `HA` \n- JetBlue Airlines: `B6`\n- Sun Country Airlines: `SY`\n- United Airlines: `UA`\n- Delta Airlines: `DL`"
+        }
+      },
+      {
+        "name": "preferred_takeoff_timing",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated values for preferred departure time window.\n- Ex:- `Early Morning,Morning,Afternoon`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred departure time window.\n- Ex:- `Early Morning,Morning,Afternoon`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        }
+      },
+      {
+        "name": "preferred_landing_timing",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated values for preferred arrival time window.\n- Ex:- `Afternoon,Evening`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred arrival time window.\n- Ex:- `Afternoon,Evening`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slice_key": {
+          "type": "string",
+          "description": "REQUIRED. The `sliceKey` obtained from the `search-flight` endpoint response (found inside `slices[0].sliceKey`). This identifies the specific outbound flight the user selected.",
+          "example": "312025-12-01T16:29ASASJFKSEA0-13902025-12-01T21:15ASASSEALAX0"
+        },
+        "flight_type": {
+          "type": "string",
+          "enum": [
+            "ROUND_TRIP"
+          ],
+          "default": "ROUND_TRIP",
+          "description": "Must be 'ROUND_TRIP' for this endpoint.",
+          "example": "ROUND_TRIP"
+        },
+        "origin_airport_code": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "IATA code of the Origin Airport (e.g., JFK).",
+          "example": "JFK"
+        },
+        "destination_airport_code": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3,
+          "description": "IATA code of the Destination Airport (e.g., LAX).",
+          "example": "LAX"
+        },
+        "departure_date": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Departure date (MM-DD-YYYY). Must match the date used in the initial search.",
+          "example": "01-05-2026"
+        },
+        "return_date": {
+          "type": "string",
+          "pattern": "^\\d{2}-\\d{2}-\\d{4}$",
+          "description": "Return date (MM-DD-YYYY). Required for fetching return flights.",
+          "example": "01-07-2026"
+        },
+        "cabin_class": {
+          "type": "string",
+          "enum": [
+            "ECO",
+            "PEC",
+            "BUS",
+            "FST"
+          ],
+          "description": "- Cabin class\n- Default value:  `ECO`\n- Select one of the values below\n- `ECO`: Economy\n- `PEC`: Premium Economy\n- `BUS`: Business\n- `FST`: First Class",
+          "example": "ECO"
+        },
+        "num_adults": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of adult passengers.",
+          "example": 1
+        },
+        "num_children": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of children (2-11 years old).",
+          "example": 0
+        },
+        "infants_on_lap": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Number of infants on lap (under 2 years old).",
+          "example": 0
+        },
+        "attributes": {
+          "type": "string",
+          "description": "Comma-separated values: CARRY_ON, SEATS",
+          "example": "CARRY_ON,SEATS"
+        },
+        "sort_options": {
+          "type": "string",
+          "enum": [
+            "FASTEST",
+            "LOWEST_PRICE",
+            "EARLIEST",
+            "LATEST"
+          ],
+          "description": "Sorting order for the flight results.",
+          "example": "LOWEST_PRICE"
+        },
+        "no_of_stops": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum number of stops. 0 for non-stop. Values > 7 will be capped at 7. Defaults to 7 if omitted.",
+          "example": 0
+        },
+        "preferred_airline": {
+          "type": "string",
+          "description": "- Comma-separated IATA codes for preferred airlines.\n- Ex.- `'AA,DL,UA'`\n- It can input multiple values.\n- American Airlines: `AA`\n- Alaskan Airlines: `AS`\n- Frontier Airlines: `F9`\n- Hawaiian Airlines: `HA` \n- JetBlue Airlines: `B6`\n- Sun Country Airlines: `SY`\n- United Airlines: `UA`\n- Delta Airlines: `DL`"
+        },
+        "preferred_takeoff_timing": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred departure time window.\n- Ex:- `Early Morning,Morning,Afternoon`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        },
+        "preferred_landing_timing": {
+          "type": "string",
+          "description": "- Comma-separated values for preferred arrival time window.\n- Ex:- `Afternoon,Evening`\n- `Early Morning`\n- `Morning`\n- `Afternoon`\n- `Evening`"
+        }
+      },
+      "required": [
+        "slice_key",
+        "origin_airport_code",
+        "destination_airport_code",
+        "departure_date",
+        "return_date",
+        "cabin_class",
+        "num_adults"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

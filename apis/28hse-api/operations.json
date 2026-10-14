@@ -1,0 +1,1438 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-search",
+    "method": "GET",
+    "path": "/property-search",
+    "summary": "/property-search",
+    "description": "Search property listings for sale or rent, filterable by district, estate, price, floor area, and property type.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listingType",
+        "in": "query",
+        "required": true,
+        "description": "**Which side of the market to look at  -  `buy` (for sale) or `rent` (to let).**\n\n28Hse keeps the two inventories completely separate, and the flag also decides how `priceMin`/`priceMax` are read:\n\n- `buy`  -  買樓, for-sale listings. Price is the **total asking price in HKD**, e.g. `4720000` (shown on 28Hse as 售 $472 萬元).\n- `rent`  -  租樓, to-let listings. Price is the **monthly rent in HKD**, e.g. `18000` (租 $18,000 元).\n\nEvery other filter  -  district, estate, area, bedrooms, building age  -  works the same on both sides.\n\nRequired on `/property-search`; optional on `/property-filters`, where it defaults to `buy`.\n\nEx: `buy`, `rent`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "rent"
+          ],
+          "description": "**Which side of the market to look at  -  `buy` (for sale) or `rent` (to let).**\n\n28Hse keeps the two inventories completely separate, and the flag also decides how `priceMin`/`priceMax` are read:\n\n- `buy`  -  買樓, for-sale listings. Price is the **total asking price in HKD**, e.g. `4720000` (shown on 28Hse as 售 $472 萬元).\n- `rent`  -  租樓, to-let listings. Price is the **monthly rent in HKD**, e.g. `18000` (租 $18,000 元).\n\nEvery other filter  -  district, estate, area, bedrooms, building age  -  works the same on both sides.\n\nRequired on `/property-search`; optional on `/property-filters`, where it defaults to `buy`.\n\nEx: `buy`, `rent`",
+          "example": "buy"
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        }
+      },
+      {
+        "name": "districtIds",
+        "in": "query",
+        "required": false,
+        "description": "**One or more district ids, comma-separated  -  the finest location filter available.** Optional.\n\nA *district* here is a neighbourhood (大埔, 沙田, 銅鑼灣 …), **not** one of the four coarse `region` values, and the two use different id sets. Ids from different regions can be mixed; the result is their union (an OR, never an AND).\n\n**Call `/property-filters` for the full list**  -  its `districts` array gives every id that filters, with the region and area each one belongs to. Common ones:\n\n- `103`  -  大埔 Tai Po\n- `102`  -  沙田 Sha Tin\n- `19`  -  中環 Central\n- `23`  -  銅鑼灣 Causeway Bay\n- `30`  -  北角 North Point\n- `62`  -  深水埗 Sham Shui Po\n- `54`  -  觀塘 Kwun Tong\n- `45`  -  鴨脷洲 Ap Lei Chau\n- `103,102`  -  Tai Po **or** Sha Tin\n\nAn unknown id matches nothing rather than erroring, so check the id against `/property-filters` if a search comes back empty. Single-estate areas such as 太古城 or 美孚 are not districts on 28Hse  -  search those with `estateIds` from `/location-autocomplete`.\n\nEx: `103`, `103,102`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**One or more district ids, comma-separated  -  the finest location filter available.** Optional.\n\nA *district* here is a neighbourhood (大埔, 沙田, 銅鑼灣 …), **not** one of the four coarse `region` values, and the two use different id sets. Ids from different regions can be mixed; the result is their union (an OR, never an AND).\n\n**Call `/property-filters` for the full list**  -  its `districts` array gives every id that filters, with the region and area each one belongs to. Common ones:\n\n- `103`  -  大埔 Tai Po\n- `102`  -  沙田 Sha Tin\n- `19`  -  中環 Central\n- `23`  -  銅鑼灣 Causeway Bay\n- `30`  -  北角 North Point\n- `62`  -  深水埗 Sham Shui Po\n- `54`  -  觀塘 Kwun Tong\n- `45`  -  鴨脷洲 Ap Lei Chau\n- `103,102`  -  Tai Po **or** Sha Tin\n\nAn unknown id matches nothing rather than erroring, so check the id against `/property-filters` if a search comes back empty. Single-estate areas such as 太古城 or 美孚 are not districts on 28Hse  -  search those with `estateIds` from `/location-autocomplete`.\n\nEx: `103`, `103,102`",
+          "example": "103"
+        }
+      },
+      {
+        "name": "estateIds",
+        "in": "query",
+        "required": false,
+        "description": "**One or more estate ids, comma-separated  -  restricts the search to specific estates/buildings.** Optional.\n\nThe most precise filter on this endpoint: `query` matches names loosely, an estate id matches exactly one estate. Multiple ids are OR-ed together.\n\n- `1140`  -  太古城 Taikoo Shing\n- `2520`  -  美孚新邨 Mei Foo Sun Chuen\n- `4198`  -  逸雅苑 Yat Nga Court\n- `1140,2520`  -  listings in either estate\n\nGet ids from `/location-autocomplete` (type a name, read `id`), `/estate-search` (`estateId`), or any listing's `estateId`.\n\nEx: `1140`, `1140,2520`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**One or more estate ids, comma-separated  -  restricts the search to specific estates/buildings.** Optional.\n\nThe most precise filter on this endpoint: `query` matches names loosely, an estate id matches exactly one estate. Multiple ids are OR-ed together.\n\n- `1140`  -  太古城 Taikoo Shing\n- `2520`  -  美孚新邨 Mei Foo Sun Chuen\n- `4198`  -  逸雅苑 Yat Nga Court\n- `1140,2520`  -  listings in either estate\n\nGet ids from `/location-autocomplete` (type a name, read `id`), `/estate-search` (`estateId`), or any listing's `estateId`.\n\nEx: `1140`, `1140,2520`",
+          "example": "1140"
+        }
+      },
+      {
+        "name": "priceMin",
+        "in": "query",
+        "required": false,
+        "description": "**Lowest price to include, in HKD.** Optional  -  omit for no lower bound.\n\nWhat the number means follows `listingType`:\n\n- `listingType=buy`  -  the **total asking price**. `3000000` = HK$3,000,000, which 28Hse displays as 300 萬. Buy prices are bucketed to the nearest 萬 (10,000) upstream, so anything finer than that has no effect.\n- `listingType=rent`  -  the **monthly rent**. `15000` = HK$15,000 per month.\n\nPair with `priceMax` for a band, or use it alone as an open-ended floor.\n\nEx: `3000000` (buy), `15000` (rent)",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Lowest price to include, in HKD.** Optional  -  omit for no lower bound.\n\nWhat the number means follows `listingType`:\n\n- `listingType=buy`  -  the **total asking price**. `3000000` = HK$3,000,000, which 28Hse displays as 300 萬. Buy prices are bucketed to the nearest 萬 (10,000) upstream, so anything finer than that has no effect.\n- `listingType=rent`  -  the **monthly rent**. `15000` = HK$15,000 per month.\n\nPair with `priceMax` for a band, or use it alone as an open-ended floor.\n\nEx: `3000000` (buy), `15000` (rent)"
+        }
+      },
+      {
+        "name": "priceMax",
+        "in": "query",
+        "required": false,
+        "description": "**Highest price to include, in HKD.** Optional  -  omit for no upper bound.\n\nRead exactly like `priceMin`, so it follows `listingType` too:\n\n- `listingType=buy`  -  total asking price. `5000000` = HK$5,000,000 (500 萬), bucketed to the nearest 萬 upstream.\n- `listingType=rent`  -  monthly rent. `25000` = HK$25,000 per month.\n\nEx: `5000000` (buy), `25000` (rent)",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Highest price to include, in HKD.** Optional  -  omit for no upper bound.\n\nRead exactly like `priceMin`, so it follows `listingType` too:\n\n- `listingType=buy`  -  total asking price. `5000000` = HK$5,000,000 (500 萬), bucketed to the nearest 萬 upstream.\n- `listingType=rent`  -  monthly rent. `25000` = HK$25,000 per month.\n\nEx: `5000000` (buy), `25000` (rent)"
+        }
+      },
+      {
+        "name": "areaMin",
+        "in": "query",
+        "required": false,
+        "description": "**Smallest floor area to include, in square feet  -  measured on *saleable* area (實用面積).** Optional.\n\n28Hse quotes two areas per listing: gross/建築 (`buildAreaText`) and saleable/實用 (`saleableAreaText`). This filter reads the **saleable** figure, the one Hong Kong buyers actually compare, so a floor of `500` can still return a flat whose gross area is 700 ft².\n\n- `300`  -  studio / 開放式 territory\n- `500`  -  a typical 2-bedroom\n- `1000`  -  large family flats and up\n\nEx: `500`",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Smallest floor area to include, in square feet  -  measured on *saleable* area (實用面積).** Optional.\n\n28Hse quotes two areas per listing: gross/建築 (`buildAreaText`) and saleable/實用 (`saleableAreaText`). This filter reads the **saleable** figure, the one Hong Kong buyers actually compare, so a floor of `500` can still return a flat whose gross area is 700 ft².\n\n- `300`  -  studio / 開放式 territory\n- `500`  -  a typical 2-bedroom\n- `1000`  -  large family flats and up\n\nEx: `500`"
+        }
+      },
+      {
+        "name": "areaMax",
+        "in": "query",
+        "required": false,
+        "description": "**Largest floor area to include, in square feet  -  measured on *saleable* area (實用面積).** Optional.\n\nThe companion ceiling to `areaMin`, and likewise compared against the saleable figure (`saleableAreaText`) rather than the gross one. Listings that publish no saleable area at all are excluded once you set an area filter.\n\nEx: `800`",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Largest floor area to include, in square feet  -  measured on *saleable* area (實用面積).** Optional.\n\nThe companion ceiling to `areaMin`, and likewise compared against the saleable figure (`saleableAreaText`) rather than the gross one. Listings that publish no saleable area at all are excluded once you set an area filter.\n\nEx: `800`"
+        }
+      },
+      {
+        "name": "bedroomsMin",
+        "in": "query",
+        "required": false,
+        "description": "**Fewest bedrooms to accept.** Optional.\n\nCounts bedrooms (房), not total rooms  -  `2` here means a 2-房 flat, which 28Hse shows as `2 房, 1 浴室`. Set `bedroomsMin` and `bedroomsMax` to the same number for an exact match (`2`/`2` = strictly 2-bedroom).\n\nLeaving it at `0` is the same as no lower bound. Listings that publish no bedroom count  -  car parks, shops, land  -  drop out as soon as you set either bound.\n\nEx: `1`, `2`, `3`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Fewest bedrooms to accept.** Optional.\n\nCounts bedrooms (房), not total rooms  -  `2` here means a 2-房 flat, which 28Hse shows as `2 房, 1 浴室`. Set `bedroomsMin` and `bedroomsMax` to the same number for an exact match (`2`/`2` = strictly 2-bedroom).\n\nLeaving it at `0` is the same as no lower bound. Listings that publish no bedroom count  -  car parks, shops, land  -  drop out as soon as you set either bound.\n\nEx: `1`, `2`, `3`"
+        }
+      },
+      {
+        "name": "bedroomsMax",
+        "in": "query",
+        "required": false,
+        "description": "**Most bedrooms to accept.** Optional.\n\nThe ceiling half of the bedroom band; `bedroomsMin=2` with `bedroomsMax=3` returns 2- and 3-bedroom flats. Anything with more than five bedrooms is reported back as `5plus` in the `bedrooms` field, so a max of `5` is effectively \"5 or more\".\n\nEx: `3`, `4`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Most bedrooms to accept.** Optional.\n\nThe ceiling half of the bedroom band; `bedroomsMin=2` with `bedroomsMax=3` returns 2- and 3-bedroom flats. Anything with more than five bedrooms is reported back as `5plus` in the `bedrooms` field, so a max of `5` is effectively \"5 or more\".\n\nEx: `3`, `4`"
+        }
+      },
+      {
+        "name": "buildingAgeMin",
+        "in": "query",
+        "required": false,
+        "description": "**Youngest building age to accept, in years.** Optional.\n\nAge runs from the building's occupation permit, so `0` means brand-new stock and doubles as \"no lower bound\". Use it to *exclude* new builds  -  `buildingAgeMin=30` returns only genuinely old buildings, the ones where redevelopment potential is the story.\n\nEx: `0`, `10`, `30`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Youngest building age to accept, in years.** Optional.\n\nAge runs from the building's occupation permit, so `0` means brand-new stock and doubles as \"no lower bound\". Use it to *exclude* new builds  -  `buildingAgeMin=30` returns only genuinely old buildings, the ones where redevelopment potential is the story.\n\nEx: `0`, `10`, `30`"
+        }
+      },
+      {
+        "name": "buildingAgeMax",
+        "in": "query",
+        "required": false,
+        "description": "**Oldest building age to accept, in years.** Optional.\n\nThe usual way to screen out ageing stock: pair it with `buildingAgeMin=0` for \"anything up to N years old\".\n\n- `10`  -  recent developments only\n- `20`  -  the common bank-friendly cutoff for mortgage terms\n- `50`  -  excludes little beyond pre-war tenements (唐樓)\n\nEx: `20`, `30`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Oldest building age to accept, in years.** Optional.\n\nThe usual way to screen out ageing stock: pair it with `buildingAgeMin=0` for \"anything up to N years old\".\n\n- `10`  -  recent developments only\n- `20`  -  the common bank-friendly cutoff for mortgage terms\n- `50`  -  excludes little beyond pre-war tenements (唐樓)\n\nEx: `20`, `30`"
+        }
+      },
+      {
+        "name": "propertyType",
+        "in": "query",
+        "required": false,
+        "description": "**Property category to search.** Optional  -  omit to search every category at once.\n\nTop-level codes:\n\n- `5`  -  住宅 residential (what most callers want)\n- `6`  -  車位 car park / parking space\n- `7`  -  工商 industrial & commercial\n- `8`  -  店舖 retail shop\n- `9`  -  土地 land\n- `2`  -  海外 overseas\n\nEach of these also has finer sub-codes that are accepted here  -  `101` 居屋 subsidised/HOS narrows `5` to one housing class, for instance. Call **`/property-filters`** for the current list of codes and names straight from 28Hse rather than hard-coding them.\n\nEx: `5`, `101`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "**Property category to search.** Optional  -  omit to search every category at once.\n\nTop-level codes:\n\n- `5`  -  住宅 residential (what most callers want)\n- `6`  -  車位 car park / parking space\n- `7`  -  工商 industrial & commercial\n- `8`  -  店舖 retail shop\n- `9`  -  土地 land\n- `2`  -  海外 overseas\n\nEach of these also has finer sub-codes that are accepted here  -  `101` 居屋 subsidised/HOS narrows `5` to one housing class, for instance. Call **`/property-filters`** for the current list of codes and names straight from 28Hse rather than hard-coding them.\n\nEx: `5`, `101`"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Order the listings come back in.** Optional  -  defaults to 28Hse's own ranking.\n\n- `default`  -  預設, the site's ranking (promoted and higher-`grade` listings first)\n- `latest`  -  最新放盤, newest listing first\n- `price_low` / `price_high`  -  price (or monthly rent) low→high / high→low\n- `buildarea_low` / `buildarea_high`  -  gross area 建築 low→high / high→low\n- `salesarea_low` / `salesarea_high`  -  saleable area 實用 low→high / high→low\n- `unitprice_buildarea_low` / `unitprice_buildarea_high`  -  price per ft² of *gross* area\n- `unitprice_salesarea_low` / `unitprice_salesarea_high`  -  price per ft² of *saleable* area\n\nThe per-ft² sorts are the ones to reach for when hunting value; the `salesarea` variants match how Hong Kong listings are normally compared, since saleable area is the quoted standard.\n\nEx: `latest`, `unitprice_salesarea_low`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "default",
+            "latest",
+            "price_low",
+            "price_high",
+            "buildarea_low",
+            "buildarea_high",
+            "salesarea_low",
+            "salesarea_high",
+            "unitprice_buildarea_low",
+            "unitprice_buildarea_high",
+            "unitprice_salesarea_low",
+            "unitprice_salesarea_high"
+          ],
+          "description": "**Order the listings come back in.** Optional  -  defaults to 28Hse's own ranking.\n\n- `default`  -  預設, the site's ranking (promoted and higher-`grade` listings first)\n- `latest`  -  最新放盤, newest listing first\n- `price_low` / `price_high`  -  price (or monthly rent) low→high / high→low\n- `buildarea_low` / `buildarea_high`  -  gross area 建築 low→high / high→low\n- `salesarea_low` / `salesarea_high`  -  saleable area 實用 low→high / high→low\n- `unitprice_buildarea_low` / `unitprice_buildarea_high`  -  price per ft² of *gross* area\n- `unitprice_salesarea_low` / `unitprice_salesarea_high`  -  price per ft² of *saleable* area\n\nThe per-ft² sorts are the ones to reach for when hunting value; the `salesarea` variants match how Hong Kong listings are normally compared, since saleable area is the quoted standard.\n\nEx: `latest`, `unitprice_salesarea_low`",
+          "example": "latest"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listingType": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "rent"
+          ],
+          "description": "**Which side of the market to look at  -  `buy` (for sale) or `rent` (to let).**\n\n28Hse keeps the two inventories completely separate, and the flag also decides how `priceMin`/`priceMax` are read:\n\n- `buy`  -  買樓, for-sale listings. Price is the **total asking price in HKD**, e.g. `4720000` (shown on 28Hse as 售 $472 萬元).\n- `rent`  -  租樓, to-let listings. Price is the **monthly rent in HKD**, e.g. `18000` (租 $18,000 元).\n\nEvery other filter  -  district, estate, area, bedrooms, building age  -  works the same on both sides.\n\nRequired on `/property-search`; optional on `/property-filters`, where it defaults to `buy`.\n\nEx: `buy`, `rent`",
+          "example": "buy"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        },
+        "districtIds": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**One or more district ids, comma-separated  -  the finest location filter available.** Optional.\n\nA *district* here is a neighbourhood (大埔, 沙田, 銅鑼灣 …), **not** one of the four coarse `region` values, and the two use different id sets. Ids from different regions can be mixed; the result is their union (an OR, never an AND).\n\n**Call `/property-filters` for the full list**  -  its `districts` array gives every id that filters, with the region and area each one belongs to. Common ones:\n\n- `103`  -  大埔 Tai Po\n- `102`  -  沙田 Sha Tin\n- `19`  -  中環 Central\n- `23`  -  銅鑼灣 Causeway Bay\n- `30`  -  北角 North Point\n- `62`  -  深水埗 Sham Shui Po\n- `54`  -  觀塘 Kwun Tong\n- `45`  -  鴨脷洲 Ap Lei Chau\n- `103,102`  -  Tai Po **or** Sha Tin\n\nAn unknown id matches nothing rather than erroring, so check the id against `/property-filters` if a search comes back empty. Single-estate areas such as 太古城 or 美孚 are not districts on 28Hse  -  search those with `estateIds` from `/location-autocomplete`.\n\nEx: `103`, `103,102`",
+          "example": "103"
+        },
+        "estateIds": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**One or more estate ids, comma-separated  -  restricts the search to specific estates/buildings.** Optional.\n\nThe most precise filter on this endpoint: `query` matches names loosely, an estate id matches exactly one estate. Multiple ids are OR-ed together.\n\n- `1140`  -  太古城 Taikoo Shing\n- `2520`  -  美孚新邨 Mei Foo Sun Chuen\n- `4198`  -  逸雅苑 Yat Nga Court\n- `1140,2520`  -  listings in either estate\n\nGet ids from `/location-autocomplete` (type a name, read `id`), `/estate-search` (`estateId`), or any listing's `estateId`.\n\nEx: `1140`, `1140,2520`",
+          "example": "1140"
+        },
+        "priceMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Lowest price to include, in HKD.** Optional  -  omit for no lower bound.\n\nWhat the number means follows `listingType`:\n\n- `listingType=buy`  -  the **total asking price**. `3000000` = HK$3,000,000, which 28Hse displays as 300 萬. Buy prices are bucketed to the nearest 萬 (10,000) upstream, so anything finer than that has no effect.\n- `listingType=rent`  -  the **monthly rent**. `15000` = HK$15,000 per month.\n\nPair with `priceMax` for a band, or use it alone as an open-ended floor.\n\nEx: `3000000` (buy), `15000` (rent)"
+        },
+        "priceMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Highest price to include, in HKD.** Optional  -  omit for no upper bound.\n\nRead exactly like `priceMin`, so it follows `listingType` too:\n\n- `listingType=buy`  -  total asking price. `5000000` = HK$5,000,000 (500 萬), bucketed to the nearest 萬 upstream.\n- `listingType=rent`  -  monthly rent. `25000` = HK$25,000 per month.\n\nEx: `5000000` (buy), `25000` (rent)"
+        },
+        "areaMin": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Smallest floor area to include, in square feet  -  measured on *saleable* area (實用面積).** Optional.\n\n28Hse quotes two areas per listing: gross/建築 (`buildAreaText`) and saleable/實用 (`saleableAreaText`). This filter reads the **saleable** figure, the one Hong Kong buyers actually compare, so a floor of `500` can still return a flat whose gross area is 700 ft².\n\n- `300`  -  studio / 開放式 territory\n- `500`  -  a typical 2-bedroom\n- `1000`  -  large family flats and up\n\nEx: `500`"
+        },
+        "areaMax": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Largest floor area to include, in square feet  -  measured on *saleable* area (實用面積).** Optional.\n\nThe companion ceiling to `areaMin`, and likewise compared against the saleable figure (`saleableAreaText`) rather than the gross one. Listings that publish no saleable area at all are excluded once you set an area filter.\n\nEx: `800`"
+        },
+        "bedroomsMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Fewest bedrooms to accept.** Optional.\n\nCounts bedrooms (房), not total rooms  -  `2` here means a 2-房 flat, which 28Hse shows as `2 房, 1 浴室`. Set `bedroomsMin` and `bedroomsMax` to the same number for an exact match (`2`/`2` = strictly 2-bedroom).\n\nLeaving it at `0` is the same as no lower bound. Listings that publish no bedroom count  -  car parks, shops, land  -  drop out as soon as you set either bound.\n\nEx: `1`, `2`, `3`"
+        },
+        "bedroomsMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Most bedrooms to accept.** Optional.\n\nThe ceiling half of the bedroom band; `bedroomsMin=2` with `bedroomsMax=3` returns 2- and 3-bedroom flats. Anything with more than five bedrooms is reported back as `5plus` in the `bedrooms` field, so a max of `5` is effectively \"5 or more\".\n\nEx: `3`, `4`"
+        },
+        "buildingAgeMin": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Youngest building age to accept, in years.** Optional.\n\nAge runs from the building's occupation permit, so `0` means brand-new stock and doubles as \"no lower bound\". Use it to *exclude* new builds  -  `buildingAgeMin=30` returns only genuinely old buildings, the ones where redevelopment potential is the story.\n\nEx: `0`, `10`, `30`"
+        },
+        "buildingAgeMax": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "**Oldest building age to accept, in years.** Optional.\n\nThe usual way to screen out ageing stock: pair it with `buildingAgeMin=0` for \"anything up to N years old\".\n\n- `10`  -  recent developments only\n- `20`  -  the common bank-friendly cutoff for mortgage terms\n- `50`  -  excludes little beyond pre-war tenements (唐樓)\n\nEx: `20`, `30`"
+        },
+        "propertyType": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "**Property category to search.** Optional  -  omit to search every category at once.\n\nTop-level codes:\n\n- `5`  -  住宅 residential (what most callers want)\n- `6`  -  車位 car park / parking space\n- `7`  -  工商 industrial & commercial\n- `8`  -  店舖 retail shop\n- `9`  -  土地 land\n- `2`  -  海外 overseas\n\nEach of these also has finer sub-codes that are accepted here  -  `101` 居屋 subsidised/HOS narrows `5` to one housing class, for instance. Call **`/property-filters`** for the current list of codes and names straight from 28Hse rather than hard-coding them.\n\nEx: `5`, `101`"
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "default",
+            "latest",
+            "price_low",
+            "price_high",
+            "buildarea_low",
+            "buildarea_high",
+            "salesarea_low",
+            "salesarea_high",
+            "unitprice_buildarea_low",
+            "unitprice_buildarea_high",
+            "unitprice_salesarea_low",
+            "unitprice_salesarea_high"
+          ],
+          "description": "**Order the listings come back in.** Optional  -  defaults to 28Hse's own ranking.\n\n- `default`  -  預設, the site's ranking (promoted and higher-`grade` listings first)\n- `latest`  -  最新放盤, newest listing first\n- `price_low` / `price_high`  -  price (or monthly rent) low→high / high→low\n- `buildarea_low` / `buildarea_high`  -  gross area 建築 low→high / high→low\n- `salesarea_low` / `salesarea_high`  -  saleable area 實用 low→high / high→low\n- `unitprice_buildarea_low` / `unitprice_buildarea_high`  -  price per ft² of *gross* area\n- `unitprice_salesarea_low` / `unitprice_salesarea_high`  -  price per ft² of *saleable* area\n\nThe per-ft² sorts are the ones to reach for when hunting value; the `salesarea` variants match how Hong Kong listings are normally compared, since saleable area is the quoted standard.\n\nEx: `latest`, `unitprice_salesarea_low`",
+          "example": "latest"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [
+        "listingType"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_estate-search",
+    "method": "GET",
+    "path": "/estate-search",
+    "summary": "/estate-search",
+    "description": "Search residential estates/buildings with price, volume and rental-yield stats.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        }
+      },
+      {
+        "name": "estateType",
+        "in": "query",
+        "required": false,
+        "description": "**Ownership class of the estate.** Optional  -  omit for every class.\n\n- `private`  -  私人屋苑, private residential estates (Taikoo Shing, Mei Foo Sun Chuen, City One …)\n- `public`  -  公屋/居屋, public rental estates and subsidised-sale HOS courts. Resale of these is restricted, which is why listings carry a `whiteGreenForm` note (綠表/白表 eligibility).\n- `village-house`  -  獨立屋, detached houses and New Territories village houses\n\nEx: `private`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "private",
+            "public",
+            "village-house"
+          ],
+          "description": "**Ownership class of the estate.** Optional  -  omit for every class.\n\n- `private`  -  私人屋苑, private residential estates (Taikoo Shing, Mei Foo Sun Chuen, City One …)\n- `public`  -  公屋/居屋, public rental estates and subsidised-sale HOS courts. Resale of these is restricted, which is why listings carry a `whiteGreenForm` note (綠表/白表 eligibility).\n- `village-house`  -  獨立屋, detached houses and New Territories village houses\n\nEx: `private`",
+          "example": "private"
+        }
+      },
+      {
+        "name": "pricePerSqftLevel",
+        "in": "query",
+        "required": false,
+        "description": "**Price bucket, in HKD per square foot of *saleable* area (呎價).** Optional  -  a bucket `1` - `6`, not a free range:\n\n- `1`  -  under $10,000 / ft²\n- `2`  -  $10,000  -  $15,000\n- `3`  -  $15,000  -  $20,000\n- `4`  -  $20,000  -  $30,000\n- `5`  -  $30,000  -  $50,000\n- `6`  -  over $50,000\n\nThe figure being bucketed is the estate's trailing three-month average (`stats.saleableSqPrice` in the response), not any individual listing  -  so this filters *estates by price level*, which is exactly what you want when comparing neighbourhoods.\n\nEx: `2`, `3`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6,
+          "description": "**Price bucket, in HKD per square foot of *saleable* area (呎價).** Optional  -  a bucket `1` - `6`, not a free range:\n\n- `1`  -  under $10,000 / ft²\n- `2`  -  $10,000  -  $15,000\n- `3`  -  $15,000  -  $20,000\n- `4`  -  $20,000  -  $30,000\n- `5`  -  $30,000  -  $50,000\n- `6`  -  over $50,000\n\nThe figure being bucketed is the estate's trailing three-month average (`stats.saleableSqPrice` in the response), not any individual listing  -  so this filters *estates by price level*, which is exactly what you want when comparing neighbourhoods.\n\nEx: `2`, `3`"
+        }
+      },
+      {
+        "name": "buildingAgeLevel",
+        "in": "query",
+        "required": false,
+        "description": "**Building-age bucket (樓齡).** Optional  -  `1` - `8`. Note that buckets `1` - `6` are *upper bounds* (\"within N years\"), so they overlap; only `7` and `8` are true bands:\n\n- `1`  -  brand new, 1 year or less\n- `2`  -  within 5 years\n- `3`  -  within 10 years\n- `4`  -  within 15 years\n- `5`  -  within 20 years\n- `6`  -  within 30 years\n- `7`  -  30 to 50 years\n- `8`  -  over 50 years\n\nEx: `2` (newer stock), `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "**Building-age bucket (樓齡).** Optional  -  `1` - `8`. Note that buckets `1` - `6` are *upper bounds* (\"within N years\"), so they overlap; only `7` and `8` are true bands:\n\n- `1`  -  brand new, 1 year or less\n- `2`  -  within 5 years\n- `3`  -  within 10 years\n- `4`  -  within 15 years\n- `5`  -  within 20 years\n- `6`  -  within 30 years\n- `7`  -  30 to 50 years\n- `8`  -  over 50 years\n\nEx: `2` (newer stock), `7`"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Order the estates come back in.** Optional  -  defaults to `popular`.\n\n- `popular`  -  熱門屋苑, 28Hse's own popularity ranking (the site default)\n- `age-asc` / `age-desc`  -  building age, youngest first / oldest first\n- `price-asc` / `price-desc`  -  price per ft² of saleable area, cheapest first / dearest first\n- `rental-yield`  -  回報率, highest gross rental yield first (`stats.rentalYield`)\n\n`rental-yield` is the natural starting point for an investment screen; combine it with `pricePerSqftLevel` to find yield without buying into the most expensive tier.\n\nEx: `rental-yield`, `price-asc`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "age-asc",
+            "age-desc",
+            "price-asc",
+            "price-desc",
+            "rental-yield"
+          ],
+          "description": "**Order the estates come back in.** Optional  -  defaults to `popular`.\n\n- `popular`  -  熱門屋苑, 28Hse's own popularity ranking (the site default)\n- `age-asc` / `age-desc`  -  building age, youngest first / oldest first\n- `price-asc` / `price-desc`  -  price per ft² of saleable area, cheapest first / dearest first\n- `rental-yield`  -  回報率, highest gross rental yield first (`stats.rentalYield`)\n\n`rental-yield` is the natural starting point for an investment screen; combine it with `pricePerSqftLevel` to find yield without buying into the most expensive tier.\n\nEx: `rental-yield`, `price-asc`",
+          "example": "popular"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        },
+        "estateType": {
+          "type": "string",
+          "enum": [
+            "private",
+            "public",
+            "village-house"
+          ],
+          "description": "**Ownership class of the estate.** Optional  -  omit for every class.\n\n- `private`  -  私人屋苑, private residential estates (Taikoo Shing, Mei Foo Sun Chuen, City One …)\n- `public`  -  公屋/居屋, public rental estates and subsidised-sale HOS courts. Resale of these is restricted, which is why listings carry a `whiteGreenForm` note (綠表/白表 eligibility).\n- `village-house`  -  獨立屋, detached houses and New Territories village houses\n\nEx: `private`",
+          "example": "private"
+        },
+        "pricePerSqftLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6,
+          "description": "**Price bucket, in HKD per square foot of *saleable* area (呎價).** Optional  -  a bucket `1` - `6`, not a free range:\n\n- `1`  -  under $10,000 / ft²\n- `2`  -  $10,000  -  $15,000\n- `3`  -  $15,000  -  $20,000\n- `4`  -  $20,000  -  $30,000\n- `5`  -  $30,000  -  $50,000\n- `6`  -  over $50,000\n\nThe figure being bucketed is the estate's trailing three-month average (`stats.saleableSqPrice` in the response), not any individual listing  -  so this filters *estates by price level*, which is exactly what you want when comparing neighbourhoods.\n\nEx: `2`, `3`"
+        },
+        "buildingAgeLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "**Building-age bucket (樓齡).** Optional  -  `1` - `8`. Note that buckets `1` - `6` are *upper bounds* (\"within N years\"), so they overlap; only `7` and `8` are true bands:\n\n- `1`  -  brand new, 1 year or less\n- `2`  -  within 5 years\n- `3`  -  within 10 years\n- `4`  -  within 15 years\n- `5`  -  within 20 years\n- `6`  -  within 30 years\n- `7`  -  30 to 50 years\n- `8`  -  over 50 years\n\nEx: `2` (newer stock), `7`"
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "age-asc",
+            "age-desc",
+            "price-asc",
+            "price-desc",
+            "rental-yield"
+          ],
+          "description": "**Order the estates come back in.** Optional  -  defaults to `popular`.\n\n- `popular`  -  熱門屋苑, 28Hse's own popularity ranking (the site default)\n- `age-asc` / `age-desc`  -  building age, youngest first / oldest first\n- `price-asc` / `price-desc`  -  price per ft² of saleable area, cheapest first / dearest first\n- `rental-yield`  -  回報率, highest gross rental yield first (`stats.rentalYield`)\n\n`rental-yield` is the natural starting point for an investment screen; combine it with `pricePerSqftLevel` to find yield without buying into the most expensive tier.\n\nEx: `rental-yield`, `price-asc`",
+          "example": "popular"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_new-property-search",
+    "method": "GET",
+    "path": "/new-property-search",
+    "summary": "/new-property-search",
+    "description": "Search new-development (pre-sale/first-hand) projects.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        }
+      },
+      {
+        "name": "priceBand",
+        "in": "query",
+        "required": false,
+        "description": "**Asking-price band of the development.** Optional. The band names are in 萬 HKD, the unit Hong Kong prices are quoted in (1 萬 = HK$10,000):\n\n- `under-300`  -  under HK$3M\n- `300-500`  -  HK$3M  -  5M\n- `500-1000`  -  HK$5M  -  10M\n- `1000-2000`  -  HK$10M  -  20M\n- `2000-3000`  -  HK$20M  -  30M\n- `over-3000`  -  over HK$30M\n- `tender`  -  招標, sold by tender with no published price list (common for houses and top-floor units)\n\nEx: `500-1000`, `tender`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "under-300",
+            "300-500",
+            "500-1000",
+            "1000-2000",
+            "2000-3000",
+            "over-3000",
+            "tender"
+          ],
+          "description": "**Asking-price band of the development.** Optional. The band names are in 萬 HKD, the unit Hong Kong prices are quoted in (1 萬 = HK$10,000):\n\n- `under-300`  -  under HK$3M\n- `300-500`  -  HK$3M  -  5M\n- `500-1000`  -  HK$5M  -  10M\n- `1000-2000`  -  HK$10M  -  20M\n- `2000-3000`  -  HK$20M  -  30M\n- `over-3000`  -  over HK$30M\n- `tender`  -  招標, sold by tender with no published price list (common for houses and top-floor units)\n\nEx: `500-1000`, `tender`"
+        }
+      },
+      {
+        "name": "occupancy",
+        "in": "query",
+        "required": false,
+        "description": "**When the flats can actually be moved into  -  the occupation-permit (入伙) year.** Optional.\n\n- `occupied`  -  已入伙, the development is finished and handover has started\n- `2026`  -  intake expected during 2026\n- `2027`  -  intake expected during 2027\n- `2028+`  -  2028 or later\n\nA future year means the project is being sold as 樓花 (off-plan/pre-sale), so buyers are committing before completion; `occupied` is the closest a new development gets to move-in-ready.\n\nEx: `2027`, `occupied`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "occupied",
+            "2026",
+            "2027",
+            "2028+"
+          ],
+          "description": "**When the flats can actually be moved into  -  the occupation-permit (入伙) year.** Optional.\n\n- `occupied`  -  已入伙, the development is finished and handover has started\n- `2026`  -  intake expected during 2026\n- `2027`  -  intake expected during 2027\n- `2028+`  -  2028 or later\n\nA future year means the project is being sold as 樓花 (off-plan/pre-sale), so buyers are committing before completion; `occupied` is the closest a new development gets to move-in-ready.\n\nEx: `2027`, `occupied`"
+        }
+      },
+      {
+        "name": "developer",
+        "in": "query",
+        "required": false,
+        "description": "**Developer behind the project.** Optional. 28Hse breaks out the five largest Hong Kong developers and lumps the rest together:\n\n- `cheung-kong`  -  長實 CK Asset Holdings\n- `henderson`  -  恒基 Henderson Land\n- `shkp`  -  新鴻基 Sun Hung Kai Properties\n- `sino`  -  信和 Sino Land\n- `new-world`  -  新世界 New World Development\n- `other`  -  everyone else (Wheelock, Kerry, China Resources, Nan Fung, MTR joint ventures …)\n\nThe developer name is echoed on each result as `developer`.\n\nEx: `shkp`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "cheung-kong",
+            "henderson",
+            "shkp",
+            "sino",
+            "new-world",
+            "other"
+          ],
+          "description": "**Developer behind the project.** Optional. 28Hse breaks out the five largest Hong Kong developers and lumps the rest together:\n\n- `cheung-kong`  -  長實 CK Asset Holdings\n- `henderson`  -  恒基 Henderson Land\n- `shkp`  -  新鴻基 Sun Hung Kai Properties\n- `sino`  -  信和 Sino Land\n- `new-world`  -  新世界 New World Development\n- `other`  -  everyone else (Wheelock, Kerry, China Resources, Nan Fung, MTR joint ventures …)\n\nThe developer name is echoed on each result as `developer`.\n\nEx: `shkp`"
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        },
+        "priceBand": {
+          "type": "string",
+          "enum": [
+            "under-300",
+            "300-500",
+            "500-1000",
+            "1000-2000",
+            "2000-3000",
+            "over-3000",
+            "tender"
+          ],
+          "description": "**Asking-price band of the development.** Optional. The band names are in 萬 HKD, the unit Hong Kong prices are quoted in (1 萬 = HK$10,000):\n\n- `under-300`  -  under HK$3M\n- `300-500`  -  HK$3M  -  5M\n- `500-1000`  -  HK$5M  -  10M\n- `1000-2000`  -  HK$10M  -  20M\n- `2000-3000`  -  HK$20M  -  30M\n- `over-3000`  -  over HK$30M\n- `tender`  -  招標, sold by tender with no published price list (common for houses and top-floor units)\n\nEx: `500-1000`, `tender`"
+        },
+        "occupancy": {
+          "type": "string",
+          "enum": [
+            "occupied",
+            "2026",
+            "2027",
+            "2028+"
+          ],
+          "description": "**When the flats can actually be moved into  -  the occupation-permit (入伙) year.** Optional.\n\n- `occupied`  -  已入伙, the development is finished and handover has started\n- `2026`  -  intake expected during 2026\n- `2027`  -  intake expected during 2027\n- `2028+`  -  2028 or later\n\nA future year means the project is being sold as 樓花 (off-plan/pre-sale), so buyers are committing before completion; `occupied` is the closest a new development gets to move-in-ready.\n\nEx: `2027`, `occupied`"
+        },
+        "developer": {
+          "type": "string",
+          "enum": [
+            "cheung-kong",
+            "henderson",
+            "shkp",
+            "sino",
+            "new-world",
+            "other"
+          ],
+          "description": "**Developer behind the project.** Optional. 28Hse breaks out the five largest Hong Kong developers and lumps the rest together:\n\n- `cheung-kong`  -  長實 CK Asset Holdings\n- `henderson`  -  恒基 Henderson Land\n- `shkp`  -  新鴻基 Sun Hung Kai Properties\n- `sino`  -  信和 Sino Land\n- `new-world`  -  新世界 New World Development\n- `other`  -  everyone else (Wheelock, Kerry, China Resources, Nan Fung, MTR joint ventures …)\n\nThe developer name is echoed on each result as `developer`.\n\nEx: `shkp`"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "/property-details",
+    "description": "Full detail for a single property listing by ad id.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "adId",
+        "in": "query",
+        "required": true,
+        "description": "**Numeric id of a single 28Hse property listing (廣告編號).** Required.\n\nEvery `/property-search` result carries one as `adId`, and it is also the number at the end of a listing URL:\n\n- `https://www.28hse.com/buy/apartment/property-3939129` → `3939129`\n- `https://www.28hse.com/rent/office/property-3972742` → `3972742`\n\nIf you have the URL rather than the id, pass it straight to `/property-details-by-url` instead of splitting it yourself.\n\nAn id whose listing has expired, sold, or been withdrawn returns `404`  -  listings are advertisements, so they do not live forever.\n\nEx: `3939129`",
+        "schema": {
+          "type": "integer",
+          "description": "**Numeric id of a single 28Hse property listing (廣告編號).** Required.\n\nEvery `/property-search` result carries one as `adId`, and it is also the number at the end of a listing URL:\n\n- `https://www.28hse.com/buy/apartment/property-3939129` → `3939129`\n- `https://www.28hse.com/rent/office/property-3972742` → `3972742`\n\nIf you have the URL rather than the id, pass it straight to `/property-details-by-url` instead of splitting it yourself.\n\nAn id whose listing has expired, sold, or been withdrawn returns `404`  -  listings are advertisements, so they do not live forever.\n\nEx: `3939129`",
+          "example": 3939129,
+          "exclusiveMinimum": 0
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "adId": {
+          "type": "integer",
+          "description": "**Numeric id of a single 28Hse property listing (廣告編號).** Required.\n\nEvery `/property-search` result carries one as `adId`, and it is also the number at the end of a listing URL:\n\n- `https://www.28hse.com/buy/apartment/property-3939129` → `3939129`\n- `https://www.28hse.com/rent/office/property-3972742` → `3972742`\n\nIf you have the URL rather than the id, pass it straight to `/property-details-by-url` instead of splitting it yourself.\n\nAn id whose listing has expired, sold, or been withdrawn returns `404`  -  listings are advertisements, so they do not live forever.\n\nEx: `3939129`",
+          "example": 3939129,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "adId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details-by-url",
+    "method": "GET",
+    "path": "/property-details-by-url",
+    "summary": "/property-details-by-url",
+    "description": "Full property listing detail from a listing URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A 28Hse listing URL  -  the front door for when you have a link rather than an id.** Required.\n\nThe ad id is parsed out of the URL and the same payload as `/property-details` is returned, so you never have to split the URL yourself. Every listing URL shape works  -  sale or rental, apartment, office or shop  -  and trailing query strings or anchors are tolerated:\n\n- `https://www.28hse.com/buy/apartment/property-3939129`\n- `https://www.28hse.com/rent/apartment/property-3972762`\n- `https://www.28hse.com/rent/office/property-3972742`\n\nA URL with no listing id in it  -  an estate page, a search page  -  returns `400` with a hint saying so; a well-formed URL whose listing has since expired or sold returns `404`.\n\nEx: `https://www.28hse.com/buy/apartment/property-3939129`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**A 28Hse listing URL  -  the front door for when you have a link rather than an id.** Required.\n\nThe ad id is parsed out of the URL and the same payload as `/property-details` is returned, so you never have to split the URL yourself. Every listing URL shape works  -  sale or rental, apartment, office or shop  -  and trailing query strings or anchors are tolerated:\n\n- `https://www.28hse.com/buy/apartment/property-3939129`\n- `https://www.28hse.com/rent/apartment/property-3972762`\n- `https://www.28hse.com/rent/office/property-3972742`\n\nA URL with no listing id in it  -  an estate page, a search page  -  returns `400` with a hint saying so; a well-formed URL whose listing has since expired or sold returns `404`.\n\nEx: `https://www.28hse.com/buy/apartment/property-3939129`",
+          "example": "https://www.28hse.com/buy/apartment/property-3939129"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**A 28Hse listing URL  -  the front door for when you have a link rather than an id.** Required.\n\nThe ad id is parsed out of the URL and the same payload as `/property-details` is returned, so you never have to split the URL yourself. Every listing URL shape works  -  sale or rental, apartment, office or shop  -  and trailing query strings or anchors are tolerated:\n\n- `https://www.28hse.com/buy/apartment/property-3939129`\n- `https://www.28hse.com/rent/apartment/property-3972762`\n- `https://www.28hse.com/rent/office/property-3972742`\n\nA URL with no listing id in it  -  an estate page, a search page  -  returns `400` with a hint saying so; a well-formed URL whose listing has since expired or sold returns `404`.\n\nEx: `https://www.28hse.com/buy/apartment/property-3939129`",
+          "example": "https://www.28hse.com/buy/apartment/property-3939129"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_transactions",
+    "method": "GET",
+    "path": "/transactions",
+    "summary": "/transactions",
+    "description": "Recent sale/lease transaction records, optionally scoped to a single estate.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "estateId",
+        "in": "query",
+        "required": false,
+        "description": "**Numeric estate id  -  scopes the transaction feed to one estate/building.** Optional.\n\nOmit it and you get the citywide feed: every sale and lease registration 28Hse holds, newest first. Pass one and you get just that estate's deal history, which is what you want for a price trend or a comparable-sales check.\n\n- `1140`  -  太古城 Taikoo Shing\n- `2520`  -  美孚新邨 Mei Foo Sun Chuen\n- `4198`  -  逸雅苑 Yat Nga Court, Tai Po\n\nGet an id from `/location-autocomplete` (`id`), `/estate-search` (`estateId`), any `/property-search` result (`estateId`), or the number at the end of an estate URL  -  `https://www.28hse.com/estate/detail/逸雅苑-4198` → `4198`.\n\nEx: `1140`",
+        "schema": {
+          "type": "integer",
+          "description": "**Numeric estate id  -  scopes the transaction feed to one estate/building.** Optional.\n\nOmit it and you get the citywide feed: every sale and lease registration 28Hse holds, newest first. Pass one and you get just that estate's deal history, which is what you want for a price trend or a comparable-sales check.\n\n- `1140`  -  太古城 Taikoo Shing\n- `2520`  -  美孚新邨 Mei Foo Sun Chuen\n- `4198`  -  逸雅苑 Yat Nga Court, Tai Po\n\nGet an id from `/location-autocomplete` (`id`), `/estate-search` (`estateId`), any `/property-search` result (`estateId`), or the number at the end of an estate URL  -  `https://www.28hse.com/estate/detail/逸雅苑-4198` → `4198`.\n\nEx: `1140`",
+          "example": 4198,
+          "exclusiveMinimum": 0
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "estateId": {
+          "type": "integer",
+          "description": "**Numeric estate id  -  scopes the transaction feed to one estate/building.** Optional.\n\nOmit it and you get the citywide feed: every sale and lease registration 28Hse holds, newest first. Pass one and you get just that estate's deal history, which is what you want for a price trend or a comparable-sales check.\n\n- `1140`  -  太古城 Taikoo Shing\n- `2520`  -  美孚新邨 Mei Foo Sun Chuen\n- `4198`  -  逸雅苑 Yat Nga Court, Tai Po\n\nGet an id from `/location-autocomplete` (`id`), `/estate-search` (`estateId`), any `/property-search` result (`estateId`), or the number at the end of an estate URL  -  `https://www.28hse.com/estate/detail/逸雅苑-4198` → `4198`.\n\nEx: `1140`",
+          "example": 4198,
+          "exclusiveMinimum": 0
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_location-autocomplete",
+    "method": "GET",
+    "path": "/location-autocomplete",
+    "summary": "/location-autocomplete",
+    "description": "Autocomplete for estates/districts by free-text (front door for discovering search ids).",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-filters",
+    "method": "GET",
+    "path": "/property-filters",
+    "summary": "/property-filters",
+    "description": "Available property-type, sort and price-range options for property search.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listingType",
+        "in": "query",
+        "required": false,
+        "description": "**Which side of the market to look at  -  `buy` (for sale) or `rent` (to let).**\n\n28Hse keeps the two inventories completely separate, and the flag also decides how `priceMin`/`priceMax` are read:\n\n- `buy`  -  買樓, for-sale listings. Price is the **total asking price in HKD**, e.g. `4720000` (shown on 28Hse as 售 $472 萬元).\n- `rent`  -  租樓, to-let listings. Price is the **monthly rent in HKD**, e.g. `18000` (租 $18,000 元).\n\nEvery other filter  -  district, estate, area, bedrooms, building age  -  works the same on both sides.\n\nRequired on `/property-search`; optional on `/property-filters`, where it defaults to `buy`.\n\nEx: `buy`, `rent`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "rent"
+          ],
+          "description": "**Which side of the market to look at  -  `buy` (for sale) or `rent` (to let).**\n\n28Hse keeps the two inventories completely separate, and the flag also decides how `priceMin`/`priceMax` are read:\n\n- `buy`  -  買樓, for-sale listings. Price is the **total asking price in HKD**, e.g. `4720000` (shown on 28Hse as 售 $472 萬元).\n- `rent`  -  租樓, to-let listings. Price is the **monthly rent in HKD**, e.g. `18000` (租 $18,000 元).\n\nEvery other filter  -  district, estate, area, bedrooms, building age  -  works the same on both sides.\n\nRequired on `/property-search`; optional on `/property-filters`, where it defaults to `buy`.\n\nEx: `buy`, `rent`",
+          "example": "buy"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listingType": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "rent"
+          ],
+          "description": "**Which side of the market to look at  -  `buy` (for sale) or `rent` (to let).**\n\n28Hse keeps the two inventories completely separate, and the flag also decides how `priceMin`/`priceMax` are read:\n\n- `buy`  -  買樓, for-sale listings. Price is the **total asking price in HKD**, e.g. `4720000` (shown on 28Hse as 售 $472 萬元).\n- `rent`  -  租樓, to-let listings. Price is the **monthly rent in HKD**, e.g. `18000` (租 $18,000 元).\n\nEvery other filter  -  district, estate, area, bedrooms, building age  -  works the same on both sides.\n\nRequired on `/property-search`; optional on `/property-filters`, where it defaults to `buy`.\n\nEx: `buy`, `rent`",
+          "example": "buy"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agent-search",
+    "method": "GET",
+    "path": "/agent-search",
+    "summary": "/agent-search",
+    "description": "Directory of real-estate agent companies with per-district listing counts.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        }
+      },
+      {
+        "name": "listingType",
+        "in": "query",
+        "required": false,
+        "description": "**Show only agencies currently active on this side of the market.** Optional  -  omit to list every company.\n\n- `buy`  -  放賣, agencies with for-sale listings (see `salesCount` on each result)\n- `rent`  -  放租, agencies with to-let listings (see `rentCount`)\n\nEx: `buy`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "rent"
+          ],
+          "description": "**Show only agencies currently active on this side of the market.** Optional  -  omit to list every company.\n\n- `buy`  -  放賣, agencies with for-sale listings (see `salesCount` on each result)\n- `rent`  -  放租, agencies with to-let listings (see `rentCount`)\n\nEx: `buy`",
+          "example": "buy"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "**Line of business the agency works in.** Optional.\n\n- `residential`  -  住宅, homes (the bulk of the directory)\n- `commercial`  -  工商, offices and industrial/commercial space\n- `shop`  -  店舖, retail shops\n\nEx: `residential`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial",
+            "shop"
+          ],
+          "description": "**Line of business the agency works in.** Optional.\n\n- `residential`  -  住宅, homes (the bulk of the directory)\n- `commercial`  -  工商, offices and industrial/commercial space\n- `shop`  -  店舖, retail shops\n\nEx: `residential`",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        },
+        "listingType": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "rent"
+          ],
+          "description": "**Show only agencies currently active on this side of the market.** Optional  -  omit to list every company.\n\n- `buy`  -  放賣, agencies with for-sale listings (see `salesCount` on each result)\n- `rent`  -  放租, agencies with to-let listings (see `rentCount`)\n\nEx: `buy`",
+          "example": "buy"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial",
+            "shop"
+          ],
+          "description": "**Line of business the agency works in.** Optional.\n\n- `residential`  -  住宅, homes (the bulk of the directory)\n- `commercial`  -  工商, offices and industrial/commercial space\n- `shop`  -  店舖, retail shops\n\nEx: `residential`",
+          "example": "residential"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_school-net-search",
+    "method": "GET",
+    "path": "/school-net-search",
+    "summary": "/school-net-search",
+    "description": "Directory of schools by school net, district, type, and gender/religion.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "schoolLevel",
+        "in": "query",
+        "required": false,
+        "description": "**Level of schooling.** Optional  -  omit to list schools of every level.\n\n- `kindergarten`  -  幼稚園\n- `primary`  -  小學\n- `secondary`  -  中學\n\n`primary` is the one that moves property prices: Hong Kong allocates primary places by school net (校網), so a flat's net is a selling point. Estates carry their nets as `primarySchoolNetId` / `secondarySchoolNetId` in `/estate-search`.\n\nEx: `primary`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "kindergarten",
+            "primary",
+            "secondary"
+          ],
+          "description": "**Level of schooling.** Optional  -  omit to list schools of every level.\n\n- `kindergarten`  -  幼稚園\n- `primary`  -  小學\n- `secondary`  -  中學\n\n`primary` is the one that moves property prices: Hong Kong allocates primary places by school net (校網), so a flat's net is a selling point. Estates carry their nets as `primarySchoolNetId` / `secondarySchoolNetId` in `/estate-search`.\n\nEx: `primary`",
+          "example": "primary"
+        }
+      },
+      {
+        "name": "gender",
+        "in": "query",
+        "required": false,
+        "description": "**Gender intake of the school.** Optional.\n\n- `co-ed`  -  男女校, mixed (most schools)\n- `boys`  -  男校, boys only\n- `girls`  -  女校, girls only\n\nEchoed on each result as `sex`.\n\nEx: `co-ed`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "co-ed",
+            "boys",
+            "girls"
+          ],
+          "description": "**Gender intake of the school.** Optional.\n\n- `co-ed`  -  男女校, mixed (most schools)\n- `boys`  -  男校, boys only\n- `girls`  -  女校, girls only\n\nEchoed on each result as `sex`.\n\nEx: `co-ed`",
+          "example": "co-ed"
+        }
+      },
+      {
+        "name": "funding",
+        "in": "query",
+        "required": false,
+        "description": "**How the school is funded (資助種類).** Optional.\n\n- `aided`  -  資助, government-aided; run by a sponsoring body on public funds, and by far the largest group\n- `government`  -  官立, operated directly by the government\n- `private`  -  私立, private/independent, fee-paying\n- `caput`  -  按位津貼, caput schools paid a per-place subsidy\n\nEchoed on each result as `funding`.\n\nEx: `aided`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "aided",
+            "government",
+            "private",
+            "caput"
+          ],
+          "description": "**How the school is funded (資助種類).** Optional.\n\n- `aided`  -  資助, government-aided; run by a sponsoring body on public funds, and by far the largest group\n- `government`  -  官立, operated directly by the government\n- `private`  -  私立, private/independent, fee-paying\n- `caput`  -  按位津貼, caput schools paid a per-place subsidy\n\nEchoed on each result as `funding`.\n\nEx: `aided`",
+          "example": "aided"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "schoolLevel": {
+          "type": "string",
+          "enum": [
+            "kindergarten",
+            "primary",
+            "secondary"
+          ],
+          "description": "**Level of schooling.** Optional  -  omit to list schools of every level.\n\n- `kindergarten`  -  幼稚園\n- `primary`  -  小學\n- `secondary`  -  中學\n\n`primary` is the one that moves property prices: Hong Kong allocates primary places by school net (校網), so a flat's net is a selling point. Estates carry their nets as `primarySchoolNetId` / `secondarySchoolNetId` in `/estate-search`.\n\nEx: `primary`",
+          "example": "primary"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "co-ed",
+            "boys",
+            "girls"
+          ],
+          "description": "**Gender intake of the school.** Optional.\n\n- `co-ed`  -  男女校, mixed (most schools)\n- `boys`  -  男校, boys only\n- `girls`  -  女校, girls only\n\nEchoed on each result as `sex`.\n\nEx: `co-ed`",
+          "example": "co-ed"
+        },
+        "funding": {
+          "type": "string",
+          "enum": [
+            "aided",
+            "government",
+            "private",
+            "caput"
+          ],
+          "description": "**How the school is funded (資助種類).** Optional.\n\n- `aided`  -  資助, government-aided; run by a sponsoring body on public funds, and by far the largest group\n- `government`  -  官立, operated directly by the government\n- `private`  -  私立, private/independent, fee-paying\n- `caput`  -  按位津貼, caput schools paid a per-place subsidy\n\nEchoed on each result as `funding`.\n\nEx: `aided`",
+          "example": "aided"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_service-apartment-search",
+    "method": "GET",
+    "path": "/service-apartment-search",
+    "summary": "/service-apartment-search",
+    "description": "Directory of serviced apartments/hotels with room types and price ranges.",
+    "tags": [
+      "Discovery"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "region",
+        "in": "query",
+        "required": false,
+        "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        }
+      },
+      {
+        "name": "sizeLevel",
+        "in": "query",
+        "required": false,
+        "description": "**Unit-size bucket, in square feet.** Optional  -  `1` - `5`:\n\n- `1`  -  under 100 ft²\n- `2`  -  100  -  500 ft²\n- `3`  -  500  -  1,000 ft²\n- `4`  -  1,000  -  2,000 ft²\n- `5`  -  over 2,000 ft²\n\nA serviced-apartment listing is a *building* offering several room types, so it publishes a size **range** (`sizeRange` in the response, e.g. `230 - 560 呎`) and matches when that range reaches into the bucket.\n\nEx: `2`, `3`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "**Unit-size bucket, in square feet.** Optional  -  `1` - `5`:\n\n- `1`  -  under 100 ft²\n- `2`  -  100  -  500 ft²\n- `3`  -  500  -  1,000 ft²\n- `4`  -  1,000  -  2,000 ft²\n- `5`  -  over 2,000 ft²\n\nA serviced-apartment listing is a *building* offering several room types, so it publishes a size **range** (`sizeRange` in the response, e.g. `230 - 560 呎`) and matches when that range reaches into the bucket.\n\nEx: `2`, `3`",
+          "example": 2
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        }
+      },
+      {
+        "name": "priceLevel",
+        "in": "query",
+        "required": false,
+        "description": "**Rent bucket. Monthly rents use buckets `1` - `5`, nightly rates use `6` - `10`  -  the two bases have their own numbering, so the bucket must match the `rentMode` you send.**\n\nMonthly (`rentMode=monthly`, the default):\n\n- `1`  -  under $5,000 / month\n- `2`  -  $5,000  -  $10,000\n- `3`  -  $10,000  -  $20,000\n- `4`  -  $20,000  -  $50,000\n- `5`  -  over $50,000\n\nNightly (`rentMode=daily`):\n\n- `6`  -  under $300 / night\n- `7`  -  $300  -  $500\n- `8`  -  $500  -  $700\n- `9`  -  $700  -  $1,000\n- `10`  -  over $1,000\n\nAs with size, a listing quotes a price **range** across its room types (`priceRange`, e.g. `HKD $16,500-17,500`) and matches when that range reaches into the bucket. Pairing a bucket with the wrong `rentMode`  -  say `3` with `daily`  -  is not an error upstream, it just fails to filter.\n\nEx: `3` with `monthly`, `7` with `daily`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Rent bucket. Monthly rents use buckets `1` - `5`, nightly rates use `6` - `10`  -  the two bases have their own numbering, so the bucket must match the `rentMode` you send.**\n\nMonthly (`rentMode=monthly`, the default):\n\n- `1`  -  under $5,000 / month\n- `2`  -  $5,000  -  $10,000\n- `3`  -  $10,000  -  $20,000\n- `4`  -  $20,000  -  $50,000\n- `5`  -  over $50,000\n\nNightly (`rentMode=daily`):\n\n- `6`  -  under $300 / night\n- `7`  -  $300  -  $500\n- `8`  -  $500  -  $700\n- `9`  -  $700  -  $1,000\n- `10`  -  over $1,000\n\nAs with size, a listing quotes a price **range** across its room types (`priceRange`, e.g. `HKD $16,500-17,500`) and matches when that range reaches into the bucket. Pairing a bucket with the wrong `rentMode`  -  say `3` with `daily`  -  is not an error upstream, it just fails to filter.\n\nEx: `3` with `monthly`, `7` with `daily`",
+          "example": 3
+        }
+      },
+      {
+        "name": "rentMode",
+        "in": "query",
+        "required": false,
+        "description": "**Which rent basis `priceLevel` is expressed in.** Optional  -  defaults to `monthly`.\n\n- `monthly`  -  月租, pair with `priceLevel` `1` - `5`\n- `daily`  -  日租, pair with `priceLevel` `6` - `10`; serviced apartments in Hong Kong are routinely let by the night as well as by the month\n\nOn its own this does nothing  -  it only says how `priceLevel` should be read, and the bucket numbers do not overlap between the two bases.\n\nEx: `monthly`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "daily"
+          ],
+          "description": "**Which rent basis `priceLevel` is expressed in.** Optional  -  defaults to `monthly`.\n\n- `monthly`  -  月租, pair with `priceLevel` `1` - `5`\n- `daily`  -  日租, pair with `priceLevel` `6` - `10`; serviced apartments in Hong Kong are routinely let by the night as well as by the month\n\nOn its own this does nothing  -  it only says how `priceLevel` should be read, and the bucket numbers do not overlap between the two bases.\n\nEx: `monthly`",
+          "example": "monthly"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Order the listings come back in.** Optional.\n\n- `default`  -  預設, 28Hse's own order\n- `price-asc` / `price-desc`  -  by rent, cheapest first / dearest first\n- `size-asc` / `size-desc`  -  by unit size, smallest first / largest first\n\nBecause each listing spans a range, the ascending sorts rank on the bottom of the range and the descending ones on the top.\n\nEx: `price-asc`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price-asc",
+            "price-desc",
+            "size-asc",
+            "size-desc"
+          ],
+          "description": "**Order the listings come back in.** Optional.\n\n- `default`  -  預設, 28Hse's own order\n- `price-asc` / `price-desc`  -  by rent, cheapest first / dearest first\n- `size-asc` / `size-desc`  -  by unit size, smallest first / largest first\n\nBecause each listing spans a range, the ascending sorts rank on the bottom of the range and the descending ones on the top.\n\nEx: `price-asc`",
+          "example": "price-asc"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "string",
+          "enum": [
+            "hong-kong-island",
+            "kowloon",
+            "new-territories",
+            "islands"
+          ],
+          "description": "**Coarse region of Hong Kong to restrict results to.** Optional  -  omit for the whole territory.\n\nThis is the widest location filter there is (the four top-level tabs on 28Hse). It is *not* the same thing as `districtIds`, which is neighbourhood-level and uses a different set of ids:\n\n- `hong-kong-island`  -  香港島 (Central, Wan Chai, Causeway Bay, North Point, Taikoo Shing …)\n- `kowloon`  -  九龍 (Tsim Sha Tsui, Mong Kok, Kowloon City, Kwun Tong, Sham Shui Po …)\n- `new-territories`  -  新界 (Sha Tin, Tai Po, Tuen Mun, Yuen Long, Tseung Kwan O …)\n- `islands`  -  離島 (Tung Chung, Discovery Bay, Cheung Chau, Lamma, Ma Wan …)\n\nEx: `kowloon`, `new-territories`",
+          "example": "kowloon"
+        },
+        "sizeLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "**Unit-size bucket, in square feet.** Optional  -  `1` - `5`:\n\n- `1`  -  under 100 ft²\n- `2`  -  100  -  500 ft²\n- `3`  -  500  -  1,000 ft²\n- `4`  -  1,000  -  2,000 ft²\n- `5`  -  over 2,000 ft²\n\nA serviced-apartment listing is a *building* offering several room types, so it publishes a size **range** (`sizeRange` in the response, e.g. `230 - 560 呎`) and matches when that range reaches into the bucket.\n\nEx: `2`, `3`",
+          "example": 2
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text term  -  an estate, building, street or district name, in Chinese or English.**\n\nMatched loosely against estate/building names and addresses. Chinese generally returns more than English, because most 28Hse inventory is listed in Chinese; a partial name works fine (`大埔` matches 大埔中心, 大埔廣場, 大埔花園 …).\n\n- `太古城`  -  Taikoo Shing, Hong Kong Island\n- `美孚新邨` or `Mei Foo`  -  Mei Foo Sun Chuen, Kowloon\n- `將軍澳`  -  anything in/named after Tseung Kwan O\n\nWhen the endpoint also takes ids, prefer them for precision: run the term through `/location-autocomplete` first, then pass the returned `id` as `estateIds`. Free text matches by name, an id matches exactly.\n\nEx: `太古城`, `Mei Foo`",
+          "example": "太古城"
+        },
+        "priceLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**Rent bucket. Monthly rents use buckets `1` - `5`, nightly rates use `6` - `10`  -  the two bases have their own numbering, so the bucket must match the `rentMode` you send.**\n\nMonthly (`rentMode=monthly`, the default):\n\n- `1`  -  under $5,000 / month\n- `2`  -  $5,000  -  $10,000\n- `3`  -  $10,000  -  $20,000\n- `4`  -  $20,000  -  $50,000\n- `5`  -  over $50,000\n\nNightly (`rentMode=daily`):\n\n- `6`  -  under $300 / night\n- `7`  -  $300  -  $500\n- `8`  -  $500  -  $700\n- `9`  -  $700  -  $1,000\n- `10`  -  over $1,000\n\nAs with size, a listing quotes a price **range** across its room types (`priceRange`, e.g. `HKD $16,500-17,500`) and matches when that range reaches into the bucket. Pairing a bucket with the wrong `rentMode`  -  say `3` with `daily`  -  is not an error upstream, it just fails to filter.\n\nEx: `3` with `monthly`, `7` with `daily`",
+          "example": 3
+        },
+        "rentMode": {
+          "type": "string",
+          "enum": [
+            "monthly",
+            "daily"
+          ],
+          "description": "**Which rent basis `priceLevel` is expressed in.** Optional  -  defaults to `monthly`.\n\n- `monthly`  -  月租, pair with `priceLevel` `1` - `5`\n- `daily`  -  日租, pair with `priceLevel` `6` - `10`; serviced apartments in Hong Kong are routinely let by the night as well as by the month\n\nOn its own this does nothing  -  it only says how `priceLevel` should be read, and the bucket numbers do not overlap between the two bases.\n\nEx: `monthly`",
+          "example": "monthly"
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "default",
+            "price-asc",
+            "price-desc",
+            "size-asc",
+            "size-desc"
+          ],
+          "description": "**Order the listings come back in.** Optional.\n\n- `default`  -  預設, 28Hse's own order\n- `price-asc` / `price-desc`  -  by rent, cheapest first / dearest first\n- `size-asc` / `size-desc`  -  by unit size, smallest first / largest first\n\nBecause each listing spans a range, the ascending sorts rank on the bottom of the range and the descending ones on the top.\n\nEx: `price-asc`",
+          "example": "price-asc"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_mortgage-plans",
+    "method": "GET",
+    "path": "/mortgage-plans",
+    "summary": "/mortgage-plans",
+    "description": "Current bank mortgage plans (rate, cash rebate, penalty period).",
+    "tags": [
+      "Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_news-search",
+    "method": "GET",
+    "path": "/news-search",
+    "summary": "/news-search",
+    "description": "Property-market news and video articles.",
+    "tags": [
+      "Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": false,
+        "description": "**Free-text keyword to search articles for, in Chinese or English.** Optional.\n\nMatched against headline and body. Passing a keyword also changes the *scope*: without one you get the current week's headlines, with one you get the whole archive back to 2014.\n\n- `樓市`  -  the property market in general\n- `太古城`  -  everything written about one estate\n- `按揭`  -  mortgage coverage\n- `新盤`  -  new-launch coverage\n\nEx: `樓市`, `按揭`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text keyword to search articles for, in Chinese or English.** Optional.\n\nMatched against headline and body. Passing a keyword also changes the *scope*: without one you get the current week's headlines, with one you get the whole archive back to 2014.\n\n- `樓市`  -  the property market in general\n- `太古城`  -  everything written about one estate\n- `按揭`  -  mortgage coverage\n- `新盤`  -  new-launch coverage\n\nEx: `樓市`, `按揭`",
+          "example": "樓市"
+        }
+      },
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": false,
+        "description": "**Restrict the feed to one editorial stream.** Optional.\n\n- *omitted*  -  the last seven days of headlines, i.e. the 28Hse front page\n- `1`  -  28Hse's own newsroom: 新盤 new launches, 成交行情 completed deals, 城市發展 development, 工商舖 commercial, 影片 video, 樓市走勢 market trends\n- `2`  -  the full archive, syndicated wire copy included\n- `3`  -  專欄, columns and partner blogs (三地產焦點, 經絡按揭, 美聯專欄)\n\nAny other number falls back to the behaviour of `2`. Each article echoes its section as `category`.\n\nEx: `1`, `3`",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "**Restrict the feed to one editorial stream.** Optional.\n\n- *omitted*  -  the last seven days of headlines, i.e. the 28Hse front page\n- `1`  -  28Hse's own newsroom: 新盤 new launches, 成交行情 completed deals, 城市發展 development, 工商舖 commercial, 影片 video, 樓市走勢 market trends\n- `2`  -  the full archive, syndicated wire copy included\n- `3`  -  專欄, columns and partner blogs (三地產焦點, 經絡按揭, 美聯專欄)\n\nAny other number falls back to the behaviour of `2`. Each article echoes its section as `category`.\n\nEx: `1`, `3`",
+          "example": 1
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "**Free-text keyword to search articles for, in Chinese or English.** Optional.\n\nMatched against headline and body. Passing a keyword also changes the *scope*: without one you get the current week's headlines, with one you get the whole archive back to 2014.\n\n- `樓市`  -  the property market in general\n- `太古城`  -  everything written about one estate\n- `按揭`  -  mortgage coverage\n- `新盤`  -  new-launch coverage\n\nEx: `樓市`, `按揭`",
+          "example": "樓市"
+        },
+        "categoryId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "**Restrict the feed to one editorial stream.** Optional.\n\n- *omitted*  -  the last seven days of headlines, i.e. the 28Hse front page\n- `1`  -  28Hse's own newsroom: 新盤 new launches, 成交行情 completed deals, 城市發展 development, 工商舖 commercial, 影片 video, 樓市走勢 market trends\n- `2`  -  the full archive, syndicated wire copy included\n- `3`  -  專欄, columns and partner blogs (三地產焦點, 經絡按揭, 美聯專欄)\n\nAny other number falls back to the behaviour of `2`. Each article echoes its section as `category`.\n\nEx: `1`, `3`",
+          "example": 1
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "**Page of results to fetch, 1-based.** Optional  -  defaults to `1`.\n\nEvery paginated response echoes `pagination: {count, page, totalPages}`; walk `page` upwards until it reaches `totalPages`. Page size is fixed by 28Hse (20 items on most feeds) and cannot be changed, so `count` divided by the items you receive tells you how deep the feed goes.\n\nEx: `1`, `2`, `7`",
+          "example": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

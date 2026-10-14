@@ -1,0 +1,695 @@
+[
+  {
+    "id": "_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "Health check endpoint",
+    "description": "Returns the health status of the Semrush API service including system metrics and processing time",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Search_By_Keyword",
+    "method": "GET",
+    "path": "/product-search-by-keyword",
+    "summary": "Search products by keyword on Ikea",
+    "description": "Search for products on Ikea using keywords. Provide a search query to get product results including prices, availability, and product details.",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "- Search keyword for IKEA products\n- Examples: `table`, `chair`, `sofa`, `desk`, `bed`, `storage`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Search keyword for IKEA products\n- Examples: `table`, `chair`, `sofa`, `desk`, `bed`, `storage`",
+          "example": "table"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number for pagination (default page size: 24)\n- Examples: `1`, `2`, `3`, `4`, `5`",
+        "schema": {
+          "type": "string",
+          "description": "- Page number for pagination (default page size: 24)\n- Examples: `1`, `2`, `3`, `4`, `5`",
+          "example": "1"
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "- Filters in format: parameterId=valueId,parameterId=valueId\n- Get Filters from \"product-search-by-keyword-filters\"\n- Example: `f-measurement-buckets=WIDTH_0_26,f-measurement-buckets=WIDTH_26_28,f-type=chair,f-type=desk`",
+        "schema": {
+          "type": "string",
+          "description": "- Filters in format: parameterId=valueId,parameterId=valueId\n- Get Filters from \"product-search-by-keyword-filters\"\n- Example: `f-measurement-buckets=WIDTH_0_26,f-measurement-buckets=WIDTH_26_28,f-type=chair,f-type=desk`",
+          "example": "f-price-buckets=PRICE_0_10000,f-colors=10156"
+        }
+      },
+      {
+        "name": "sortOrder",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for results (default: RELEVANCE)\n- Options: `RELEVANCE`, `PRICE_LOW_TO_HIGH`, `PRICE_HIGH_TO_LOW`, `NEWEST`, `RATING`, `NAME_ASCENDING`, `MOST_POPULAR`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "RELEVANCE",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEWEST",
+            "RATING",
+            "NAME_ASCENDING",
+            "MOST_POPULAR"
+          ],
+          "description": "- Sort order for results (default: RELEVANCE)\n- Options: `RELEVANCE`, `PRICE_LOW_TO_HIGH`, `PRICE_HIGH_TO_LOW`, `NEWEST`, `RATING`, `NAME_ASCENDING`, `MOST_POPULAR`",
+          "example": "RELEVANCE"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Search keyword for IKEA products\n- Examples: `table`, `chair`, `sofa`, `desk`, `bed`, `storage`",
+          "example": "table"
+        },
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        },
+        "page": {
+          "type": "string",
+          "description": "- Page number for pagination (default page size: 24)\n- Examples: `1`, `2`, `3`, `4`, `5`",
+          "example": "1"
+        },
+        "filters": {
+          "type": "string",
+          "description": "- Filters in format: parameterId=valueId,parameterId=valueId\n- Get Filters from \"product-search-by-keyword-filters\"\n- Example: `f-measurement-buckets=WIDTH_0_26,f-measurement-buckets=WIDTH_26_28,f-type=chair,f-type=desk`",
+          "example": "f-price-buckets=PRICE_0_10000,f-colors=10156"
+        },
+        "sortOrder": {
+          "type": "string",
+          "enum": [
+            "RELEVANCE",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEWEST",
+            "RATING",
+            "NAME_ASCENDING",
+            "MOST_POPULAR"
+          ],
+          "description": "- Sort order for results (default: RELEVANCE)\n- Options: `RELEVANCE`, `PRICE_LOW_TO_HIGH`, `PRICE_HIGH_TO_LOW`, `NEWEST`, `RATING`, `NAME_ASCENDING`, `MOST_POPULAR`",
+          "example": "RELEVANCE"
+        }
+      },
+      "required": [
+        "keyword",
+        "countryCode",
+        "languageCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Filters_for_Search_By_Keyword",
+    "method": "GET",
+    "path": "/product-search-by-keyword-filters",
+    "summary": "Filters for Product Search By Keyword Endpoint",
+    "description": "Get Filters to be used for Product Search by Keyword endpoint. Get filters like price, material, color, size etc.",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "- Search keyword for IKEA products to get available filters\n- Examples: `table`, `chair`, `sofa`, `desk`, `bed`, `storage`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Search keyword for IKEA products to get available filters\n- Examples: `table`, `chair`, `sofa`, `desk`, `bed`, `storage`",
+          "example": "table"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Search keyword for IKEA products to get available filters\n- Examples: `table`, `chair`, `sofa`, `desk`, `bed`, `storage`",
+          "example": "table"
+        },
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "keyword",
+        "countryCode",
+        "languageCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Search_By_Category",
+    "method": "GET",
+    "path": "/product-search-by-category",
+    "summary": "Search products by Category ID on Ikea",
+    "description": "Search for products on Ikea using Category ID. Provide a search query to get product results including prices, availability, and product details",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": true,
+        "description": "- IKEA category ID\n- Get category IDs from `/categories` endpoint\n- Examples: `10385` (Filing cabinets & storage cabinets), `18768` (Kids tables), `700675` (Tables)",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "- IKEA category ID\n- Get category IDs from `/categories` endpoint\n- Examples: `10385` (Filing cabinets & storage cabinets), `18768` (Kids tables), `700675` (Tables)",
+          "example": "st004"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number for pagination (default page size: 24)\n- Examples: `1`, `2`, `3`, `4`, `5`",
+        "schema": {
+          "type": "string",
+          "description": "- Page number for pagination (default page size: 24)\n- Examples: `1`, `2`, `3`, `4`, `5`",
+          "example": "1"
+        }
+      },
+      {
+        "name": "filters",
+        "in": "query",
+        "required": false,
+        "description": "- Filters in format: parameterId=valueId,parameterId=valueId\n- Get available filters from `/product-search-by-category-filters` endpoint\n- Examples: `f-price-buckets=PRICE_0_10000`, `f-colors=10156`, `f-top-seller=true`\n- Multiple filters: `f-price-buckets=PRICE_0_10000,f-colors=10156,f-top-seller=true`",
+        "schema": {
+          "type": "string",
+          "description": "- Filters in format: parameterId=valueId,parameterId=valueId\n- Get available filters from `/product-search-by-category-filters` endpoint\n- Examples: `f-price-buckets=PRICE_0_10000`, `f-colors=10156`, `f-top-seller=true`\n- Multiple filters: `f-price-buckets=PRICE_0_10000,f-colors=10156,f-top-seller=true`",
+          "example": "f-price-buckets=PRICE_0_10000,f-colors=10156"
+        }
+      },
+      {
+        "name": "sortOrder",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for results (default: RELEVANCE)\n- Options: `RELEVANCE`, `PRICE_LOW_TO_HIGH`, `PRICE_HIGH_TO_LOW`, `NEWEST`, `RATING`, `NAME_ASCENDING`, `MOST_POPULAR`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "RELEVANCE",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEWEST",
+            "RATING",
+            "NAME_ASCENDING",
+            "MOST_POPULAR"
+          ],
+          "description": "- Sort order for results (default: RELEVANCE)\n- Options: `RELEVANCE`, `PRICE_LOW_TO_HIGH`, `PRICE_HIGH_TO_LOW`, `NEWEST`, `RATING`, `NAME_ASCENDING`, `MOST_POPULAR`",
+          "example": "RELEVANCE"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "- IKEA category ID\n- Get category IDs from `/categories` endpoint\n- Examples: `10385` (Filing cabinets & storage cabinets), `18768` (Kids tables), `700675` (Tables)",
+          "example": "st004"
+        },
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        },
+        "page": {
+          "type": "string",
+          "description": "- Page number for pagination (default page size: 24)\n- Examples: `1`, `2`, `3`, `4`, `5`",
+          "example": "1"
+        },
+        "filters": {
+          "type": "string",
+          "description": "- Filters in format: parameterId=valueId,parameterId=valueId\n- Get available filters from `/product-search-by-category-filters` endpoint\n- Examples: `f-price-buckets=PRICE_0_10000`, `f-colors=10156`, `f-top-seller=true`\n- Multiple filters: `f-price-buckets=PRICE_0_10000,f-colors=10156,f-top-seller=true`",
+          "example": "f-price-buckets=PRICE_0_10000,f-colors=10156"
+        },
+        "sortOrder": {
+          "type": "string",
+          "enum": [
+            "RELEVANCE",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEWEST",
+            "RATING",
+            "NAME_ASCENDING",
+            "MOST_POPULAR"
+          ],
+          "description": "- Sort order for results (default: RELEVANCE)\n- Options: `RELEVANCE`, `PRICE_LOW_TO_HIGH`, `PRICE_HIGH_TO_LOW`, `NEWEST`, `RATING`, `NAME_ASCENDING`, `MOST_POPULAR`",
+          "example": "RELEVANCE"
+        }
+      },
+      "required": [
+        "categoryId",
+        "countryCode",
+        "languageCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Filters_for_Search_By_Category",
+    "method": "GET",
+    "path": "/product-search-by-category-filters",
+    "summary": "Filters for Product Search By Category Endpoint",
+    "description": "Get Filters to be used for Product Search by Category endpoint. Get filters like price, material, color, size etc.",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": true,
+        "description": "- IKEA category ID to get available filters\n- Get category IDs from `/categories` endpoint\n- Examples: `10385` (Filing cabinets & storage cabinets), `18768` (Kids tables), `700675` (Tables)",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "- IKEA category ID to get available filters\n- Get category IDs from `/categories` endpoint\n- Examples: `10385` (Filing cabinets & storage cabinets), `18768` (Kids tables), `700675` (Tables)",
+          "example": "st004"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "- IKEA category ID to get available filters\n- Get category IDs from `/categories` endpoint\n- Examples: `10385` (Filing cabinets & storage cabinets), `18768` (Kids tables), `700675` (Tables)",
+          "example": "st004"
+        },
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "categoryId",
+        "countryCode",
+        "languageCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Product_Details",
+    "method": "GET",
+    "path": "/product-details",
+    "summary": "Get Product Details",
+    "description": "Get Product Details using product ID",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "- IKEA product ID\n- Get product IDs from `/product-search-by-keyword` or `/product-search-by-category` endpoints\n- Examples: `s29420393`, `60561248`, `50590915`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "- IKEA product ID\n- Get product IDs from `/product-search-by-keyword` or `/product-search-by-category` endpoints\n- Examples: `s29420393`, `60561248`, `50590915`",
+          "example": "60561248"
+        }
+      },
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "- IKEA product ID\n- Get product IDs from `/product-search-by-keyword` or `/product-search-by-category` endpoints\n- Examples: `s29420393`, `60561248`, `50590915`",
+          "example": "60561248"
+        },
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "productId",
+        "countryCode",
+        "languageCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Categories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "Get Categories list",
+    "description": "Get categories ID list to be used in Search products by Category endpoint",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      {
+        "name": "languageCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        },
+        "languageCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter language code\n- Get available language codes from `/countries` endpoint\n- Examples: `en` (English), `fr` (French), `de` (German), `it` (Italian), `sv` (Swedish)\n- Note: `ca` supports `en` or `fr`, `ch` supports `de`, `fr`, `it`, or `en`",
+          "example": "en"
+        }
+      },
+      "required": [
+        "countryCode",
+        "languageCode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Countries",
+    "method": "GET",
+    "path": "/countries",
+    "summary": "Get Countries list",
+    "description": "Get countries ID list to be used in Search products endpoint",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "Stores",
+    "method": "GET",
+    "path": "/stores",
+    "summary": "Get Stores list",
+    "description": "Get stores list using country code",
+    "tags": [
+      "Ikea API"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "countryCode",
+        "in": "query",
+        "required": true,
+        "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+        "schema": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "- Two-letter country code\n- Get available country codes from `/countries` endpoint\n- Examples: `us` (United States), `ca` (Canada), `gb` (United Kingdom), `ch` (Switzerland), `se` (Sweden), `de` (Germany)",
+          "example": "us"
+        }
+      },
+      "required": [
+        "countryCode"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

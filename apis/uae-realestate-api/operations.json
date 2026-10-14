@@ -1,0 +1,1448 @@
+[
+  {
+    "id": "get_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "/health",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-autocomplete",
+    "method": "GET",
+    "path": "/autocomplete",
+    "summary": "Search for locations on Bayut or PropertyFinder",
+    "description": "Search for location names and get their platform-specific IDs. Use the returned location_id in the /search-properties endpoint for faster searches (skips auto-resolve).",
+    "tags": [
+      "Location"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- `bayut`  -  Search locations on Bayut\n- `propertyfinder`  -  Search locations on PropertyFinder",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- `bayut`  -  Search locations on Bayut\n- `propertyfinder`  -  Search locations on PropertyFinder",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "- Location search query\n- Examples: `Dubai Marina`, `Palm Jumeirah`, `Business Bay`, `JBR`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location search query\n- Examples: `Dubai Marina`, `Palm Jumeirah`, `Business Bay`, `JBR`",
+          "example": "Dubai Marina"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- `bayut`  -  Search locations on Bayut\n- `propertyfinder`  -  Search locations on PropertyFinder",
+          "example": "bayut"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location search query\n- Examples: `Dubai Marina`, `Palm Jumeirah`, `Business Bay`, `JBR`",
+          "example": "Dubai Marina"
+        }
+      },
+      "required": [
+        "platform",
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-search-properties",
+    "method": "GET",
+    "path": "/search-properties",
+    "summary": "Search properties for rent or sale",
+    "description": "Search properties on Bayut or PropertyFinder. Pass a location name (e.g. 'Dubai Marina') and we auto-resolve it, or pass a location_id directly for faster results. Filter by property type, bedrooms, price range, area, and more.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- `bayut`  -  Search on Bayut\n- `propertyfinder`  -  Search on PropertyFinder",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- `bayut`  -  Search on Bayut\n- `propertyfinder`  -  Search on PropertyFinder",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "purpose",
+        "in": "query",
+        "required": true,
+        "description": "- Transaction type\n- `rent`  -  Properties for rent\n- `buy`  -  Properties for sale",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "rent",
+            "buy"
+          ],
+          "description": "- Transaction type\n- `rent`  -  Properties for rent\n- `buy`  -  Properties for sale",
+          "example": "rent"
+        }
+      },
+      {
+        "name": "location",
+        "in": "query",
+        "required": false,
+        "description": "- Location name (e.g. `Dubai Marina`, `Business Bay`, `JBR`)\n- We auto-resolve this to a location ID internally\n- Either `location` or `location_id` is required",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (e.g. `Dubai Marina`, `Business Bay`, `JBR`)\n- We auto-resolve this to a location ID internally\n- Either `location` or `location_id` is required",
+          "example": "Dubai Marina"
+        }
+      },
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": false,
+        "description": "- Platform-specific location ID\n- Get this from the `/autocomplete` endpoint\n- Faster than using `location` (skips auto-resolve step)\n- Either `location` or `location_id` is required",
+        "schema": {
+          "type": "string",
+          "description": "- Platform-specific location ID\n- Get this from the `/autocomplete` endpoint\n- Faster than using `location` (skips auto-resolve step)\n- Either `location` or `location_id` is required",
+          "example": "5002"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)",
+          "example": 1
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order\n- `popular`  -  Most popular (default)\n- `newest`  -  Most recent listings\n- `price_low`  -  Cheapest first\n- `price_high`  -  Most expensive first",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "newest",
+            "price_low",
+            "price_high"
+          ],
+          "default": "popular",
+          "description": "- Sort order\n- `popular`  -  Most popular (default)\n- `newest`  -  Most recent listings\n- `price_low`  -  Cheapest first\n- `price_high`  -  Most expensive first",
+          "example": "popular"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated property types\n- Options: `apartment`, `villa`, `townhouse`, `penthouse`, `office`, `shop`, `warehouse`, `hotel-apartment`",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Options: `apartment`, `villa`, `townhouse`, `penthouse`, `office`, `shop`, `warehouse`, `hotel-apartment`",
+          "example": "apartment,villa"
+        }
+      },
+      {
+        "name": "bedrooms",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated number of bedrooms\n- `0` = Studio\n- Example: `0,1,2` for studio, 1-bed, 2-bed",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated number of bedrooms\n- `0` = Studio\n- Example: `0,1,2` for studio, 1-bed, 2-bed",
+          "example": "1,2,3"
+        }
+      },
+      {
+        "name": "bathrooms",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated number of bathrooms",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated number of bathrooms",
+          "example": "1,2"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum price in AED",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED",
+          "example": 50000
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum price in AED",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED",
+          "example": 200000
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum area in Square Feet (sqft)",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in Square Feet (sqft)",
+          "example": 500
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum area in Square Feet (sqft)",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in Square Feet (sqft)",
+          "example": 2000
+        }
+      },
+      {
+        "name": "furnishing",
+        "in": "query",
+        "required": false,
+        "description": "- Furnishing status filter",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "unfurnished"
+          ],
+          "description": "- Furnishing status filter",
+          "example": "furnished"
+        }
+      },
+      {
+        "name": "completion_status",
+        "in": "query",
+        "required": false,
+        "description": "- Completion status\n- `ready`  -  Completed/ready to move in\n- `off_plan`  -  Under construction",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "off_plan"
+          ],
+          "description": "- Completion status\n- `ready`  -  Completed/ready to move in\n- `off_plan`  -  Under construction",
+          "example": "ready"
+        }
+      },
+      {
+        "name": "rent_frequency",
+        "in": "query",
+        "required": false,
+        "description": "- Rent payment frequency (only for `rent` purpose)\n- Default: `yearly`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "yearly",
+            "monthly",
+            "weekly",
+            "daily"
+          ],
+          "description": "- Rent payment frequency (only for `rent` purpose)\n- Default: `yearly`",
+          "example": "yearly"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- `bayut`  -  Search on Bayut\n- `propertyfinder`  -  Search on PropertyFinder",
+          "example": "bayut"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "rent",
+            "buy"
+          ],
+          "description": "- Transaction type\n- `rent`  -  Properties for rent\n- `buy`  -  Properties for sale",
+          "example": "rent"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (e.g. `Dubai Marina`, `Business Bay`, `JBR`)\n- We auto-resolve this to a location ID internally\n- Either `location` or `location_id` is required",
+          "example": "Dubai Marina"
+        },
+        "location_id": {
+          "type": "string",
+          "description": "- Platform-specific location ID\n- Get this from the `/autocomplete` endpoint\n- Faster than using `location` (skips auto-resolve step)\n- Either `location` or `location_id` is required",
+          "example": "5002"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)",
+          "example": 1
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "newest",
+            "price_low",
+            "price_high"
+          ],
+          "default": "popular",
+          "description": "- Sort order\n- `popular`  -  Most popular (default)\n- `newest`  -  Most recent listings\n- `price_low`  -  Cheapest first\n- `price_high`  -  Most expensive first",
+          "example": "popular"
+        },
+        "property_type": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Options: `apartment`, `villa`, `townhouse`, `penthouse`, `office`, `shop`, `warehouse`, `hotel-apartment`",
+          "example": "apartment,villa"
+        },
+        "bedrooms": {
+          "type": "string",
+          "description": "- Comma-separated number of bedrooms\n- `0` = Studio\n- Example: `0,1,2` for studio, 1-bed, 2-bed",
+          "example": "1,2,3"
+        },
+        "bathrooms": {
+          "type": "string",
+          "description": "- Comma-separated number of bathrooms",
+          "example": "1,2"
+        },
+        "price_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum price in AED",
+          "example": 50000
+        },
+        "price_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum price in AED",
+          "example": 200000
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Minimum area in Square Feet (sqft)",
+          "example": 500
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "- Maximum area in Square Feet (sqft)",
+          "example": 2000
+        },
+        "furnishing": {
+          "type": "string",
+          "enum": [
+            "furnished",
+            "unfurnished"
+          ],
+          "description": "- Furnishing status filter",
+          "example": "furnished"
+        },
+        "completion_status": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "off_plan"
+          ],
+          "description": "- Completion status\n- `ready`  -  Completed/ready to move in\n- `off_plan`  -  Under construction",
+          "example": "ready"
+        },
+        "rent_frequency": {
+          "type": "string",
+          "enum": [
+            "yearly",
+            "monthly",
+            "weekly",
+            "daily"
+          ],
+          "description": "- Rent payment frequency (only for `rent` purpose)\n- Default: `yearly`",
+          "example": "yearly"
+        }
+      },
+      "required": [
+        "platform",
+        "purpose"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "Get detailed property information",
+    "description": "Get full details for a specific property by its ID. Use the property ID from search results.",
+    "tags": [
+      "Property Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- `bayut`  -  Get details from Bayut\n- `propertyfinder`  -  Get details from PropertyFinder",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- `bayut`  -  Get details from Bayut\n- `propertyfinder`  -  Get details from PropertyFinder",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "property_id",
+        "in": "query",
+        "required": true,
+        "description": "- Property ID from search results\n- For Bayut: use `externalID` from search response\n- For PropertyFinder: use `property_id` from search response",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Property ID from search results\n- For Bayut: use `externalID` from search response\n- For PropertyFinder: use `property_id` from search response",
+          "example": "13495633"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- `bayut`  -  Get details from Bayut\n- `propertyfinder`  -  Get details from PropertyFinder",
+          "example": "bayut"
+        },
+        "property_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Property ID from search results\n- For Bayut: use `externalID` from search response\n- For PropertyFinder: use `property_id` from search response",
+          "example": "13495633"
+        }
+      },
+      "required": [
+        "platform",
+        "property_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-search-agents",
+    "method": "GET",
+    "path": "/search-agents",
+    "summary": "Search real estate agents",
+    "description": "Search agents by name (Bayut only) or by location (both platforms). For Bayut, you can search by agent name or filter by location/purpose/category. For PropertyFinder, location is required.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "- Agent name to search for\n- Bayut only. PropertyFinder requires location instead.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agent name to search for\n- Bayut only. PropertyFinder requires location instead.",
+          "example": "John"
+        }
+      },
+      {
+        "name": "location",
+        "in": "query",
+        "required": false,
+        "description": "- Location name (auto-resolved to location_id)",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (auto-resolved to location_id)",
+          "example": "Dubai Marina"
+        }
+      },
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": false,
+        "description": "- Platform-specific location ID from /autocomplete",
+        "schema": {
+          "type": "string",
+          "description": "- Platform-specific location ID from /autocomplete",
+          "example": "5003"
+        }
+      },
+      {
+        "name": "purpose",
+        "in": "query",
+        "required": false,
+        "description": "- Filter agents by transaction purpose\n- Default: `buy`",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "rent",
+            "buy"
+          ],
+          "default": "buy",
+          "description": "- Filter agents by transaction purpose\n- Default: `buy`",
+          "example": "buy"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "- Property category filter (Bayut location-search only)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial"
+          ],
+          "default": "residential",
+          "description": "- Property category filter (Bayut location-search only)",
+          "example": "residential"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number (starts from 1)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform",
+          "example": "bayut"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agent name to search for\n- Bayut only. PropertyFinder requires location instead.",
+          "example": "John"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (auto-resolved to location_id)",
+          "example": "Dubai Marina"
+        },
+        "location_id": {
+          "type": "string",
+          "description": "- Platform-specific location ID from /autocomplete",
+          "example": "5003"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "rent",
+            "buy"
+          ],
+          "default": "buy",
+          "description": "- Filter agents by transaction purpose\n- Default: `buy`",
+          "example": "buy"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "residential",
+            "commercial"
+          ],
+          "default": "residential",
+          "description": "- Property category filter (Bayut location-search only)",
+          "example": "residential"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number (starts from 1)",
+          "example": 1
+        }
+      },
+      "required": [
+        "platform"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-agent-details",
+    "method": "GET",
+    "path": "/agent-details",
+    "summary": "Get agent profile details",
+    "description": "Get detailed agent profile including contact information. Available for Bayut only  -  PropertyFinder returns a platform limitation error.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- Note: Agent details is only available for Bayut",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Note: Agent details is only available for Bayut",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "agent_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agent external ID from /search-agents response",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent external ID from /search-agents response",
+          "example": "100200"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Note: Agent details is only available for Bayut",
+          "example": "bayut"
+        },
+        "agent_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent external ID from /search-agents response",
+          "example": "100200"
+        }
+      },
+      "required": [
+        "platform",
+        "agent_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-agent-properties",
+    "method": "GET",
+    "path": "/agent-properties",
+    "summary": "Get properties listed by an agent",
+    "description": "Get all properties listed by a specific agent. For Bayut, use the ownerID from /agent-details. For PropertyFinder, use the agent id from /search-agents.",
+    "tags": [
+      "Agents"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "agent_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agent ID\n- Bayut: use ownerID from /agent-details\n- PropertyFinder: use agent id from /search-agents",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent ID\n- Bayut: use ownerID from /agent-details\n- PropertyFinder: use agent id from /search-agents",
+          "example": "2640383"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order (PropertyFinder only, ignored for Bayut)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "newest",
+            "price_low",
+            "price_high"
+          ],
+          "description": "- Sort order (PropertyFinder only, ignored for Bayut)",
+          "example": "newest"
+        }
+      },
+      {
+        "name": "transaction_type",
+        "in": "query",
+        "required": false,
+        "description": "- Filter by transaction type (PropertyFinder only, ignored for Bayut)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rental"
+          ],
+          "description": "- Filter by transaction type (PropertyFinder only, ignored for Bayut)",
+          "example": "sale"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform",
+          "example": "bayut"
+        },
+        "agent_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agent ID\n- Bayut: use ownerID from /agent-details\n- PropertyFinder: use agent id from /search-agents",
+          "example": "2640383"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "newest",
+            "price_low",
+            "price_high"
+          ],
+          "description": "- Sort order (PropertyFinder only, ignored for Bayut)",
+          "example": "newest"
+        },
+        "transaction_type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rental"
+          ],
+          "description": "- Filter by transaction type (PropertyFinder only, ignored for Bayut)",
+          "example": "sale"
+        }
+      },
+      "required": [
+        "platform",
+        "agent_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-search-agencies",
+    "method": "GET",
+    "path": "/search-agencies",
+    "summary": "Search agencies (Bayut) or brokers (PropertyFinder)",
+    "description": "Search real estate agencies/brokerages by name (Bayut only) or by location (both platforms). Bayut agencies and PropertyFinder brokers represent the same concept.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- Bayut: searches agencies\n- PropertyFinder: searches brokers (equivalent to Bayut agencies)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Bayut: searches agencies\n- PropertyFinder: searches brokers (equivalent to Bayut agencies)",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "- Agency/broker name to search for\n- Bayut only. PropertyFinder requires location instead.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agency/broker name to search for\n- Bayut only. PropertyFinder requires location instead.",
+          "example": "DAMAC"
+        }
+      },
+      {
+        "name": "location",
+        "in": "query",
+        "required": false,
+        "description": "- Location name (auto-resolved to location_id)",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (auto-resolved to location_id)",
+          "example": "Dubai"
+        }
+      },
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": false,
+        "description": "- Platform-specific location ID from /autocomplete",
+        "schema": {
+          "type": "string",
+          "description": "- Platform-specific location ID from /autocomplete",
+          "example": "5002"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Bayut: searches agencies\n- PropertyFinder: searches brokers (equivalent to Bayut agencies)",
+          "example": "bayut"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Agency/broker name to search for\n- Bayut only. PropertyFinder requires location instead.",
+          "example": "DAMAC"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (auto-resolved to location_id)",
+          "example": "Dubai"
+        },
+        "location_id": {
+          "type": "string",
+          "description": "- Platform-specific location ID from /autocomplete",
+          "example": "5002"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        }
+      },
+      "required": [
+        "platform"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-agency-details",
+    "method": "GET",
+    "path": "/agency-details",
+    "summary": "Get agency/broker profile details",
+    "description": "Get detailed agency/broker profile. Available for Bayut only  -  PropertyFinder returns a platform limitation error.",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- Note: Agency/broker details is only available for Bayut",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Note: Agency/broker details is only available for Bayut",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "agency_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agency ID from /search-agencies response",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency ID from /search-agencies response",
+          "example": "8566"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Note: Agency/broker details is only available for Bayut",
+          "example": "bayut"
+        },
+        "agency_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency ID from /search-agencies response",
+          "example": "8566"
+        }
+      },
+      "required": [
+        "platform",
+        "agency_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-agency-properties",
+    "method": "GET",
+    "path": "/agency-properties",
+    "summary": "Get properties listed by an agency/broker",
+    "description": "Get all properties listed by a specific agency (Bayut) or broker (PropertyFinder).",
+    "tags": [
+      "Agencies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform\n- Bayut: uses agency external ID\n- PropertyFinder: uses broker ID",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Bayut: uses agency external ID\n- PropertyFinder: uses broker ID",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "agency_id",
+        "in": "query",
+        "required": true,
+        "description": "- Agency/broker ID from /search-agencies response",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency/broker ID from /search-agencies response",
+          "example": "8566"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order (PropertyFinder only, ignored for Bayut)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "newest",
+            "price_low",
+            "price_high"
+          ],
+          "description": "- Sort order (PropertyFinder only, ignored for Bayut)",
+          "example": "newest"
+        }
+      },
+      {
+        "name": "transaction_type",
+        "in": "query",
+        "required": false,
+        "description": "- Filter by transaction type (PropertyFinder only, ignored for Bayut)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rental"
+          ],
+          "description": "- Filter by transaction type (PropertyFinder only, ignored for Bayut)",
+          "example": "sale"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform\n- Bayut: uses agency external ID\n- PropertyFinder: uses broker ID",
+          "example": "bayut"
+        },
+        "agency_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "- Agency/broker ID from /search-agencies response",
+          "example": "8566"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "popular",
+            "newest",
+            "price_low",
+            "price_high"
+          ],
+          "description": "- Sort order (PropertyFinder only, ignored for Bayut)",
+          "example": "newest"
+        },
+        "transaction_type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rental"
+          ],
+          "description": "- Filter by transaction type (PropertyFinder only, ignored for Bayut)",
+          "example": "sale"
+        }
+      },
+      "required": [
+        "platform",
+        "agency_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "uae-re-get-transactions",
+    "method": "GET",
+    "path": "/get-transactions",
+    "summary": "Get historical property transactions",
+    "description": "Get historical property transaction data (sales and rentals) for a specific location. Filter by property type, bedrooms, time period, and sort order.",
+    "tags": [
+      "Transactions"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "platform",
+        "in": "query",
+        "required": true,
+        "description": "- Data source platform",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform",
+          "example": "bayut"
+        }
+      },
+      {
+        "name": "transaction_type",
+        "in": "query",
+        "required": true,
+        "description": "- Transaction type\n- `sale`  -  Property sales\n- `rental`  -  Property rentals",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rental"
+          ],
+          "description": "- Transaction type\n- `sale`  -  Property sales\n- `rental`  -  Property rentals",
+          "example": "sale"
+        }
+      },
+      {
+        "name": "location",
+        "in": "query",
+        "required": false,
+        "description": "- Location name (auto-resolved)\n- Either `location` or `location_id` is required",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (auto-resolved)\n- Either `location` or `location_id` is required",
+          "example": "Dubai Marina"
+        }
+      },
+      {
+        "name": "location_id",
+        "in": "query",
+        "required": false,
+        "description": "- Platform-specific location ID from /autocomplete",
+        "schema": {
+          "type": "string",
+          "description": "- Platform-specific location ID from /autocomplete",
+          "example": "5003"
+        }
+      },
+      {
+        "name": "property_type",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated property types\n- Options: apartment, villa, townhouse, penthouse, office, shop, warehouse, hotel-apartment\n- PropertyFinder uses first value only",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Options: apartment, villa, townhouse, penthouse, office, shop, warehouse, hotel-apartment\n- PropertyFinder uses first value only",
+          "example": "apartment,villa"
+        }
+      },
+      {
+        "name": "bedrooms",
+        "in": "query",
+        "required": false,
+        "description": "- Comma-separated bedroom counts\n- PropertyFinder uses first value only",
+        "schema": {
+          "type": "string",
+          "description": "- Comma-separated bedroom counts\n- PropertyFinder uses first value only",
+          "example": "1,2"
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "- Sort order for transactions",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_high",
+            "price_low"
+          ],
+          "default": "newest",
+          "description": "- Sort order for transactions",
+          "example": "newest"
+        }
+      },
+      {
+        "name": "time_period",
+        "in": "query",
+        "required": false,
+        "description": "- Time period for historical data\n- `3m` = 3 months, `6m` = 6 months, `1y` = 1 year, `2y` = 2 years",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "3m",
+            "6m",
+            "1y",
+            "2y"
+          ],
+          "default": "1y",
+          "description": "- Time period for historical data\n- `3m` = 3 months, `6m` = 6 months, `1y` = 1 year, `2y` = 2 years",
+          "example": "1y"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "- Page number",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "bayut",
+            "propertyfinder"
+          ],
+          "description": "- Data source platform",
+          "example": "bayut"
+        },
+        "transaction_type": {
+          "type": "string",
+          "enum": [
+            "sale",
+            "rental"
+          ],
+          "description": "- Transaction type\n- `sale`  -  Property sales\n- `rental`  -  Property rentals",
+          "example": "sale"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Location name (auto-resolved)\n- Either `location` or `location_id` is required",
+          "example": "Dubai Marina"
+        },
+        "location_id": {
+          "type": "string",
+          "description": "- Platform-specific location ID from /autocomplete",
+          "example": "5003"
+        },
+        "property_type": {
+          "type": "string",
+          "description": "- Comma-separated property types\n- Options: apartment, villa, townhouse, penthouse, office, shop, warehouse, hotel-apartment\n- PropertyFinder uses first value only",
+          "example": "apartment,villa"
+        },
+        "bedrooms": {
+          "type": "string",
+          "description": "- Comma-separated bedroom counts\n- PropertyFinder uses first value only",
+          "example": "1,2"
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_high",
+            "price_low"
+          ],
+          "default": "newest",
+          "description": "- Sort order for transactions",
+          "example": "newest"
+        },
+        "time_period": {
+          "type": "string",
+          "enum": [
+            "3m",
+            "6m",
+            "1y",
+            "2y"
+          ],
+          "default": "1y",
+          "description": "- Time period for historical data\n- `3m` = 3 months, `6m` = 6 months, `1y` = 1 year, `2y` = 2 years",
+          "example": "1y"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "- Page number",
+          "example": 1
+        }
+      },
+      "required": [
+        "platform",
+        "transaction_type"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

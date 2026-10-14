@@ -1,0 +1,306 @@
+[
+  {
+    "id": "_health",
+    "method": "GET",
+    "path": "/health",
+    "summary": "Health check endpoint",
+    "description": "Returns the health status of the Semrush API service including system metrics and processing time",
+    "tags": [
+      "System"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-search-by-keyword",
+    "method": "GET",
+    "path": "/product-search-by-keyword",
+    "summary": "Search products by keyword on Tesco UK",
+    "description": "Search for products on Tesco UK using keywords. Provide a search query to get product results including prices, availability, and product details.",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search query for products (e.g., 'powerbank', 'milk', 'bread')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search query for products (e.g., 'powerbank', 'milk', 'bread')",
+          "example": "bread"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Search query for products (e.g., 'powerbank', 'milk', 'bread')",
+          "example": "bread"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-details",
+    "method": "GET",
+    "path": "/product-details",
+    "summary": "Get product details from Tesco UK",
+    "description": "Retrieve detailed product information from Tesco UK. Provide a product ID or full product URL to get comprehensive product data including pricing, descriptions, and specifications.",
+    "tags": [
+      "Product Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "- Product ID or full Tesco product URL (e.g., `330659955` or `https://www.tesco.com/groceries/en-GB/products/330659955`)\n- Get the product ID from `Product Search/product-search-by-keyword` endpoint\n- Get the Product ID `data.products[0].id`",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "- Product ID or full Tesco product URL (e.g., `330659955` or `https://www.tesco.com/groceries/en-GB/products/330659955`)\n- Get the product ID from `Product Search/product-search-by-keyword` endpoint\n- Get the Product ID `data.products[0].id`",
+          "example": "330659955"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "- Product ID or full Tesco product URL (e.g., `330659955` or `https://www.tesco.com/groceries/en-GB/products/330659955`)\n- Get the product ID from `Product Search/product-search-by-keyword` endpoint\n- Get the Product ID `data.products[0].id`",
+          "example": "330659955"
+        }
+      },
+      "required": [
+        "productId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_category-page",
+    "method": "GET",
+    "path": "/category-page",
+    "summary": "Get category page data from Tesco UK",
+    "description": "Retrieve category page information from Tesco UK. Provide a category page URL to get structured data about products in that category.",
+    "tags": [
+      "Category Pages"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": true,
+        "description": "- Tesco category ID/facet (e.g., `b;RnJlc2glMjBGb29k` for Fresh Food)\n- Get the `categoryID` from `Helper/get-category-id` endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "- Tesco category ID/facet (e.g., `b;RnJlc2glMjBGb29k` for Fresh Food)\n- Get the `categoryID` from `Helper/get-category-id` endpoint",
+          "example": "b;RnJlc2glMjBGb29k"
+        }
+      },
+      {
+        "name": "pageNo",
+        "in": "query",
+        "required": false,
+        "description": "Page number for pagination (default: 1)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number for pagination (default: 1)",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "- Tesco category ID/facet (e.g., `b;RnJlc2glMjBGb29k` for Fresh Food)\n- Get the `categoryID` from `Helper/get-category-id` endpoint",
+          "example": "b;RnJlc2glMjBGb29k"
+        },
+        "pageNo": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number for pagination (default: 1)",
+          "example": 1
+        }
+      },
+      "required": [
+        "categoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_ireland-category-page",
+    "method": "GET",
+    "path": "/ireland-category-page",
+    "summary": "Get category page data from Tesco Ireland",
+    "description": "Retrieve category page information from Tesco Ireland. Provide a category page URL to get structured data about products in that category.",
+    "tags": [
+      "Category Pages"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": true,
+        "description": "- Tesco category ID/facet (e.g., `b;RnJlc2glMjBGb29kJTdDQmFjayUyMHRvJTIwU2Nob29sJTIwTHVuY2hib3glN0NTYW5kd2ljaCUyMEZpbGxpbmdzJTIwJiUyMFNwcmVhZHM=` for Fresh Food)\n- Get the `categoryID` from `Helper/get-category-id` endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Tesco category ID/facet (e.g., `b;RnJlc2glMjBGb29kJTdDQmFjayUyMHRvJTIwU2Nob29sJTIwTHVuY2hib3glN0NTYW5kd2ljaCUyMEZpbGxpbmdzJTIwJiUyMFNwcmVhZHM=` for Fresh Food)\n- Get the `categoryID` from `Helper/get-category-id` endpoint",
+          "example": "b;RnJlc2glMjBGb29kJTdDQmFjayUyMHRvJTIwU2Nob29sJTIwTHVuY2hib3glN0NTYW5kd2ljaCUyMEZpbGxpbmdzJTIwJiUyMFNwcmVhZHM="
+        }
+      },
+      {
+        "name": "pageNo",
+        "in": "query",
+        "required": false,
+        "description": "Page number for pagination (default: 1)",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number for pagination (default: 1)",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "- Tesco category ID/facet (e.g., `b;RnJlc2glMjBGb29kJTdDQmFjayUyMHRvJTIwU2Nob29sJTIwTHVuY2hib3glN0NTYW5kd2ljaCUyMEZpbGxpbmdzJTIwJiUyMFNwcmVhZHM=` for Fresh Food)\n- Get the `categoryID` from `Helper/get-category-id` endpoint",
+          "example": "b;RnJlc2glMjBGb29kJTdDQmFjayUyMHRvJTIwU2Nob29sJTIwTHVuY2hib3glN0NTYW5kd2ljaCUyMEZpbGxpbmdzJTIwJiUyMFNwcmVhZHM="
+        },
+        "pageNo": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number for pagination (default: 1)",
+          "example": 1
+        }
+      },
+      "required": [
+        "categoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_ireland-product-details",
+    "method": "GET",
+    "path": "/ireland-product-details",
+    "summary": "Get product details from Tesco Ireland",
+    "description": "Retrieve detailed product information from Tesco Ireland. Provide a product ID or full product URL to get comprehensive product data including pricing, descriptions, and specifications.",
+    "tags": [
+      "Product Details"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "Product ID or full Tesco Ireland product URL (e.g., '266719388' or 'https://www.tesco.ie/groceries/en-IE/products/266719388')",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Product ID or full Tesco Ireland product URL (e.g., '266719388' or 'https://www.tesco.ie/groceries/en-IE/products/266719388')",
+          "example": "266719388"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Product ID or full Tesco Ireland product URL (e.g., '266719388' or 'https://www.tesco.ie/groceries/en-IE/products/266719388')",
+          "example": "266719388"
+        }
+      },
+      "required": [
+        "productId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_get-category-id-for-uk",
+    "method": "GET",
+    "path": "/get-category-ids-for-uk",
+    "summary": "Get category taxonomy and IDs from Tesco UK",
+    "description": "Retrieve the complete category taxonomy structure with category IDs that can be used with other category endpoints. No parameters required.",
+    "tags": [
+      "Category Management"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_get-category-ids-for-ireland",
+    "method": "GET",
+    "path": "/get-category-ids-for-ireland",
+    "summary": "Get category taxonomy and IDs from Tesco Ireland",
+    "description": "Retrieve the complete category taxonomy structure with category IDs that can be used with other Ireland category endpoints. No parameters required.",
+    "tags": [
+      "Category Management"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

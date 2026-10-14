@@ -1,0 +1,1020 @@
+[
+  {
+    "id": "_auto-complete",
+    "method": "GET",
+    "path": "/auto-complete",
+    "summary": "/auto-complete",
+    "description": "Returns autocomplete product and  suggestions based on partial input.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "Search query for autocomplete",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Search query for autocomplete",
+          "example": "eyeshadow"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Language preference",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "en-CA",
+            "fr-CA"
+          ],
+          "default": "en-US",
+          "description": "Language preference",
+          "example": "en-US"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Search query for autocomplete",
+          "example": "eyeshadow"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "en-CA",
+            "fr-CA"
+          ],
+          "default": "en-US",
+          "description": "Language preference",
+          "example": "en-US"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_store-list",
+    "method": "GET",
+    "path": "/store-list",
+    "summary": "/store-list",
+    "description": "Return list of stores given coordinates and raduis.",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": true,
+        "description": "Latitude coordinate",
+        "schema": {
+          "type": "string",
+          "description": "Latitude coordinate",
+          "example": "37.4418834"
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": true,
+        "description": "Longitude coordinate",
+        "schema": {
+          "type": "string",
+          "description": "Longitude coordinate",
+          "example": "-122.1430195"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": true,
+        "description": "Search radius in miles",
+        "schema": {
+          "type": "string",
+          "description": "Search radius in miles",
+          "example": "50"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "string",
+          "description": "Latitude coordinate",
+          "example": "37.4418834"
+        },
+        "longitude": {
+          "type": "string",
+          "description": "Longitude coordinate",
+          "example": "-122.1430195"
+        },
+        "radius": {
+          "type": "string",
+          "description": "Search radius in miles",
+          "example": "50"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude",
+        "radius"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_brands-list",
+    "method": "GET",
+    "path": "/brands-list",
+    "summary": "/brands-list",
+    "description": "Return list of brands listed on Sephora.com",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_categories-list",
+    "method": "GET",
+    "path": "/categories-list",
+    "summary": "/categories-list",
+    "description": "Return list of available root categories on Sephora.com",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_category-data",
+    "method": "GET",
+    "path": "/category-data",
+    "summary": "/category-data",
+    "description": "Return categories and other data from a root category",
+    "tags": [
+      "Helper & Navigation"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": true,
+        "description": "Category ID, get list category or categoryID from /category-list endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID, get list category or categoryID from /category-list endpoint",
+          "example": "cat160006"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Category ID, get list category or categoryID from /category-list endpoint",
+          "example": "cat160006"
+        }
+      },
+      "required": [
+        "categoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-keyword",
+    "method": "GET",
+    "path": "/search-by-keyword",
+    "summary": "/search-by-keyword",
+    "description": "Search for product using keyword and other parameters",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "keyword",
+        "in": "query",
+        "required": true,
+        "description": "Search keyword",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search keyword",
+          "example": "eyeshadow"
+        }
+      },
+      {
+        "name": "sortBy",
+        "in": "query",
+        "required": false,
+        "description": "Sort order for results",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "BEST_SELLING",
+            "TOP_RATED",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEW"
+          ],
+          "default": "BEST_SELLING",
+          "description": "Sort order for results",
+          "example": "BEST_SELLING"
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price in $",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in $",
+          "example": 25
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price in $",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in $",
+          "example": 50
+        }
+      },
+      {
+        "name": "currentPage",
+        "in": "query",
+        "required": false,
+        "description": "Current page number",
+        "schema": {
+          "type": "number",
+          "minimum": 1,
+          "default": 1,
+          "description": "Current page number",
+          "example": 1
+        }
+      },
+      {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "description": "Number of items per page",
+        "schema": {
+          "type": "number",
+          "minimum": 1,
+          "default": 60,
+          "description": "Number of items per page",
+          "example": 60
+        }
+      },
+      {
+        "name": "minRating",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rating filter (1 to 5)",
+        "schema": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Minimum rating filter (1 to 5)",
+          "example": 4
+        }
+      },
+      {
+        "name": "isNew",
+        "in": "query",
+        "required": false,
+        "description": "Filter for new products (true/false)",
+        "schema": {
+          "type": "string",
+          "description": "Filter for new products (true/false)"
+        }
+      },
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": false,
+        "description": "Get `categoryId` from Categories List endpoint",
+        "schema": {
+          "type": "string",
+          "description": "Get `categoryId` from Categories List endpoint",
+          "example": "cat130054"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Search keyword",
+          "example": "eyeshadow"
+        },
+        "sortBy": {
+          "type": "string",
+          "enum": [
+            "BEST_SELLING",
+            "TOP_RATED",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEW"
+          ],
+          "default": "BEST_SELLING",
+          "description": "Sort order for results",
+          "example": "BEST_SELLING"
+        },
+        "minPrice": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Minimum price in $",
+          "example": 25
+        },
+        "maxPrice": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Maximum price in $",
+          "example": 50
+        },
+        "currentPage": {
+          "type": "number",
+          "minimum": 1,
+          "default": 1,
+          "description": "Current page number",
+          "example": 1
+        },
+        "pageSize": {
+          "type": "number",
+          "minimum": 1,
+          "default": 60,
+          "description": "Number of items per page",
+          "example": 60
+        },
+        "minRating": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Minimum rating filter (1 to 5)",
+          "example": 4
+        },
+        "isNew": {
+          "type": "string",
+          "description": "Filter for new products (true/false)"
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Get `categoryId` from Categories List endpoint",
+          "example": "cat130054"
+        }
+      },
+      "required": [
+        "keyword"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-category",
+    "method": "GET",
+    "path": "/search-by-category",
+    "summary": "/search-by-category",
+    "description": "Search for product using category ID and other paramters",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "categoryId",
+        "in": "query",
+        "required": true,
+        "description": "Get `categoryId` from Categories List endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Get `categoryId` from Categories List endpoint",
+          "example": "fragrance"
+        }
+      },
+      {
+        "name": "sortBy",
+        "in": "query",
+        "required": false,
+        "description": "Sort order for products",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "BEST_SELLING",
+            "TOP_RATED",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEW"
+          ],
+          "description": "Sort order for products"
+        }
+      },
+      {
+        "name": "currentPage",
+        "in": "query",
+        "required": false,
+        "description": "Current page number",
+        "schema": {
+          "type": "string",
+          "description": "Current page number",
+          "example": "1"
+        }
+      },
+      {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "description": "Number of items per page",
+        "schema": {
+          "type": "string",
+          "description": "Number of items per page",
+          "example": "60"
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price in $",
+        "schema": {
+          "type": "string",
+          "description": "Minimum price in $",
+          "example": "25"
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price in $",
+        "schema": {
+          "type": "string",
+          "description": "Maximum price in $",
+          "example": "50"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Get `categoryId` from Categories List endpoint",
+          "example": "fragrance"
+        },
+        "sortBy": {
+          "type": "string",
+          "enum": [
+            "BEST_SELLING",
+            "TOP_RATED",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEW"
+          ],
+          "description": "Sort order for products"
+        },
+        "currentPage": {
+          "type": "string",
+          "description": "Current page number",
+          "example": "1"
+        },
+        "pageSize": {
+          "type": "string",
+          "description": "Number of items per page",
+          "example": "60"
+        },
+        "minPrice": {
+          "type": "string",
+          "description": "Minimum price in $",
+          "example": "25"
+        },
+        "maxPrice": {
+          "type": "string",
+          "description": "Maximum price in $",
+          "example": "50"
+        }
+      },
+      "required": [
+        "categoryId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-by-brand",
+    "method": "GET",
+    "path": "/search-by-brand",
+    "summary": "/search-by-brand",
+    "description": "Search for product using Brand ID and other parameters",
+    "tags": [
+      "Product Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "brandName",
+        "in": "query",
+        "required": true,
+        "description": "Get brand name from Brands List endpoint",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Get brand name from Brands List endpoint",
+          "example": "gucci"
+        }
+      },
+      {
+        "name": "sortBy",
+        "in": "query",
+        "required": false,
+        "description": "Sort order for products",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "BEST_SELLING",
+            "TOP_RATED",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEW"
+          ],
+          "description": "Sort order for products"
+        }
+      },
+      {
+        "name": "currentPage",
+        "in": "query",
+        "required": false,
+        "description": "Current page number",
+        "schema": {
+          "type": "string",
+          "description": "Current page number",
+          "example": "1"
+        }
+      },
+      {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "description": "Number of items per page",
+        "schema": {
+          "type": "string",
+          "description": "Number of items per page",
+          "example": "60"
+        }
+      },
+      {
+        "name": "minPrice",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price in $",
+        "schema": {
+          "type": "string",
+          "description": "Minimum price in $",
+          "example": "50"
+        }
+      },
+      {
+        "name": "maxPrice",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price in $",
+        "schema": {
+          "type": "string",
+          "description": "Maximum price in $",
+          "example": "100"
+        }
+      },
+      {
+        "name": "minRating",
+        "in": "query",
+        "required": false,
+        "description": "Minimum rating (4 or 5)",
+        "schema": {
+          "type": "string",
+          "description": "Minimum rating (4 or 5)",
+          "example": "4"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "brandName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Get brand name from Brands List endpoint",
+          "example": "gucci"
+        },
+        "sortBy": {
+          "type": "string",
+          "enum": [
+            "BEST_SELLING",
+            "TOP_RATED",
+            "PRICE_LOW_TO_HIGH",
+            "PRICE_HIGH_TO_LOW",
+            "NEW"
+          ],
+          "description": "Sort order for products"
+        },
+        "currentPage": {
+          "type": "string",
+          "description": "Current page number",
+          "example": "1"
+        },
+        "pageSize": {
+          "type": "string",
+          "description": "Number of items per page",
+          "example": "60"
+        },
+        "minPrice": {
+          "type": "string",
+          "description": "Minimum price in $",
+          "example": "50"
+        },
+        "maxPrice": {
+          "type": "string",
+          "description": "Maximum price in $",
+          "example": "100"
+        },
+        "minRating": {
+          "type": "string",
+          "description": "Minimum rating (4 or 5)",
+          "example": "4"
+        }
+      },
+      "required": [
+        "brandName"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-details",
+    "method": "GET",
+    "path": "/product-details",
+    "summary": "/product-details",
+    "description": "Return detailed data of a product, including images, price, product details, and ingredients.",
+    "tags": [
+      "Product Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "P427421"
+        }
+      },
+      {
+        "name": "skuId",
+        "in": "query",
+        "required": false,
+        "description": "SKU ID for a specific product variation (e.g., size or color)",
+        "schema": {
+          "type": "string",
+          "description": "SKU ID for a specific product variation (e.g., size or color)",
+          "example": "2025633"
+        }
+      },
+      {
+        "name": "language",
+        "in": "query",
+        "required": false,
+        "description": "Language preference",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "en-CA",
+            "fr-CA"
+          ],
+          "default": "en-US",
+          "description": "Language preference",
+          "example": "en-US"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "P427421"
+        },
+        "skuId": {
+          "type": "string",
+          "description": "SKU ID for a specific product variation (e.g., size or color)",
+          "example": "2025633"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "en-CA",
+            "fr-CA"
+          ],
+          "default": "en-US",
+          "description": "Language preference",
+          "example": "en-US"
+        }
+      },
+      "required": [
+        "productId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-reviews",
+    "method": "GET",
+    "path": "/product-reviews",
+    "summary": "/product-reviews",
+    "description": "Get the product reviews using product ID and other paramters.",
+    "tags": [
+      "Product Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "Product ID",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "P458747"
+        }
+      },
+      {
+        "name": "sortBy",
+        "in": "query",
+        "required": false,
+        "description": "Sort order for reviews",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "MOST_HELPFUL",
+            "HIGHEST_RATING",
+            "LOWEST_RATING",
+            "OLDEST",
+            "NEWEST"
+          ],
+          "description": "Sort order for reviews",
+          "example": "MOST_HELPFUL"
+        }
+      },
+      {
+        "name": "rating",
+        "in": "query",
+        "required": false,
+        "description": "Filter by rating (1-5)",
+        "schema": {
+          "type": "string",
+          "description": "Filter by rating (1-5)",
+          "example": "4"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of reviews to return",
+        "schema": {
+          "type": "string",
+          "description": "Number of reviews to return",
+          "example": "6"
+        }
+      },
+      {
+        "name": "offset",
+        "in": "query",
+        "required": false,
+        "description": "Offset for pagination",
+        "schema": {
+          "type": "string",
+          "description": "Offset for pagination",
+          "example": "0"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product ID",
+          "example": "P458747"
+        },
+        "sortBy": {
+          "type": "string",
+          "enum": [
+            "MOST_HELPFUL",
+            "HIGHEST_RATING",
+            "LOWEST_RATING",
+            "OLDEST",
+            "NEWEST"
+          ],
+          "description": "Sort order for reviews",
+          "example": "MOST_HELPFUL"
+        },
+        "rating": {
+          "type": "string",
+          "description": "Filter by rating (1-5)",
+          "example": "4"
+        },
+        "limit": {
+          "type": "string",
+          "description": "Number of reviews to return",
+          "example": "6"
+        },
+        "offset": {
+          "type": "string",
+          "description": "Offset for pagination",
+          "example": "0"
+        }
+      },
+      "required": [
+        "productId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_product-availability",
+    "method": "GET",
+    "path": "/product-availability",
+    "summary": "/product-availability",
+    "description": "Check product availability at a coordinates and raduis.",
+    "tags": [
+      "Product Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "skuId",
+        "in": "query",
+        "required": true,
+        "description": "SKU ID of product",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SKU ID of product",
+          "example": "2495505"
+        }
+      },
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": true,
+        "description": "Latitude",
+        "schema": {
+          "type": "string",
+          "description": "Latitude",
+          "example": "41.78874829999999"
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": true,
+        "description": "Longitude",
+        "schema": {
+          "type": "string",
+          "description": "Longitude",
+          "example": "-87.7664934"
+        }
+      },
+      {
+        "name": "radius",
+        "in": "query",
+        "required": false,
+        "description": "Search radius in miles",
+        "schema": {
+          "type": "string",
+          "description": "Search radius in miles",
+          "example": "50"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "skuId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SKU ID of product",
+          "example": "2495505"
+        },
+        "latitude": {
+          "type": "string",
+          "description": "Latitude",
+          "example": "41.78874829999999"
+        },
+        "longitude": {
+          "type": "string",
+          "description": "Longitude",
+          "example": "-87.7664934"
+        },
+        "radius": {
+          "type": "string",
+          "description": "Search radius in miles",
+          "example": "50"
+        }
+      },
+      "required": [
+        "skuId",
+        "latitude",
+        "longitude"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

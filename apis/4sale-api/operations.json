@@ -1,0 +1,2379 @@
+[
+  {
+    "id": "getServiceStatus",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "Check whether the 4Sale API is available.",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listCategories",
+    "method": "GET",
+    "path": "/categories",
+    "summary": "/categories",
+    "description": "Browse or search the category tree to find the category ids /listings, /listings-by-url, /category-search, /category-details, /category-filters, /sponsored-cards and /business-profiles take.",
+    "tags": [
+      "Categories & Locations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "parent_id",
+        "in": "query",
+        "required": false,
+        "description": "**Return the direct children of this category.** Optional. A numeric category id; omit it (and\n`query`) for the top-level verticals (Automotive, Property, Electronics, Services, …).\n\n- Walk the tree downward by passing any returned `category_id` back as `parent_id`.\n- The `parent` object in the response echoes the node you asked for with its full `path`.\n- An unknown id returns **404**; accepts 1 - 999,999,999.",
+        "schema": {
+          "type": "integer",
+          "description": "**Return the direct children of this category.** Optional. A numeric category id; omit it (and\n`query`) for the top-level verticals (Automotive, Property, Electronics, Services, …).\n\n- Walk the tree downward by passing any returned `category_id` back as `parent_id`.\n- The `parent` object in the response echoes the node you asked for with its full `path`.\n- An unknown id returns **404**; accepts 1 - 999,999,999.",
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "**Find categories by name instead of walking the tree.** Optional. Case-insensitive text matched\nagainst the English name, the Arabic name and the slug of every category, e.g. `land cruiser`,\n`apartment`, `شقة`.\n\n- Arabic spelling variants match each other (`ايجار` finds `إيجار`, `شقه` finds `شقة`).\n- Each match comes back with its full `path` from the vertical down; `total` counts every match.\n- Takes precedence over `parent_id`. At most 100 matches are returned, shallowest first.",
+        "schema": {
+          "type": "string",
+          "description": "**Find categories by name instead of walking the tree.** Optional. Case-insensitive text matched\nagainst the English name, the Arabic name and the slug of every category, e.g. `land cruiser`,\n`apartment`, `شقة`.\n\n- Arabic spelling variants match each other (`ايجار` finds `إيجار`, `شقه` finds `شقة`).\n- Each match comes back with its full `path` from the vertical down; `total` counts every match.\n- Takes precedence over `parent_id`. At most 100 matches are returned, shallowest first.",
+          "maxLength": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "parent_id": {
+          "type": "integer",
+          "description": "**Return the direct children of this category.** Optional. A numeric category id; omit it (and\n`query`) for the top-level verticals (Automotive, Property, Electronics, Services, …).\n\n- Walk the tree downward by passing any returned `category_id` back as `parent_id`.\n- The `parent` object in the response echoes the node you asked for with its full `path`.\n- An unknown id returns **404**; accepts 1 - 999,999,999.",
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "query": {
+          "type": "string",
+          "description": "**Find categories by name instead of walking the tree.** Optional. Case-insensitive text matched\nagainst the English name, the Arabic name and the slug of every category, e.g. `land cruiser`,\n`apartment`, `شقة`.\n\n- Arabic spelling variants match each other (`ايجار` finds `إيجار`, `شقه` finds `شقة`).\n- Each match comes back with its full `path` from the vertical down; `total` counts every match.\n- Takes precedence over `parent_id`. At most 100 matches are returned, shallowest first.",
+          "maxLength": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getCategoryDetails",
+    "method": "GET",
+    "path": "/category-details",
+    "summary": "/category-details",
+    "description": "One category's bilingual description, breadcrumb and direct children.",
+    "tags": [
+      "Categories & Locations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.",
+        "schema": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.",
+          "example": 138,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.",
+          "example": 138,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getCategoryFilters",
+    "method": "GET",
+    "path": "/category-filters",
+    "summary": "/category-filters",
+    "description": "A category's attribute dictionary  -  the ids and option ids the `attributes` filter takes and listing attributes decode against.",
+    "tags": [
+      "Categories & Locations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- Attributes are inherited: a model such as `1971` (Prado) returns the attributes of Used Cars.",
+        "schema": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- Attributes are inherited: a model such as `1971` (Prado) returns the attributes of Used Cars.",
+          "example": 2888,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "filterable_only",
+        "in": "query",
+        "required": false,
+        "description": "**Return only the attributes the marketplace app shows in its filter panel** (`filterable: true`).\nOptional; send `true` or `false`.\n\n- Omitted or `false`: every attribute, so a listing's `attributes` can always be decoded.\n- The flag is about the app's panel only: every drop-down, number and yes/no attribute recorded on\n  listings can be used in `attributes=` on /search and /listings, `filterable: false` ones included\n  (`text`, `file` and `multi_selection` attributes cannot, whatever the flag says).",
+        "schema": {
+          "type": "boolean",
+          "description": "**Return only the attributes the marketplace app shows in its filter panel** (`filterable: true`).\nOptional; send `true` or `false`.\n\n- Omitted or `false`: every attribute, so a listing's `attributes` can always be decoded.\n- The flag is about the app's panel only: every drop-down, number and yes/no attribute recorded on\n  listings can be used in `attributes=` on /search and /listings, `filterable: false` ones included\n  (`text`, `file` and `multi_selection` attributes cannot, whatever the flag says).",
+          "example": ""
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- Attributes are inherited: a model such as `1971` (Prado) returns the attributes of Used Cars.",
+          "example": 2888,
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "filterable_only": {
+          "type": "boolean",
+          "description": "**Return only the attributes the marketplace app shows in its filter panel** (`filterable: true`).\nOptional; send `true` or `false`.\n\n- Omitted or `false`: every attribute, so a listing's `attributes` can always be decoded.\n- The flag is about the app's panel only: every drop-down, number and yes/no attribute recorded on\n  listings can be used in `attributes=` on /search and /listings, `filterable: false` ones included\n  (`text`, `file` and `multi_selection` attributes cannot, whatever the flag says).",
+          "example": ""
+        }
+      },
+      "required": [
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listDistricts",
+    "method": "GET",
+    "path": "/districts",
+    "summary": "/districts",
+    "description": "Kuwait's governorates, areas and blocks  -  the ids the `district_ids` filter takes.",
+    "tags": [
+      "Categories & Locations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "parent_id",
+        "in": "query",
+        "required": false,
+        "description": "**Return the districts directly beneath this one.** Optional. A numeric district id; omitted, the six\ngovernorates (Kuwait City, Hawalli, Farwaniyah, Ahmadi, Jahra, Mubarak Al-Kabeer).\n\n- The hierarchy is governorate (`level` 1) → area (`level` 2, e.g. `54` Salmiya) → block (`level` 3).\n- Pass any returned id back as `parent_id` to go one level down; a block with nothing beneath it\n  returns an empty list.\n- Some blocks list `level` 4 entries (named buildings or unit types, not places); asking for one, like\n  an unknown id, is a **404**. Accepts 1 - 999,999,999.",
+        "schema": {
+          "type": "integer",
+          "description": "**Return the districts directly beneath this one.** Optional. A numeric district id; omitted, the six\ngovernorates (Kuwait City, Hawalli, Farwaniyah, Ahmadi, Jahra, Mubarak Al-Kabeer).\n\n- The hierarchy is governorate (`level` 1) → area (`level` 2, e.g. `54` Salmiya) → block (`level` 3).\n- Pass any returned id back as `parent_id` to go one level down; a block with nothing beneath it\n  returns an empty list.\n- Some blocks list `level` 4 entries (named buildings or unit types, not places); asking for one, like\n  an unknown id, is a **404**. Accepts 1 - 999,999,999.",
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "**Find a district by name.** Optional. Case-insensitive text matched against the English and Arabic\nnames of every governorate, area and block, e.g. `salmiya`, `jabriya`, `السالمية`.\n\n- Arabic spelling variants match each other (`السالميه` finds `السالمية`, `الاحمدي` finds `الأحمدي`).\n- Takes precedence over `parent_id`; at most 200 matches are returned, `total` counts them all.\n- Search by area name: blocks are named `Block 1`…`Block 12` in every area, so a block search is\n  ambiguous  -  find the area, then list its blocks with `parent_id`.",
+        "schema": {
+          "type": "string",
+          "description": "**Find a district by name.** Optional. Case-insensitive text matched against the English and Arabic\nnames of every governorate, area and block, e.g. `salmiya`, `jabriya`, `السالمية`.\n\n- Arabic spelling variants match each other (`السالميه` finds `السالمية`, `الاحمدي` finds `الأحمدي`).\n- Takes precedence over `parent_id`; at most 200 matches are returned, `total` counts them all.\n- Search by area name: blocks are named `Block 1`…`Block 12` in every area, so a block search is\n  ambiguous  -  find the area, then list its blocks with `parent_id`.",
+          "maxLength": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "parent_id": {
+          "type": "integer",
+          "description": "**Return the districts directly beneath this one.** Optional. A numeric district id; omitted, the six\ngovernorates (Kuwait City, Hawalli, Farwaniyah, Ahmadi, Jahra, Mubarak Al-Kabeer).\n\n- The hierarchy is governorate (`level` 1) → area (`level` 2, e.g. `54` Salmiya) → block (`level` 3).\n- Pass any returned id back as `parent_id` to go one level down; a block with nothing beneath it\n  returns an empty list.\n- Some blocks list `level` 4 entries (named buildings or unit types, not places); asking for one, like\n  an unknown id, is a **404**. Accepts 1 - 999,999,999.",
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "query": {
+          "type": "string",
+          "description": "**Find a district by name.** Optional. Case-insensitive text matched against the English and Arabic\nnames of every governorate, area and block, e.g. `salmiya`, `jabriya`, `السالمية`.\n\n- Arabic spelling variants match each other (`السالميه` finds `السالمية`, `الاحمدي` finds `الأحمدي`).\n- Takes precedence over `parent_id`; at most 200 matches are returned, `total` counts them all.\n- Search by area name: blocks are named `Block 1`…`Block 12` in every area, so a block search is\n  ambiguous  -  find the area, then list its blocks with `parent_id`.",
+          "maxLength": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getSearchSuggestions",
+    "method": "GET",
+    "path": "/autocomplete",
+    "summary": "/autocomplete",
+    "description": "Turn a typed phrase into search suggestions and the category id to browse.",
+    "tags": [
+      "Categories & Locations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "**What the user has typed so far.** A partial or full phrase in English or Arabic, e.g. `toyota`,\n`iphone 15`, `شقة`. Required; 1 - 100 characters. HTML tags and script-like text are refused with 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "**What the user has typed so far.** A partial or full phrase in English or Arabic, e.g. `toyota`,\n`iphone 15`, `شقة`. Required; 1 - 100 characters. HTML tags and script-like text are refused with 400.",
+          "example": "toyota"
+        }
+      },
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "**Language of the suggestion labels.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\n`label` switches language (`Camry` vs `كامري`); `keyword` stays as the search phrase.",
+        "schema": {
+          "type": "string",
+          "description": "**Language of the suggestion labels.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\n`label` switches language (`Camry` vs `كامري`); `keyword` stays as the search phrase.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "**What the user has typed so far.** A partial or full phrase in English or Arabic, e.g. `toyota`,\n`iphone 15`, `شقة`. Required; 1 - 100 characters. HTML tags and script-like text are refused with 400.",
+          "example": "toyota"
+        },
+        "lang": {
+          "type": "string",
+          "description": "**Language of the suggestion labels.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\n`label` switches language (`Camry` vs `كامري`); `keyword` stays as the search phrase.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listTrendingSearches",
+    "method": "GET",
+    "path": "/trending-searches",
+    "summary": "/trending-searches",
+    "description": "The search phrases trending on the marketplace right now.",
+    "tags": [
+      "Categories & Locations"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "searchListings",
+    "method": "GET",
+    "path": "/search",
+    "summary": "/search",
+    "description": "Keyword search across every category, with price, attribute, video and near-a-point filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "**The keyword search  -  what you would type in the marketplace search box.** Required; 1 - 200\ncharacters, English or Arabic, e.g. `prado`, `iphone 15 pro`, `شقة للايجار`.\n\n- Matches titles and descriptions across every category.\n- Matching is broad: a multi-word query is not an exact-phrase match, so `total` can be far larger\n  than the listings containing the phrase. In relevance order the first pages hold the closest matches;\n  narrow with a category (/category-search) or filters.\n- HTML tags, script-like text and a bare `0` are refused with 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The keyword search  -  what you would type in the marketplace search box.** Required; 1 - 200\ncharacters, English or Arabic, e.g. `prado`, `iphone 15 pro`, `شقة للايجار`.\n\n- Matches titles and descriptions across every category.\n- Matching is broad: a multi-word query is not an exact-phrase match, so `total` can be far larger\n  than the listings containing the phrase. In relevance order the first pages hold the closest matches;\n  narrow with a category (/category-search) or filters.\n- HTML tags, script-like text and a bare `0` are refused with 400.",
+          "example": "prado"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Result order.** Optional; omit it for relevance to `query`.\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n\nThe relevance order is not stable from one call to the next, so walking many pages in it can repeat\na few listings and skip others. To collect a complete result set, send a `sort` (e.g. `newest`).",
+        "schema": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for relevance to `query`.\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n\nThe relevance order is not stable from one call to the next, so walking many pages in it can repeat\na few listings and skip others. To collect a complete result set, send a `sort` (e.g. `newest`).",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_low",
+            "price_high"
+          ]
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "video_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only listings that include a video.** Optional. Send `true` to keep listings with a video tour;\nomitted or `false` applies no video restriction. How many listings carry a video differs a lot by\ncategory.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only listings that include a video.** Optional. Send `true` to keep listings with a video tour;\nomitted or `false` applies no video restriction. How many listings carry a video differs a lot by\ncategory.",
+          "example": ""
+        }
+      },
+      {
+        "name": "images_only",
+        "in": "query",
+        "required": false,
+        "description": "**Only listings with at least one photo.** Optional. Send `true` to leave out listings posted without\na photo (including those that have only a video); omitted or `false` applies no photo restriction.",
+        "schema": {
+          "type": "boolean",
+          "description": "**Only listings with at least one photo.** Optional. Send `true` to leave out listings posted without\na photo (including those that have only a video); omitted or `false` applies no photo restriction.",
+          "example": ""
+        }
+      },
+      {
+        "name": "latitude",
+        "in": "query",
+        "required": false,
+        "description": "**Search around a point  -  latitude.** Optional. Decimal degrees, e.g. `29.3375` (Salmiya).\n\n- Must be sent with `longitude`; together they keep only listings located close to that point, so\n  expect far fewer results than the plain keyword search.\n- A point far from Kuwait (including any coordinate of `0`) finds nothing: an empty page with `total: 0`.",
+        "schema": {
+          "type": "number",
+          "description": "**Search around a point  -  latitude.** Optional. Decimal degrees, e.g. `29.3375` (Salmiya).\n\n- Must be sent with `longitude`; together they keep only listings located close to that point, so\n  expect far fewer results than the plain keyword search.\n- A point far from Kuwait (including any coordinate of `0`) finds nothing: an empty page with `total: 0`.",
+          "minimum": -90,
+          "maximum": 90
+        }
+      },
+      {
+        "name": "longitude",
+        "in": "query",
+        "required": false,
+        "description": "**Search around a point  -  longitude.** Optional. Decimal degrees, e.g. `48.0759` (Salmiya).\n\n- Must be sent with `latitude`; sending only one of the two is a 400.\n- Coordinates of any listing are on /listing-details (`location.latitude` / `location.longitude`).",
+        "schema": {
+          "type": "number",
+          "description": "**Search around a point  -  longitude.** Optional. Decimal degrees, e.g. `48.0759` (Salmiya).\n\n- Must be sent with `latitude`; sending only one of the two is a 400.\n- Coordinates of any listing are on /listing-details (`location.latitude` / `location.longitude`).",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+        "schema": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The keyword search  -  what you would type in the marketplace search box.** Required; 1 - 200\ncharacters, English or Arabic, e.g. `prado`, `iphone 15 pro`, `شقة للايجار`.\n\n- Matches titles and descriptions across every category.\n- Matching is broad: a multi-word query is not an exact-phrase match, so `total` can be far larger\n  than the listings containing the phrase. In relevance order the first pages hold the closest matches;\n  narrow with a category (/category-search) or filters.\n- HTML tags, script-like text and a bare `0` are refused with 400.",
+          "example": "prado"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sort": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for relevance to `query`.\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n\nThe relevance order is not stable from one call to the next, so walking many pages in it can repeat\na few listings and skip others. To collect a complete result set, send a `sort` (e.g. `newest`).",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_low",
+            "price_high"
+          ]
+        },
+        "min_price": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "max_price": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "video_only": {
+          "type": "boolean",
+          "description": "**Only listings that include a video.** Optional. Send `true` to keep listings with a video tour;\nomitted or `false` applies no video restriction. How many listings carry a video differs a lot by\ncategory.",
+          "example": ""
+        },
+        "images_only": {
+          "type": "boolean",
+          "description": "**Only listings with at least one photo.** Optional. Send `true` to leave out listings posted without\na photo (including those that have only a video); omitted or `false` applies no photo restriction.",
+          "example": ""
+        },
+        "latitude": {
+          "type": "number",
+          "description": "**Search around a point  -  latitude.** Optional. Decimal degrees, e.g. `29.3375` (Salmiya).\n\n- Must be sent with `longitude`; together they keep only listings located close to that point, so\n  expect far fewer results than the plain keyword search.\n- A point far from Kuwait (including any coordinate of `0`) finds nothing: an empty page with `total: 0`.",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "description": "**Search around a point  -  longitude.** Optional. Decimal degrees, e.g. `48.0759` (Salmiya).\n\n- Must be sent with `latitude`; sending only one of the two is a 400.\n- Coordinates of any listing are on /listing-details (`location.latitude` / `location.longitude`).",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "attributes": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listCategoryListings",
+    "method": "GET",
+    "path": "/listings",
+    "summary": "/listings",
+    "description": "Browse one category with district, price and attribute filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- A non-leaf category returns its whole subtree (`138` Toyota includes every Toyota model); a navigation-only group is a 400 naming its children.",
+        "schema": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- A non-leaf category returns its whole subtree (`138` Toyota includes every Toyota model); a navigation-only group is a 400 naming its children.",
+          "example": 2888,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "category_ids",
+        "in": "query",
+        "required": false,
+        "description": "**More categories to include alongside `category_id`.** Optional. Comma-separated category ids, e.g.\n`116` or `116,99`; up to 20, from any vertical.\n\n- The result is every listing in `category_id` OR any of these (each with its whole subtree), counted\n  once in `total`. The response's `category_ids` lists the categories actually browsed.\n- The default order becomes `newest`; send `sort` for another.\n- An unknown id is a **404**; a navigation-only group is a **400** naming its children.",
+        "schema": {
+          "type": "string",
+          "description": "**More categories to include alongside `category_id`.** Optional. Comma-separated category ids, e.g.\n`116` or `116,99`; up to 20, from any vertical.\n\n- The result is every listing in `category_id` OR any of these (each with its whole subtree), counted\n  once in `total`. The response's `category_ids` lists the categories actually browsed.\n- The default order becomes `newest`; send `sort` for another.\n- An unknown id is a **404**; a navigation-only group is a **400** naming its children.",
+          "maxLength": 200
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Result order.** Optional; omit it for the category's own order (`newest` when `category_ids` is used).\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n- `premium`  -  listings with an active Premium add-on (card `is_premium: true`) first, then the rest\n\nIn the default order the category's pinned paid listings are left out of `listings` (they are on\n/promoted-listings). Any explicit `sort` orders them in with the rest and counts them in `total`; on\nmost categories a `district_ids` filter does the same.",
+        "schema": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for the category's own order (`newest` when `category_ids` is used).\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n- `premium`  -  listings with an active Premium add-on (card `is_premium: true`) first, then the rest\n\nIn the default order the category's pinned paid listings are left out of `listings` (they are on\n/promoted-listings). Any explicit `sort` orders them in with the rest and counts them in `total`; on\nmost categories a `district_ids` filter does the same.",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_low",
+            "price_high",
+            "premium"
+          ]
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "district_ids",
+        "in": "query",
+        "required": false,
+        "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+        "schema": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        }
+      },
+      {
+        "name": "service_area_id",
+        "in": "query",
+        "required": false,
+        "description": "**Service categories only: keep the providers serving one governorate.** Optional.\n\n- One governorate id: `2` Ahmadi, `3` Jahra, `4` Kuwait City, `5` Mubarak Al-Kabeer, `6` Farwaniyah,\n  `7` Hawalli (the ids /districts lists with no parameters).\n- Keeps the providers located in that governorate **plus those serving all of Kuwait**, as the site's\n  governorate page of a service category does (`…/contracting/plumber/1/hawalli--district`).\n  `district_ids` instead keeps only the providers located there, so it returns fewer.\n- Works on the service categories only (plumber, electrician, AC services, pack and move, cleaning, …:\n  `category_type: listings_district_filteration` on /categories); `category_id`, and every\n  `category_ids` entry where offered, must be one.\n- A 400: an area or block id, a non-service category, or combining it with `district_ids`.",
+        "schema": {
+          "type": "integer",
+          "description": "**Service categories only: keep the providers serving one governorate.** Optional.\n\n- One governorate id: `2` Ahmadi, `3` Jahra, `4` Kuwait City, `5` Mubarak Al-Kabeer, `6` Farwaniyah,\n  `7` Hawalli (the ids /districts lists with no parameters).\n- Keeps the providers located in that governorate **plus those serving all of Kuwait**, as the site's\n  governorate page of a service category does (`…/contracting/plumber/1/hawalli--district`).\n  `district_ids` instead keeps only the providers located there, so it returns fewer.\n- Works on the service categories only (plumber, electrician, AC services, pack and move, cleaning, …:\n  `category_type: listings_district_filteration` on /categories); `category_id`, and every\n  `category_ids` entry where offered, must be one.\n- A 400: an area or block id, a non-service category, or combining it with `district_ids`.",
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+        "schema": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- A non-leaf category returns its whole subtree (`138` Toyota includes every Toyota model); a navigation-only group is a 400 naming its children.",
+          "example": 2888,
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "category_ids": {
+          "type": "string",
+          "description": "**More categories to include alongside `category_id`.** Optional. Comma-separated category ids, e.g.\n`116` or `116,99`; up to 20, from any vertical.\n\n- The result is every listing in `category_id` OR any of these (each with its whole subtree), counted\n  once in `total`. The response's `category_ids` lists the categories actually browsed.\n- The default order becomes `newest`; send `sort` for another.\n- An unknown id is a **404**; a navigation-only group is a **400** naming its children.",
+          "maxLength": 200
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sort": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for the category's own order (`newest` when `category_ids` is used).\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n- `premium`  -  listings with an active Premium add-on (card `is_premium: true`) first, then the rest\n\nIn the default order the category's pinned paid listings are left out of `listings` (they are on\n/promoted-listings). Any explicit `sort` orders them in with the rest and counts them in `total`; on\nmost categories a `district_ids` filter does the same.",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_low",
+            "price_high",
+            "premium"
+          ]
+        },
+        "min_price": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "max_price": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "district_ids": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        },
+        "service_area_id": {
+          "type": "integer",
+          "description": "**Service categories only: keep the providers serving one governorate.** Optional.\n\n- One governorate id: `2` Ahmadi, `3` Jahra, `4` Kuwait City, `5` Mubarak Al-Kabeer, `6` Farwaniyah,\n  `7` Hawalli (the ids /districts lists with no parameters).\n- Keeps the providers located in that governorate **plus those serving all of Kuwait**, as the site's\n  governorate page of a service category does (`…/contracting/plumber/1/hawalli--district`).\n  `district_ids` instead keeps only the providers located there, so it returns fewer.\n- Works on the service categories only (plumber, electrician, AC services, pack and move, cleaning, …:\n  `category_type: listings_district_filteration` on /categories); `category_id`, and every\n  `category_ids` entry where offered, must be one.\n- A 400: an area or block id, a non-service category, or combining it with `district_ids`.",
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "attributes": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "searchCategoryListings",
+    "method": "GET",
+    "path": "/category-search",
+    "summary": "/category-search",
+    "description": "Keyword search inside one category, with district, price and attribute filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "**The keyword to look for inside the category.** Required; 1 - 200 characters, English or Arabic,\ne.g. `txl`, `white`, `للبيع`.\n\n- Matches listing titles and descriptions, and matching is fuzzy: `txl` also finds `TX`, `TX.L`,\n  `TX-L`, `TLX` and `VXL`.\n- A multi-word query matches listings containing **any** of its words, so `total` can be much larger\n  than the listings with the exact phrase. Results are ranked by relevance, so the first pages hold\n  the closest matches and deep pages drift\n  off-topic. To narrow, search the model's own category (e.g. Land Cruiser rather than Used Cars) or\n  add filters.\n- HTML tags, script-like text and a bare `0` are refused with 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The keyword to look for inside the category.** Required; 1 - 200 characters, English or Arabic,\ne.g. `txl`, `white`, `للبيع`.\n\n- Matches listing titles and descriptions, and matching is fuzzy: `txl` also finds `TX`, `TX.L`,\n  `TX-L`, `TLX` and `VXL`.\n- A multi-word query matches listings containing **any** of its words, so `total` can be much larger\n  than the listings with the exact phrase. Results are ranked by relevance, so the first pages hold\n  the closest matches and deep pages drift\n  off-topic. To narrow, search the model's own category (e.g. Land Cruiser rather than Used Cars) or\n  add filters.\n- HTML tags, script-like text and a bare `0` are refused with 400.",
+          "example": "txl"
+        }
+      },
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- The whole subtree is searched: `2897` (Used Cars) covers every make and model beneath it, and a\n  navigation group such as `1540` (Automotive) covers all of its children. One id per request.",
+        "schema": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- The whole subtree is searched: `2897` (Used Cars) covers every make and model beneath it, and a\n  navigation group such as `1540` (Automotive) covers all of its children. One id per request.",
+          "example": 1971,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `20`; accepts 1 - 50. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 50. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 50
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "district_ids",
+        "in": "query",
+        "required": false,
+        "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+        "schema": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+        "schema": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The keyword to look for inside the category.** Required; 1 - 200 characters, English or Arabic,\ne.g. `txl`, `white`, `للبيع`.\n\n- Matches listing titles and descriptions, and matching is fuzzy: `txl` also finds `TX`, `TX.L`,\n  `TX-L`, `TLX` and `VXL`.\n- A multi-word query matches listings containing **any** of its words, so `total` can be much larger\n  than the listings with the exact phrase. Results are ranked by relevance, so the first pages hold\n  the closest matches and deep pages drift\n  off-topic. To narrow, search the model's own category (e.g. Land Cruiser rather than Used Cars) or\n  add filters.\n- HTML tags, script-like text and a bare `0` are refused with 400.",
+          "example": "txl"
+        },
+        "category_id": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- The whole subtree is searched: `2897` (Used Cars) covers every make and model beneath it, and a\n  navigation group such as `1540` (Automotive) covers all of its children. One id per request.",
+          "example": 1971,
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 50. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "min_price": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "max_price": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "district_ids": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        },
+        "attributes": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "query",
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listLatestListings",
+    "method": "GET",
+    "path": "/latest-listings",
+    "summary": "/latest-listings",
+    "description": "The live catalogue across every category as one roughly newest-first feed  -  for monitoring new listings or a bulk sync.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 100,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- The feed runs roughly newest-first, so page 1 always holds the freshest listings; poll it to catch new ones.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 100,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- The feed runs roughly newest-first, so page 1 always holds the freshest listings; poll it to catch new ones.",
+          "minimum": 1,
+          "maximum": 100000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `30`; accepts 1 - 30. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.\n\n30 is the most one page can hold.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `30`; accepts 1 - 30. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.\n\n30 is the most one page can hold.",
+          "minimum": 1,
+          "maximum": 30
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "**Narrow the feed to listings whose title or description contains this text.** Optional, English or\nArabic, e.g. `prado`.\n\n- The text is matched literally as one piece (`%` and `_` are plain characters), not word by word,\n  so it is much narrower than /search.\n- Use it to watch for a specific item appearing.",
+        "schema": {
+          "type": "string",
+          "description": "**Narrow the feed to listings whose title or description contains this text.** Optional, English or\nArabic, e.g. `prado`.\n\n- The text is matched literally as one piece (`%` and `_` are plain characters), not word by word,\n  so it is much narrower than /search.\n- Use it to watch for a specific item appearing.",
+          "maxLength": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 100,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- The feed runs roughly newest-first, so page 1 always holds the freshest listings; poll it to catch new ones.",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `30`; accepts 1 - 30. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.\n\n30 is the most one page can hold.",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "query": {
+          "type": "string",
+          "description": "**Narrow the feed to listings whose title or description contains this text.** Optional, English or\nArabic, e.g. `prado`.\n\n- The text is matched literally as one piece (`%` and `_` are plain characters), not word by word,\n  so it is much narrower than /search.\n- Use it to watch for a specific item appearing.",
+          "maxLength": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listListingsByUrl",
+    "method": "GET",
+    "path": "/listings-by-url",
+    "summary": "/listings-by-url",
+    "description": "Paste a category page address and get its listings, with the address parsed back.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A 4Sale category page address, pasted as-is**, with the filters the site keeps in its query string.\nRequired.\n\n- `https://www.q84sale.com/en/automotive/used-cars/porsche/911/2`  -  a model, page 2\n- `https://www.q84sale.com/en/property/for-rent/apartment-for-rent/1?d=54&pf=100&pt=400&n_a46=2`  - \n  apartments for rent in Salmiya, 100 - 400 KWD, 2 rooms\n- `https://www.q84sale.com/en/contracting/plumber/1/hawalli--district`  -  a service category in one\n  governorate\n\nHow it is read:\n\n- The deepest category in the path is used (a numeric model slug such as `911` is the model); the\n  trailing number is the page.\n- A `…--district` segment names a governorate; see the response description for how it applies.\n- Applied query keys: `d`, `pf`/`pt`, `n_a`, `a`, `af`/`at`, `b_a`, `sort`,\n  `c`/`s`. Anything not applied is listed in `ignored_query_keys`.\n- A single-listing address is a 400 pointing to /listing-details-by-url.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "**A 4Sale category page address, pasted as-is**, with the filters the site keeps in its query string.\nRequired.\n\n- `https://www.q84sale.com/en/automotive/used-cars/porsche/911/2`  -  a model, page 2\n- `https://www.q84sale.com/en/property/for-rent/apartment-for-rent/1?d=54&pf=100&pt=400&n_a46=2`  - \n  apartments for rent in Salmiya, 100 - 400 KWD, 2 rooms\n- `https://www.q84sale.com/en/contracting/plumber/1/hawalli--district`  -  a service category in one\n  governorate\n\nHow it is read:\n\n- The deepest category in the path is used (a numeric model slug such as `911` is the model); the\n  trailing number is the page.\n- A `…--district` segment names a governorate; see the response description for how it applies.\n- Applied query keys: `d`, `pf`/`pt`, `n_a`, `a`, `af`/`at`, `b_a`, `sort`,\n  `c`/`s`. Anything not applied is listed in `ignored_query_keys`.\n- A single-listing address is a 400 pointing to /listing-details-by-url.",
+          "example": "https://www.q84sale.com/en/property/for-rent/apartment-for-rent/1"
+        }
+      },
+      {
+        "name": "category_ids",
+        "in": "query",
+        "required": false,
+        "description": "**More categories to include alongside `category_id`.** Optional. Comma-separated category ids, e.g.\n`116` or `116,99`; up to 20, from any vertical.\n\n- The result is every listing in `category_id` OR any of these (each with its whole subtree), counted\n  once in `total`. The response's `category_ids` lists the categories actually browsed.\n- The default order becomes `newest`; send `sort` for another.\n- An unknown id is a **404**; a navigation-only group is a **400** naming its children.",
+        "schema": {
+          "type": "string",
+          "description": "**More categories to include alongside `category_id`.** Optional. Comma-separated category ids, e.g.\n`116` or `116,99`; up to 20, from any vertical.\n\n- The result is every listing in `category_id` OR any of these (each with its whole subtree), counted\n  once in `total`. The response's `category_ids` lists the categories actually browsed.\n- The default order becomes `newest`; send `sort` for another.\n- An unknown id is a **404**; a navigation-only group is a **400** naming its children.",
+          "maxLength": 200
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- Overrides the page number in the URL; omitted, the URL's own page is used.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- Overrides the page number in the URL; omitted, the URL's own page is used.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Result order.** Optional; omit it for the category's own order (`newest` when `category_ids` is used).\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n- `premium`  -  listings with an active Premium add-on (card `is_premium: true`) first, then the rest\n\nIn the default order the category's pinned paid listings are left out of `listings` (they are on\n/promoted-listings). Any explicit `sort` orders them in with the rest and counts them in `total`; on\nmost categories a `district_ids` filter does the same.",
+        "schema": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for the category's own order (`newest` when `category_ids` is used).\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n- `premium`  -  listings with an active Premium add-on (card `is_premium: true`) first, then the rest\n\nIn the default order the category's pinned paid listings are left out of `listings` (they are on\n/promoted-listings). Any explicit `sort` orders them in with the rest and counts them in `total`; on\nmost categories a `district_ids` filter does the same.",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_low",
+            "price_high",
+            "premium"
+          ]
+        }
+      },
+      {
+        "name": "min_price",
+        "in": "query",
+        "required": false,
+        "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "max_price",
+        "in": "query",
+        "required": false,
+        "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+        "schema": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "district_ids",
+        "in": "query",
+        "required": false,
+        "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+        "schema": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        }
+      },
+      {
+        "name": "attributes",
+        "in": "query",
+        "required": false,
+        "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+        "schema": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "**A 4Sale category page address, pasted as-is**, with the filters the site keeps in its query string.\nRequired.\n\n- `https://www.q84sale.com/en/automotive/used-cars/porsche/911/2`  -  a model, page 2\n- `https://www.q84sale.com/en/property/for-rent/apartment-for-rent/1?d=54&pf=100&pt=400&n_a46=2`  - \n  apartments for rent in Salmiya, 100 - 400 KWD, 2 rooms\n- `https://www.q84sale.com/en/contracting/plumber/1/hawalli--district`  -  a service category in one\n  governorate\n\nHow it is read:\n\n- The deepest category in the path is used (a numeric model slug such as `911` is the model); the\n  trailing number is the page.\n- A `…--district` segment names a governorate; see the response description for how it applies.\n- Applied query keys: `d`, `pf`/`pt`, `n_a`, `a`, `af`/`at`, `b_a`, `sort`,\n  `c`/`s`. Anything not applied is listed in `ignored_query_keys`.\n- A single-listing address is a 400 pointing to /listing-details-by-url.",
+          "example": "https://www.q84sale.com/en/property/for-rent/apartment-for-rent/1"
+        },
+        "category_ids": {
+          "type": "string",
+          "description": "**More categories to include alongside `category_id`.** Optional. Comma-separated category ids, e.g.\n`116` or `116,99`; up to 20, from any vertical.\n\n- The result is every listing in `category_id` OR any of these (each with its whole subtree), counted\n  once in `total`. The response's `category_ids` lists the categories actually browsed.\n- The default order becomes `newest`; send `sort` for another.\n- An unknown id is a **404**; a navigation-only group is a **400** naming its children.",
+          "maxLength": 200
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.\n- Overrides the page number in the URL; omitted, the URL's own page is used.\n- **Paging window:** `page` × `page_size` may be at most 40,000. A page that would need rows beyond the\n  40,000th match is a 400; narrow the request with filters (price, `attributes`, districts, a more\n  specific query) to reach the rest.",
+          "minimum": 1,
+          "maximum": 40000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sort": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for the category's own order (`newest` when `category_ids` is used).\n\n- `newest`  -  most recently published or bumped to the top first (by the card's `sorted_at`)\n- `oldest`  -  earliest first (by `sorted_at`)\n- `price_low`  -  cheapest first; listings with no price (\"price on request\") sort before every priced one\n- `price_high`  -  most expensive first\n- `premium`  -  listings with an active Premium add-on (card `is_premium: true`) first, then the rest\n\nIn the default order the category's pinned paid listings are left out of `listings` (they are on\n/promoted-listings). Any explicit `sort` orders them in with the rest and counts them in `total`; on\nmost categories a `district_ids` filter does the same.",
+          "enum": [
+            "newest",
+            "oldest",
+            "price_low",
+            "price_high",
+            "premium"
+          ]
+        },
+        "min_price": {
+          "type": "number",
+          "description": "**Minimum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or above this value,\ne.g. `1000`.\n\n- Send it alone for \"at least\", or with `max_price` for a band.\n- A positive minimum excludes listings without a price; `0` is no restriction.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "max_price": {
+          "type": "number",
+          "description": "**Maximum price in Kuwaiti dinar (KWD).** Optional; keeps listings priced at or below this value,\ne.g. `300` for a monthly rent.\n\n- Listings with no price (\"price on request\") count as zero and are **included** under any maximum,\n  so `max_price=0` returns exactly the listings without a price.\n- `min_price` above `max_price` is a 400.\n- Accepts 0 - 999,999,999.",
+          "minimum": 0,
+          "maximum": 999999999
+        },
+        "district_ids": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        },
+        "attributes": {
+          "type": "string",
+          "description": "**Filter by listing attributes (year, mileage, rooms, …).** Optional. Comma-separated clauses, all of\nwhich must match (AND); up to 12. Attribute ids, types and option ids come from /category-filters.\n\n- `:`  -  a drop-down value, e.g. `166:624` (Year 2015)\n- `:|`  -  any of several values (OR), e.g. `166:1048|1056`\n- `:-`  -  a range, e.g. `57:0-50000` (mileage in km); open ends `57:100000-`, `57:-50000`;\n  `0-0` means exactly 0\n- `:`  -  an exact number, e.g. `46:2` (2 rooms)\n- `:1`  -  a yes/no feature the seller ticked, e.g. `65:1` (pool); `:0` matches only an explicit\n  \"no\", not \"doesn't have it\"\n\nExample: `166:1048|1056,57:0-80000` = 2021 or 2022 models with at most 80,000 km.\n\n- **Filterable:** drop-down, number and yes/no attributes with `scope: listing`, including\n  `filterable: false` ones.\n- **Not filterable:** `text`, `file` and `multi_selection` attributes (a text value is a 400), and\n  `scope: category` attributes, which never match.\n- A malformed clause is a 400 that shows the expected syntax.",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listPromotedListings",
+    "method": "GET",
+    "path": "/promoted-listings",
+    "summary": "/promoted-listings",
+    "description": "A category's paid placements: its pinned, rotating, business, commercial and golden listings.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- A non-leaf category returns the placements on its own first page; a navigation-only group is a 400 naming its children.",
+        "schema": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- A non-leaf category returns the placements on its own first page; a navigation-only group is a 400 naming its children.",
+          "example": 2897,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      {
+        "name": "district_ids",
+        "in": "query",
+        "required": false,
+        "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+        "schema": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        }
+      },
+      {
+        "name": "service_area_id",
+        "in": "query",
+        "required": false,
+        "description": "**Service categories only: keep the providers serving one governorate.** Optional.\n\n- One governorate id: `2` Ahmadi, `3` Jahra, `4` Kuwait City, `5` Mubarak Al-Kabeer, `6` Farwaniyah,\n  `7` Hawalli (the ids /districts lists with no parameters).\n- Keeps the providers located in that governorate **plus those serving all of Kuwait**, as the site's\n  governorate page of a service category does (`…/contracting/plumber/1/hawalli--district`).\n  `district_ids` instead keeps only the providers located there, so it returns fewer.\n- Works on the service categories only (plumber, electrician, AC services, pack and move, cleaning, …:\n  `category_type: listings_district_filteration` on /categories); `category_id`, and every\n  `category_ids` entry where offered, must be one.\n- A 400: an area or block id, a non-service category, or combining it with `district_ids`.",
+        "schema": {
+          "type": "integer",
+          "description": "**Service categories only: keep the providers serving one governorate.** Optional.\n\n- One governorate id: `2` Ahmadi, `3` Jahra, `4` Kuwait City, `5` Mubarak Al-Kabeer, `6` Farwaniyah,\n  `7` Hawalli (the ids /districts lists with no parameters).\n- Keeps the providers located in that governorate **plus those serving all of Kuwait**, as the site's\n  governorate page of a service category does (`…/contracting/plumber/1/hawalli--district`).\n  `district_ids` instead keeps only the providers located there, so it returns fewer.\n- Works on the service categories only (plumber, electrician, AC services, pack and move, cleaning, …:\n  `category_type: listings_district_filteration` on /categories); `category_id`, and every\n  `category_ids` entry where offered, must be one.\n- A 400: an area or block id, a non-service category, or combining it with `district_ids`.",
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.\n- A non-leaf category returns the placements on its own first page; a navigation-only group is a 400 naming its children.",
+          "example": 2897,
+          "minimum": 1,
+          "maximum": 999999999
+        },
+        "district_ids": {
+          "type": "string",
+          "description": "**Limit results to one or more districts.** Optional. Comma-separated district ids from /districts,\ne.g. `54` (Salmiya) or `54,69`; any of them may match (OR). Up to 30 ids.\n\n- A district includes everything beneath it: a governorate (e.g. `7` Hawalli) covers its areas and\n  blocks, an area (e.g. `54` Salmiya) covers its blocks.\n- `1` is the whole country and means **no district filter** (alone or in a list).\n- Listings posted for \"anywhere in Kuwait\" (card `district_id: null`) are left out by any district filter.\n- Governorate, area and block ids (levels 1 - 3) are accepted. Any other id, including the level-4 entries\n  /districts lists beneath some blocks, is a **404** naming it, also when the list contains `1`.",
+          "maxLength": 400
+        },
+        "service_area_id": {
+          "type": "integer",
+          "description": "**Service categories only: keep the providers serving one governorate.** Optional.\n\n- One governorate id: `2` Ahmadi, `3` Jahra, `4` Kuwait City, `5` Mubarak Al-Kabeer, `6` Farwaniyah,\n  `7` Hawalli (the ids /districts lists with no parameters).\n- Keeps the providers located in that governorate **plus those serving all of Kuwait**, as the site's\n  governorate page of a service category does (`…/contracting/plumber/1/hawalli--district`).\n  `district_ids` instead keeps only the providers located there, so it returns fewer.\n- Works on the service categories only (plumber, electrician, AC services, pack and move, cleaning, …:\n  `category_type: listings_district_filteration` on /categories); `category_id`, and every\n  `category_ids` entry where offered, must be one.\n- A 400: an area or block id, a non-service category, or combining it with `district_ids`.",
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listPopularListings",
+    "method": "GET",
+    "path": "/popular-listings",
+    "summary": "/popular-listings",
+    "description": "The most-viewed listings right now in each major vertical.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getListingDetails",
+    "method": "GET",
+    "path": "/listing-details",
+    "summary": "/listing-details",
+    "description": "Everything about one listing by id: bilingual text, decoded attributes, coordinates, seller and promotion state.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+        "schema": {
+          "type": "integer",
+          "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getListingDetailsByUrl",
+    "method": "GET",
+    "path": "/listing-details-by-url",
+    "summary": "/listing-details-by-url",
+    "description": "Paste a listing page address and get the full listing record.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "**A 4Sale listing page address, pasted as-is.** Required. English or Arabic pages, with or without\n`https://` and `www.`, in any letter case:\n\n- `https://www.q84sale.com/en/listing/prado-21199272`\n- `https://www.q84sale.com/ar/listing/prado-21199272`\n- `https://www.q84sale.com/en/commercial-listing/0-20871367` (a commercial banner listing)\n- `https://www.q84sale.com/en/listing/21199272` or `…/listing/archived/21199272` (the id alone)\n\nHow it is read:\n\n- The slug decides the listing (upper or lower case): a slug whose number belongs to another listing\n  (`prado-21196026`) is a **404**, never that other listing.\n- An address that names two different listings (`/listing/21199272/prado-21196026`,\n  `/listing/21199272/21196026`) is a **404**.\n- A category page address is a 400 pointing to /listings-by-url.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "**A 4Sale listing page address, pasted as-is.** Required. English or Arabic pages, with or without\n`https://` and `www.`, in any letter case:\n\n- `https://www.q84sale.com/en/listing/prado-21199272`\n- `https://www.q84sale.com/ar/listing/prado-21199272`\n- `https://www.q84sale.com/en/commercial-listing/0-20871367` (a commercial banner listing)\n- `https://www.q84sale.com/en/listing/21199272` or `…/listing/archived/21199272` (the id alone)\n\nHow it is read:\n\n- The slug decides the listing (upper or lower case): a slug whose number belongs to another listing\n  (`prado-21196026`) is a **404**, never that other listing.\n- An address that names two different listings (`/listing/21199272/prado-21196026`,\n  `/listing/21199272/21196026`) is a **404**.\n- A category page address is a 400 pointing to /listings-by-url.",
+          "example": "https://www.q84sale.com/en/listing/prado-21199272"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "**A 4Sale listing page address, pasted as-is.** Required. English or Arabic pages, with or without\n`https://` and `www.`, in any letter case:\n\n- `https://www.q84sale.com/en/listing/prado-21199272`\n- `https://www.q84sale.com/ar/listing/prado-21199272`\n- `https://www.q84sale.com/en/commercial-listing/0-20871367` (a commercial banner listing)\n- `https://www.q84sale.com/en/listing/21199272` or `…/listing/archived/21199272` (the id alone)\n\nHow it is read:\n\n- The slug decides the listing (upper or lower case): a slug whose number belongs to another listing\n  (`prado-21196026`) is a **404**, never that other listing.\n- An address that names two different listings (`/listing/21199272/prado-21196026`,\n  `/listing/21199272/21196026`) is a **404**.\n- A category page address is a 400 pointing to /listings-by-url.",
+          "example": "https://www.q84sale.com/en/listing/prado-21199272"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getListingScore",
+    "method": "GET",
+    "path": "/listing-score",
+    "summary": "/listing-score",
+    "description": "The marketplace's quality score for a listing, broken down by factor with improvement advice.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+        "schema": {
+          "type": "integer",
+          "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getListingViews",
+    "method": "GET",
+    "path": "/listing-views",
+    "summary": "/listing-views",
+    "description": "A listing's view history by day and hour, and how often buyers used its contact buttons.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "**The listing whose statistics to read  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, …); it is also\n  the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- Only listings currently on the marketplace are served: an unknown, expired or removed id is a **404**\n  (checked first, because 4Sale's own analytics answers any id). This route adds no view.",
+        "schema": {
+          "type": "integer",
+          "description": "**The listing whose statistics to read  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, …); it is also\n  the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- Only listings currently on the marketplace are served: an unknown, expired or removed id is a **404**\n  (checked first, because 4Sale's own analytics answers any id). This route adds no view.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "**The listing whose statistics to read  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, …); it is also\n  the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- Only listings currently on the marketplace are served: an unknown, expired or removed id is a **404**\n  (checked first, because 4Sale's own analytics answers any id). This route adds no view.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listSimilarListings",
+    "method": "GET",
+    "path": "/similar-listings",
+    "summary": "/similar-listings",
+    "description": "Listings the marketplace recommends alongside one listing.",
+    "tags": [
+      "Listings"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "listing_id",
+        "in": "query",
+        "required": true,
+        "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+        "schema": {
+          "type": "integer",
+          "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "listing_id": {
+          "type": "integer",
+          "description": "**The listing  -  a numeric 4Sale listing id.** Required.\n\n- Every listing card carries it as `listing_id` (/search, /listings, /latest-listings, /seller-listings, …).\n- It is also the number at the end of a listing page address (`…/listing/prado-21199272` → `21199272`).\n- An id that does not exist returns **404**.",
+          "example": 21199272,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "listing_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listSellerListings",
+    "method": "GET",
+    "path": "/seller-listings",
+    "summary": "/seller-listings",
+    "description": "The active listings of one seller account as the marketplace lists them (it leaves some pinned ones out), found by the seller's phone number.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "phone",
+        "in": "query",
+        "required": true,
+        "description": "**The seller account's phone number.** Required. Take it from `seller.phone` on /listing-details or\non any listing card.\n\n- Accepted as `96511010037`, `+965 1101 0037`, `0096511010037` or the 8-digit local number, in\n  Western, Arabic-Indic (`٩٦٥١١٠١٠٠٣٧`) or Persian digits.\n- A number no marketplace account uses is a **404**; an account with no active listings returns\n  `total: 0`.\n- A malformed number  -  too short or long, or containing anything but digits, spaces and\n  `+ - ( ) .`  -  is a 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "description": "**The seller account's phone number.** Required. Take it from `seller.phone` on /listing-details or\non any listing card.\n\n- Accepted as `96511010037`, `+965 1101 0037`, `0096511010037` or the 8-digit local number, in\n  Western, Arabic-Indic (`٩٦٥١١٠١٠٠٣٧`) or Persian digits.\n- A number no marketplace account uses is a **404**; an account with no active listings returns\n  `total: 0`.\n- A malformed number  -  too short or long, or containing anything but digits, spaces and\n  `+ - ( ) .`  -  is a 400.",
+          "example": "96566669657"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.",
+          "minimum": 1,
+          "maximum": 40000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `30`; accepts 1 - 30. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.\n\n30 is the most one page can hold.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `30`; accepts 1 - 30. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.\n\n30 is the most one page can hold.",
+          "minimum": 1,
+          "maximum": 30
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "description": "**The seller account's phone number.** Required. Take it from `seller.phone` on /listing-details or\non any listing card.\n\n- Accepted as `96511010037`, `+965 1101 0037`, `0096511010037` or the 8-digit local number, in\n  Western, Arabic-Indic (`٩٦٥١١٠١٠٠٣٧`) or Persian digits.\n- A number no marketplace account uses is a **404**; an account with no active listings returns\n  `total: 0`.\n- A malformed number  -  too short or long, or containing anything but digits, spaces and\n  `+ - ( ) .`  -  is a 400.",
+          "example": "96566669657"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.",
+          "minimum": 1,
+          "maximum": 40000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `30`; accepts 1 - 30. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.\n\n30 is the most one page can hold.",
+          "minimum": 1,
+          "maximum": 30
+        }
+      },
+      "required": [
+        "phone"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listBusinessProfiles",
+    "method": "GET",
+    "path": "/business-profiles",
+    "summary": "/business-profiles",
+    "description": "Find the dealers, offices and service companies on the marketplace  -  by the categories they have listings in, or by business directory.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_ids",
+        "in": "query",
+        "required": false,
+        "description": "**Find the businesses active in these categories.** Send this OR `directory` (exactly one).\n\n- One or more category ids from /categories, comma-separated, e.g. `2897` (Used Cars), `808` (Property\n  For Rent) or `2897,808`; up to 20.\n- A vertical id such as `1540` (Automotive) covers the businesses of every category beneath it.\n- An id that is not a category is a **404**.\n- Pre-filled with `2897` so the first test call works; clear it when you use `directory`, or the\n  request has both and is a 400.",
+        "schema": {
+          "type": "string",
+          "description": "**Find the businesses active in these categories.** Send this OR `directory` (exactly one).\n\n- One or more category ids from /categories, comma-separated, e.g. `2897` (Used Cars), `808` (Property\n  For Rent) or `2897,808`; up to 20.\n- A vertical id such as `1540` (Automotive) covers the businesses of every category beneath it.\n- An id that is not a category is a **404**.\n- Pre-filled with `2897` so the first test call works; clear it when you use `directory`, or the\n  request has both and is a 400.",
+          "maxLength": 200,
+          "example": "2897"
+        }
+      },
+      {
+        "name": "directory",
+        "in": "query",
+        "required": false,
+        "description": "**List every business in one business directory**  -  including businesses with no listing up right\nnow and parent businesses whose listings are posted by their branches, which `category_ids` cannot\nreach. Send this OR `category_ids` (exactly one).\n\n- `car-offices`\n- `property-offices`\n- `dealerships`\n- `electronics-shops`\n- `car-garages-1`\n\nEach profile's `directory` field carries the same values. A value that is not a slug (spaces,\npunctuation, markup) is a **400**; any other unknown directory is a **404**.",
+        "schema": {
+          "type": "string",
+          "description": "**List every business in one business directory**  -  including businesses with no listing up right\nnow and parent businesses whose listings are posted by their branches, which `category_ids` cannot\nreach. Send this OR `category_ids` (exactly one).\n\n- `car-offices`\n- `property-offices`\n- `dealerships`\n- `electronics-shops`\n- `car-garages-1`\n\nEach profile's `directory` field carries the same values. A value that is not a slug (spaces,\npunctuation, markup) is a **400**; any other unknown directory is a **404**.",
+          "maxLength": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_ids": {
+          "type": "string",
+          "description": "**Find the businesses active in these categories.** Send this OR `directory` (exactly one).\n\n- One or more category ids from /categories, comma-separated, e.g. `2897` (Used Cars), `808` (Property\n  For Rent) or `2897,808`; up to 20.\n- A vertical id such as `1540` (Automotive) covers the businesses of every category beneath it.\n- An id that is not a category is a **404**.\n- Pre-filled with `2897` so the first test call works; clear it when you use `directory`, or the\n  request has both and is a 400.",
+          "maxLength": 200,
+          "example": "2897"
+        },
+        "directory": {
+          "type": "string",
+          "description": "**List every business in one business directory**  -  including businesses with no listing up right\nnow and parent businesses whose listings are posted by their branches, which `category_ids` cannot\nreach. Send this OR `category_ids` (exactly one).\n\n- `car-offices`\n- `property-offices`\n- `dealerships`\n- `electronics-shops`\n- `car-garages-1`\n\nEach profile's `directory` field carries the same values. A value that is not a slug (spaces,\npunctuation, markup) is a **400**; any other unknown directory is a **404**.",
+          "maxLength": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getBusinessProfileDetails",
+    "method": "GET",
+    "path": "/business-profile-details",
+    "summary": "/business-profile-details",
+    "description": "One business profile: identity, contact numbers, verification and branches.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "**The business profile's slug**, e.g. `aayan-kuwait` or `hetten-for-cars-433`. Required.\n\n- Take it from the `slug` field of /business-profiles (or `seller.business_profile_slug` on\n  /listing-details) exactly as published.\n- Slugs can contain `&`, dots and Arabic letters (`fouad-alghanim-&-sons-345`, `باورسبورتس-720`);\n  URL-encode it in the query string.\n- Letters and digits in any script plus `.`, `_`, `-` and `&` are accepted; anything else is a 400,\n  and a slug that does not exist is a **404**.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150,
+          "description": "**The business profile's slug**, e.g. `aayan-kuwait` or `hetten-for-cars-433`. Required.\n\n- Take it from the `slug` field of /business-profiles (or `seller.business_profile_slug` on\n  /listing-details) exactly as published.\n- Slugs can contain `&`, dots and Arabic letters (`fouad-alghanim-&-sons-345`, `باورسبورتس-720`);\n  URL-encode it in the query string.\n- Letters and digits in any script plus `.`, `_`, `-` and `&` are accepted; anything else is a 400,\n  and a slug that does not exist is a **404**.",
+          "example": "aayan-kuwait"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150,
+          "description": "**The business profile's slug**, e.g. `aayan-kuwait` or `hetten-for-cars-433`. Required.\n\n- Take it from the `slug` field of /business-profiles (or `seller.business_profile_slug` on\n  /listing-details) exactly as published.\n- Slugs can contain `&`, dots and Arabic letters (`fouad-alghanim-&-sons-345`, `باورسبورتس-720`);\n  URL-encode it in the query string.\n- Letters and digits in any script plus `.`, `_`, `-` and `&` are accepted; anything else is a 400,\n  and a slug that does not exist is a **404**.",
+          "example": "aayan-kuwait"
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listBusinessProfileListings",
+    "method": "GET",
+    "path": "/business-profile-listings",
+    "summary": "/business-profile-listings",
+    "description": "A business profile's full inventory, paginated with an exact total.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "**The business profile's slug**, e.g. `hetten-for-cars-433`. Required.\n\n- Take it from the `slug` field of /business-profiles (or `seller.business_profile_slug` on\n  /listing-details) exactly as published.\n- Slugs can contain `&`, dots and Arabic letters (`fouad-alghanim-&-sons-345`, `باورسبورتس-720`);\n  URL-encode it in the query string.\n- Letters and digits in any script plus `.`, `_`, `-` and `&` are accepted; anything else is a 400,\n  and a slug that does not exist is a **404**.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150,
+          "description": "**The business profile's slug**, e.g. `hetten-for-cars-433`. Required.\n\n- Take it from the `slug` field of /business-profiles (or `seller.business_profile_slug` on\n  /listing-details) exactly as published.\n- Slugs can contain `&`, dots and Arabic letters (`fouad-alghanim-&-sons-345`, `باورسبورتس-720`);\n  URL-encode it in the query string.\n- Letters and digits in any script plus `.`, `_`, `-` and `&` are accepted; anything else is a 400,\n  and a slug that does not exist is a **404**.",
+          "example": "hetten-for-cars-433"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.",
+          "minimum": 1,
+          "maximum": 40000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Rows per page.** Default `30`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `30`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150,
+          "description": "**The business profile's slug**, e.g. `hetten-for-cars-433`. Required.\n\n- Take it from the `slug` field of /business-profiles (or `seller.business_profile_slug` on\n  /listing-details) exactly as published.\n- Slugs can contain `&`, dots and Arabic letters (`fouad-alghanim-&-sons-345`, `باورسبورتس-720`);\n  URL-encode it in the query string.\n- Letters and digits in any script plus `.`, `_`, `-` and `&` are accepted; anything else is a 400,\n  and a slug that does not exist is a **404**.",
+          "example": "hetten-for-cars-433"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 40,000.\n\n- Walk pages until `listings` comes back empty; a page past the end returns an empty `listings` array,\n  not an error.",
+          "minimum": 1,
+          "maximum": 40000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Rows per page.** Default `30`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` in the response is computed for the page size you send, so keep it constant while\nwalking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "searchDirectoryBusinesses",
+    "method": "GET",
+    "path": "/directory-search",
+    "summary": "/directory-search",
+    "description": "Search the business directory  -  restaurants, cafés, clinics, salons and other local businesses  -  with opening hours and tags.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "**What to look for  -  a business name or kind, in English or Arabic.** e.g. `cafe`, `clinic`,\n`pharmacy`, `مطعم`. Required; 1 - 200 characters. Matches business names, descriptions and tags.\nHTML tags and script-like text are refused with 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**What to look for  -  a business name or kind, in English or Arabic.** e.g. `cafe`, `clinic`,\n`pharmacy`, `مطعم`. Required; 1 - 200 characters. Matches business names, descriptions and tags.\nHTML tags and script-like text are refused with 400.",
+          "example": "cafe"
+        }
+      },
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "**Limit results to one directory category**, by its slug. Optional; case-insensitive. Every business\ncarries its own as `category.slug`; an unknown slug is a **404** that lists the valid ones.\n\n- Food and shopping: `restaurants-cafes`, `grocery-supermarkets`, `shopping`, `fashion`\n- Health and care: `healthcare`, `beauty-spa`, `fitness-sports`, `pet-services`\n- Vehicles and home: `automotive`, `car-garages`, `home-services`, `real-estate`\n- Services: `professional-business-services`, `financial-services`, `technology`, `education`\n- Leisure: `entertainment`, `travel-tourism`",
+        "schema": {
+          "type": "string",
+          "description": "**Limit results to one directory category**, by its slug. Optional; case-insensitive. Every business\ncarries its own as `category.slug`; an unknown slug is a **404** that lists the valid ones.\n\n- Food and shopping: `restaurants-cafes`, `grocery-supermarkets`, `shopping`, `fashion`\n- Health and care: `healthcare`, `beauty-spa`, `fitness-sports`, `pet-services`\n- Vehicles and home: `automotive`, `car-garages`, `home-services`, `real-estate`\n- Services: `professional-business-services`, `financial-services`, `technology`, `education`\n- Leisure: `entertainment`, `travel-tourism`",
+          "maxLength": 100
+        }
+      },
+      {
+        "name": "tags",
+        "in": "query",
+        "required": false,
+        "description": "**Keep businesses carrying these tags.** Optional. Comma-separated tag slugs, e.g. `coffee` or\n`coffee,desserts`; up to 10.\n\n- With several tags a business must carry ALL of them.\n- Tag slugs come from `tags[].slug` on any business (e.g. `bakery-2` is the slug of the tag named\n  `bakery`).\n- A tag no business carries simply matches nothing (an empty list).",
+        "schema": {
+          "type": "string",
+          "description": "**Keep businesses carrying these tags.** Optional. Comma-separated tag slugs, e.g. `coffee` or\n`coffee,desserts`; up to 10.\n\n- With several tags a business must carry ALL of them.\n- Tag slugs come from `tags[].slug` on any business (e.g. `bakery-2` is the slug of the tag named\n  `bakery`).\n- A tag no business carries simply matches nothing (an empty list).",
+          "maxLength": 300
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "**Result order.** Optional; omit it for relevance order (best match first).\n\n- `rating`  -  best reviewed first: highest `rating_average` (a whole-star average, rounded down  - \n  so a 4.8 business ranks with the 4s, after every 5), then most reviews; businesses without reviews\n  come last\n- `newest`  -  the businesses most recently added to the directory first",
+        "schema": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for relevance order (best match first).\n\n- `rating`  -  best reviewed first: highest `rating_average` (a whole-star average, rounded down  - \n  so a 4.8 business ranks with the 4s, after every 5), then most reviews; businesses without reviews\n  come last\n- `newest`  -  the businesses most recently added to the directory first",
+          "enum": [
+            "rating",
+            "newest"
+          ]
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 1000.\n\nWalk pages until `businesses` comes back empty or `page` passes `total_pages`. A page past the end\nreturns an empty `businesses` array, not an error. Only the first 10,000 matches can be paged\n(`page` × `page_size` at most 10,000).",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 1000.\n\nWalk pages until `businesses` comes back empty or `page` passes `total_pages`. A page past the end\nreturns an empty `businesses` array, not an error. Only the first 10,000 matches can be paged\n(`page` × `page_size` at most 10,000).",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Businesses per page.** Default `20`; accepts 1 - 50. Larger values are rejected with 400.\n\n`total_pages` is computed for the page size you send, so keep it constant while walking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Businesses per page.** Default `20`; accepts 1 - 50. Larger values are rejected with 400.\n\n`total_pages` is computed for the page size you send, so keep it constant while walking pages.",
+          "minimum": 1,
+          "maximum": 50
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**What to look for  -  a business name or kind, in English or Arabic.** e.g. `cafe`, `clinic`,\n`pharmacy`, `مطعم`. Required; 1 - 200 characters. Matches business names, descriptions and tags.\nHTML tags and script-like text are refused with 400.",
+          "example": "cafe"
+        },
+        "category": {
+          "type": "string",
+          "description": "**Limit results to one directory category**, by its slug. Optional; case-insensitive. Every business\ncarries its own as `category.slug`; an unknown slug is a **404** that lists the valid ones.\n\n- Food and shopping: `restaurants-cafes`, `grocery-supermarkets`, `shopping`, `fashion`\n- Health and care: `healthcare`, `beauty-spa`, `fitness-sports`, `pet-services`\n- Vehicles and home: `automotive`, `car-garages`, `home-services`, `real-estate`\n- Services: `professional-business-services`, `financial-services`, `technology`, `education`\n- Leisure: `entertainment`, `travel-tourism`",
+          "maxLength": 100
+        },
+        "tags": {
+          "type": "string",
+          "description": "**Keep businesses carrying these tags.** Optional. Comma-separated tag slugs, e.g. `coffee` or\n`coffee,desserts`; up to 10.\n\n- With several tags a business must carry ALL of them.\n- Tag slugs come from `tags[].slug` on any business (e.g. `bakery-2` is the slug of the tag named\n  `bakery`).\n- A tag no business carries simply matches nothing (an empty list).",
+          "maxLength": 300
+        },
+        "sort": {
+          "type": "string",
+          "description": "**Result order.** Optional; omit it for relevance order (best match first).\n\n- `rating`  -  best reviewed first: highest `rating_average` (a whole-star average, rounded down  - \n  so a 4.8 business ranks with the 4s, after every 5), then most reviews; businesses without reviews\n  come last\n- `newest`  -  the businesses most recently added to the directory first",
+          "enum": [
+            "rating",
+            "newest"
+          ]
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 1000.\n\nWalk pages until `businesses` comes back empty or `page` passes `total_pages`. A page past the end\nreturns an empty `businesses` array, not an error. Only the first 10,000 matches can be paged\n(`page` × `page_size` at most 10,000).",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Businesses per page.** Default `20`; accepts 1 - 50. Larger values are rejected with 400.\n\n`total_pages` is computed for the page size you send, so keep it constant while walking pages.",
+          "minimum": 1,
+          "maximum": 50
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getDirectoryBusinessDetails",
+    "method": "GET",
+    "path": "/directory-business-details",
+    "summary": "/directory-business-details",
+    "description": "One business-directory entry by slug: phone numbers, website, amenities, opening hours, branches with coordinates and its star rating.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). Required; case-insensitive.\n\n- It is also the last part of the business's page address\n  (`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`); the category is not needed.\n- An unknown slug is a **404**; anything that is not a slug (spaces, markup) is a **400**.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). Required; case-insensitive.\n\n- It is also the last part of the business's page address\n  (`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`); the category is not needed.\n- An unknown slug is a **404**; anything that is not a slug (spaces, markup) is a **400**.",
+          "example": "leila-min-lebnen"
+        }
+      },
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "**Language of the business name, description and category name.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nOpening hours, phone numbers and amenities are the same in both languages; branch names\nand addresses are mostly written once, in the language the business entered them.",
+        "schema": {
+          "type": "string",
+          "description": "**Language of the business name, description and category name.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nOpening hours, phone numbers and amenities are the same in both languages; branch names\nand addresses are mostly written once, in the language the business entered them.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). Required; case-insensitive.\n\n- It is also the last part of the business's page address\n  (`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`); the category is not needed.\n- An unknown slug is a **404**; anything that is not a slug (spaces, markup) is a **400**.",
+          "example": "leila-min-lebnen"
+        },
+        "lang": {
+          "type": "string",
+          "description": "**Language of the business name, description and category name.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nOpening hours, phone numbers and amenities are the same in both languages; branch names\nand addresses are mostly written once, in the language the business entered them.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listDirectoryBusinessReviews",
+    "method": "GET",
+    "path": "/directory-business-reviews",
+    "summary": "/directory-business-reviews",
+    "description": "The user reviews of one business-directory entry, newest first, page by page.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). It is also the last part of the business's page address\n(`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`). Required; case-insensitive.\n\n- An unknown slug is a **404**\n- Anything that is not a slug (spaces, markup) is a **400**",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). It is also the last part of the business's page address\n(`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`). Required; case-insensitive.\n\n- An unknown slug is a **404**\n- Anything that is not a slug (spaces, markup) is a **400**",
+          "example": "leila-min-lebnen"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 1000.\n\n- Walk pages until `page` reaches `total_pages`\n- A page past the end returns an empty `reviews` array, not an error",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 1000.\n\n- Walk pages until `page` reaches `total_pages`\n- A page past the end returns an empty `reviews` array, not an error",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      },
+      {
+        "name": "page_size",
+        "in": "query",
+        "required": false,
+        "description": "**Reviews per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` is computed for the page size you send, so keep it constant while walking pages.",
+        "schema": {
+          "type": "integer",
+          "description": "**Reviews per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` is computed for the page size you send, so keep it constant while walking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). It is also the last part of the business's page address\n(`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`). Required; case-insensitive.\n\n- An unknown slug is a **404**\n- Anything that is not a slug (spaces, markup) is a **400**",
+          "example": "leila-min-lebnen"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 1000.\n\n- Walk pages until `page` reaches `total_pages`\n- A page past the end returns an empty `reviews` array, not an error",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "**Reviews per page.** Default `20`; accepts 1 - 100. Larger values are rejected with 400.\n\n`total_pages` is computed for the page size you send, so keep it constant while walking pages.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listDirectoryBusinessMedia",
+    "method": "GET",
+    "path": "/directory-business-media",
+    "summary": "/directory-business-media",
+    "description": "The photos and menus of one business-directory entry, by slug.",
+    "tags": [
+      "Sellers"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "slug",
+        "in": "query",
+        "required": true,
+        "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). It is also the last part of the business's page address\n(`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`). Required; case-insensitive.\n\n- An unknown slug is a **404**\n- Anything that is not a slug (spaces, markup) is a **400**",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). It is also the last part of the business's page address\n(`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`). Required; case-insensitive.\n\n- An unknown slug is a **404**\n- Anything that is not a slug (spaces, markup) is a **400**",
+          "example": "leila-min-lebnen"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**The business  -  its directory slug**, exactly as /directory-search returns it in `slug`\n(e.g. `ojs-cafe`, `leila-min-lebnen`). It is also the last part of the business's page address\n(`https://directory.q84sale.com/en/restaurants-cafes/ojs-cafe` → `ojs-cafe`). Required; case-insensitive.\n\n- An unknown slug is a **404**\n- Anything that is not a slug (spaces, markup) is a **400**",
+          "example": "leila-min-lebnen"
+        }
+      },
+      "required": [
+        "slug"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listSponsoredCards",
+    "method": "GET",
+    "path": "/sponsored-cards",
+    "summary": "/sponsored-cards",
+    "description": "The sponsored banner cards shown in a category's search results.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": true,
+        "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.",
+        "schema": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.",
+          "example": 2888,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "**The category  -  a numeric 4Sale category id.** Required.\n\n- Find ids with /categories (browse the tree or search it by name), /autocomplete (`browse_category_id`)\n  or `category.category_id` on any listing card.\n- An unknown id returns **404** with a message saying so.",
+          "example": 2888,
+          "minimum": 1,
+          "maximum": 999999999
+        }
+      },
+      "required": [
+        "category_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listPromoCodes",
+    "method": "GET",
+    "path": "/promo-codes",
+    "summary": "/promo-codes",
+    "description": "Promo codes currently valid for posting ads on the marketplace.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "getHomeSections",
+    "method": "GET",
+    "path": "/home-sections",
+    "summary": "/home-sections",
+    "description": "What the home screen is promoting: trending categories, hero banners and sponsored cards.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "**Language of the whole home screen.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nEverything is localised: section titles and category names, the sponsored cards' titles and texts, and the\nbanners and card artwork themselves  -  Arabic serves different banner images (in a different order) and\ndifferent card artwork, not just translated text.",
+        "schema": {
+          "type": "string",
+          "description": "**Language of the whole home screen.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nEverything is localised: section titles and category names, the sponsored cards' titles and texts, and the\nbanners and card artwork themselves  -  Arabic serves different banner images (in a different order) and\ndifferent card artwork, not just translated text.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lang": {
+          "type": "string",
+          "description": "**Language of the whole home screen.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nEverything is localised: section titles and category names, the sponsored cards' titles and texts, and the\nbanners and card artwork themselves  -  Arabic serves different banner images (in a different order) and\ndifferent card artwork, not just translated text.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "searchNewCars",
+    "method": "GET",
+    "path": "/new-cars",
+    "summary": "/new-cars",
+    "description": "The new-car catalogue: models by brand with every trim and its price in KWD where the dealer publishes one.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "description": "**A brand, model or trim name, in English.** Required; 1 - 200 characters, e.g. `toyota` (every Toyota\nmodel), `prado`, `land cruiser`, `porsche`, `TX-L`.\n\n- Names are indexed in English only  -  an Arabic query finds nothing.\n- HTML tags and script-like text are refused with 400.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**A brand, model or trim name, in English.** Required; 1 - 200 characters, e.g. `toyota` (every Toyota\nmodel), `prado`, `land cruiser`, `porsche`, `TX-L`.\n\n- Names are indexed in English only  -  an Arabic query finds nothing.\n- HTML tags and script-like text are refused with 400.",
+          "example": "toyota"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 500. Every page holds 20 models (fixed).\n\nWalk pages until `models` comes back empty or `page` passes `total_pages`. A page past the end\nreturns an empty `models` array, not an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 500. Every page holds 20 models (fixed).\n\nWalk pages until `models` comes back empty or `page` passes `total_pages`. A page past the end\nreturns an empty `models` array, not an error.",
+          "minimum": 1,
+          "maximum": 500
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "**A brand, model or trim name, in English.** Required; 1 - 200 characters, e.g. `toyota` (every Toyota\nmodel), `prado`, `land cruiser`, `porsche`, `TX-L`.\n\n- Names are indexed in English only  -  an Arabic query finds nothing.\n- HTML tags and script-like text are refused with 400.",
+          "example": "toyota"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 500. Every page holds 20 models (fixed).\n\nWalk pages until `models` comes back empty or `page` passes `total_pages`. A page past the end\nreturns an empty `models` array, not an error.",
+          "minimum": 1,
+          "maximum": 500
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listServiceOffers",
+    "method": "GET",
+    "path": "/service-offers",
+    "summary": "/service-offers",
+    "description": "Local service businesses advertising on the marketplace, with phone and WhatsApp numbers.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "query",
+        "required": false,
+        "description": "**Only the offers in this service category** (e.g. `24` AC, `11` Pack & Move, `1` Car Rental).\nOptional; omit it for every category.\n\n- Ids come from /service-categories  -  they are the service directory's own ids, not /categories ids.\n- An id /service-categories does not list (unknown or retired) is a **404**.",
+        "schema": {
+          "type": "integer",
+          "description": "**Only the offers in this service category** (e.g. `24` AC, `11` Pack & Move, `1` Car Rental).\nOptional; omit it for every category.\n\n- Ids come from /service-categories  -  they are the service directory's own ids, not /categories ids.\n- An id /service-categories does not list (unknown or retired) is a **404**.",
+          "minimum": 1,
+          "maximum": 999999
+        }
+      },
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "**Language of the offers.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nOffers are localised: each offer has its own Arabic business name and its own Arabic ad image, not\njust translated text.",
+        "schema": {
+          "type": "string",
+          "description": "**Language of the offers.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nOffers are localised: each offer has its own Arabic business name and its own Arabic ad image, not\njust translated text.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "**Page number, 1-based.** Default `1`; accepts 1 - 100.\n\n- Each page holds up to `page_size` offers (set by the marketplace); `total` and `total_pages` say how\n  many there are.\n- To collect them all, walk pages until `offers` comes back empty  -  a page past the end returns an\n  empty `offers` array, not an error.",
+        "schema": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 100.\n\n- Each page holds up to `page_size` offers (set by the marketplace); `total` and `total_pages` say how\n  many there are.\n- To collect them all, walk pages until `offers` comes back empty  -  a page past the end returns an\n  empty `offers` array, not an error.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer",
+          "description": "**Only the offers in this service category** (e.g. `24` AC, `11` Pack & Move, `1` Car Rental).\nOptional; omit it for every category.\n\n- Ids come from /service-categories  -  they are the service directory's own ids, not /categories ids.\n- An id /service-categories does not list (unknown or retired) is a **404**.",
+          "minimum": 1,
+          "maximum": 999999
+        },
+        "lang": {
+          "type": "string",
+          "description": "**Language of the offers.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nOffers are localised: each offer has its own Arabic business name and its own Arabic ad image, not\njust translated text.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        },
+        "page": {
+          "type": "integer",
+          "description": "**Page number, 1-based.** Default `1`; accepts 1 - 100.\n\n- Each page holds up to `page_size` offers (set by the marketplace); `total` and `total_pages` say how\n  many there are.\n- To collect them all, walk pages until `offers` comes back empty  -  a page past the end returns an\n  empty `offers` array, not an error.",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listServiceCategories",
+    "method": "GET",
+    "path": "/service-categories",
+    "summary": "/service-categories",
+    "description": "The service directory's categories  -  the ids /service-offers filters by.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "**Language of the category names.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nIds, slugs and icons are the same in both languages.",
+        "schema": {
+          "type": "string",
+          "description": "**Language of the category names.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nIds, slugs and icons are the same in both languages.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lang": {
+          "type": "string",
+          "description": "**Language of the category names.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nIds, slugs and icons are the same in both languages.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "listBlogArticles",
+    "method": "GET",
+    "path": "/blog-articles",
+    "summary": "/blog-articles",
+    "description": "The handful of editorial blog posts the marketplace's app features.",
+    "tags": [
+      "Marketplace"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "lang",
+        "in": "query",
+        "required": false,
+        "description": "**Language of the article titles and summaries.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nThe article `url` opens the same post on the web in either case.",
+        "schema": {
+          "type": "string",
+          "description": "**Language of the article titles and summaries.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nThe article `url` opens the same post on the web in either case.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lang": {
+          "type": "string",
+          "description": "**Language of the article titles and summaries.** Default `en`.\n\n- `en`  -  English\n- `ar`  -  Arabic\n\nThe article `url` opens the same post on the web in either case.",
+          "enum": [
+            "en",
+            "ar"
+          ],
+          "default": "en"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+]

@@ -1,0 +1,1963 @@
+[
+  {
+    "id": "get_status",
+    "method": "GET",
+    "path": "/status",
+    "summary": "/status",
+    "description": "",
+    "tags": [
+      "Health"
+    ],
+    "healthCheck": true,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-sale",
+    "method": "GET",
+    "path": "/search-sale",
+    "summary": "/search-sale",
+    "description": "Search buy/sell listings (condo/house/land) with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": true,
+        "description": "Property category. One of: new-condo, used-condo, new-house, used-house, land.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "new-condo",
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Property category. One of: new-condo, used-condo, new-house, used-house, land.",
+          "example": "used-condo"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum sale price, in 万円 (10,000 yen).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum sale price, in 万円 (10,000 yen)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum sale price, in 万円 (10,000 yen).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum sale price, in 万円 (10,000 yen)."
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor (exclusive) area, m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum floor (exclusive) area, m²."
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor (exclusive) area, m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum floor (exclusive) area, m²."
+        }
+      },
+      {
+        "name": "land_area_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum land area, m² (houses/land).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum land area, m² (houses/land)."
+        }
+      },
+      {
+        "name": "land_area_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum land area, m² (houses/land).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum land area, m² (houses/land)."
+        }
+      },
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": false,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City/ward code: the 5-digit municipality code from `/cities` `city_code` (e.g. `13101` = Chiyoda). Comma-separate multiple values (e.g. `13101,13103`). A bare 3-digit ward code also works when `prefecture` is set (it is auto-prefixed).",
+        "schema": {
+          "type": "string",
+          "description": "City/ward code: the 5-digit municipality code from `/cities` `city_code` (e.g. `13101` = Chiyoda). Comma-separate multiple values (e.g. `13101,13103`). A bare 3-digit ward code also works when `prefecture` is set (it is auto-prefixed).",
+          "example": "13101"
+        }
+      },
+      {
+        "name": "station",
+        "in": "query",
+        "required": false,
+        "description": "Station code (`E`); see `/railway-stations`. Comma-separate multiple values (e.g. `25620,40650`).",
+        "schema": {
+          "type": "string",
+          "description": "Station code (`E`); see `/railway-stations`. Comma-separate multiple values (e.g. `25620,40650`)."
+        }
+      },
+      {
+        "name": "walk_time_max",
+        "in": "query",
+        "required": false,
+        "description": "Max walk-time from the nearest station, minutes.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max walk-time from the nearest station, minutes.",
+          "example": 10
+        }
+      },
+      {
+        "name": "building_age_max",
+        "in": "query",
+        "required": false,
+        "description": "Max building age, years.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max building age, years."
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "Free-text keyword (building name, address, …).",
+        "schema": {
+          "type": "string",
+          "description": "Free-text keyword (building name, address, …).",
+          "example": ""
+        }
+      },
+      {
+        "name": "include_bus",
+        "in": "query",
+        "required": false,
+        "description": "Include listings reached by bus + walk (not walk-only).",
+        "schema": {
+          "type": "boolean",
+          "description": "Include listings reached by bus + walk (not walk-only).",
+          "example": ""
+        }
+      },
+      {
+        "name": "with_photo",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that have photos.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that have photos.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: recommended, price_low_to_high, price_high_to_low, newest (default `recommended`).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest"
+          ],
+          "description": "Sort order. One of: recommended, price_low_to_high, price_high_to_low, newest (default `recommended`).",
+          "example": "recommended"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (1-based).",
+          "example": 1
+        }
+      },
+      {
+        "name": "count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20,
+          "description": "Results per page (1 - 100).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "new-condo",
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Property category. One of: new-condo, used-condo, new-house, used-house, land.",
+          "example": "used-condo"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum sale price, in 万円 (10,000 yen)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum sale price, in 万円 (10,000 yen)."
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum floor (exclusive) area, m²."
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum floor (exclusive) area, m²."
+        },
+        "land_area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum land area, m² (houses/land)."
+        },
+        "land_area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum land area, m² (houses/land)."
+        },
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        },
+        "city": {
+          "type": "string",
+          "description": "City/ward code: the 5-digit municipality code from `/cities` `city_code` (e.g. `13101` = Chiyoda). Comma-separate multiple values (e.g. `13101,13103`). A bare 3-digit ward code also works when `prefecture` is set (it is auto-prefixed).",
+          "example": "13101"
+        },
+        "station": {
+          "type": "string",
+          "description": "Station code (`E`); see `/railway-stations`. Comma-separate multiple values (e.g. `25620,40650`)."
+        },
+        "walk_time_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max walk-time from the nearest station, minutes.",
+          "example": 10
+        },
+        "building_age_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max building age, years."
+        },
+        "query": {
+          "type": "string",
+          "description": "Free-text keyword (building name, address, …).",
+          "example": ""
+        },
+        "include_bus": {
+          "type": "boolean",
+          "description": "Include listings reached by bus + walk (not walk-only).",
+          "example": ""
+        },
+        "with_photo": {
+          "type": "boolean",
+          "description": "Only listings that have photos.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest"
+          ],
+          "description": "Sort order. One of: recommended, price_low_to_high, price_high_to_low, newest (default `recommended`).",
+          "example": "recommended"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (1-based).",
+          "example": 1
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20,
+          "description": "Results per page (1 - 100).",
+          "example": 20
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-rentals",
+    "method": "GET",
+    "path": "/search-rentals",
+    "summary": "/search-rentals",
+    "description": "Search rental listings with rich filters.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "rent_min",
+        "in": "query",
+        "required": false,
+        "description": "- Minimum monthly rent, in 10,000-yen units (万円).\n- `5` means 50,000 Yen",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "- Minimum monthly rent, in 10,000-yen units (万円).\n- `5` means 50,000 Yen"
+        }
+      },
+      {
+        "name": "rent_max",
+        "in": "query",
+        "required": false,
+        "description": "- Maximum monthly rent, in 10,000-yen units (万円).\n- `5` means 50,000 Yen",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "- Maximum monthly rent, in 10,000-yen units (万円).\n- `5` means 50,000 Yen"
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor (exclusive) area, m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum floor (exclusive) area, m²."
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor (exclusive) area, m².",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum floor (exclusive) area, m²."
+        }
+      },
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": false,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City/ward code: the 5-digit municipality code from `/cities` `city_code` (e.g. `13101` = Chiyoda). Comma-separate multiple values (e.g. `13101,13103`). A bare 3-digit ward code also works when `prefecture` is set (it is auto-prefixed).",
+        "schema": {
+          "type": "string",
+          "description": "City/ward code: the 5-digit municipality code from `/cities` `city_code` (e.g. `13101` = Chiyoda). Comma-separate multiple values (e.g. `13101,13103`). A bare 3-digit ward code also works when `prefecture` is set (it is auto-prefixed).",
+          "example": "13101"
+        }
+      },
+      {
+        "name": "station",
+        "in": "query",
+        "required": false,
+        "description": "Station code (`E`); see `/railway-stations`. Comma-separate multiple values (e.g. `25620,40650`).",
+        "schema": {
+          "type": "string",
+          "description": "Station code (`E`); see `/railway-stations`. Comma-separate multiple values (e.g. `25620,40650`)."
+        }
+      },
+      {
+        "name": "walk_time_max",
+        "in": "query",
+        "required": false,
+        "description": "Max walk-time from the nearest station, minutes.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max walk-time from the nearest station, minutes.",
+          "example": 10
+        }
+      },
+      {
+        "name": "building_age_max",
+        "in": "query",
+        "required": false,
+        "description": "Max building age, years.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max building age, years."
+        }
+      },
+      {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "Free-text keyword (building name, address, …).",
+        "schema": {
+          "type": "string",
+          "description": "Free-text keyword (building name, address, …).",
+          "example": ""
+        }
+      },
+      {
+        "name": "include_bus",
+        "in": "query",
+        "required": false,
+        "description": "Include listings reached by bus + walk (not walk-only).",
+        "schema": {
+          "type": "boolean",
+          "description": "Include listings reached by bus + walk (not walk-only).",
+          "example": ""
+        }
+      },
+      {
+        "name": "with_photo",
+        "in": "query",
+        "required": false,
+        "description": "Only listings that have photos.",
+        "schema": {
+          "type": "boolean",
+          "description": "Only listings that have photos.",
+          "example": ""
+        }
+      },
+      {
+        "name": "sort",
+        "in": "query",
+        "required": false,
+        "description": "Sort order. One of: recommended, price_low_to_high, price_high_to_low, newest (default `recommended`).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest"
+          ],
+          "description": "Sort order. One of: recommended, price_low_to_high, price_high_to_low, newest (default `recommended`).",
+          "example": "recommended"
+        }
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "description": "Page number (1-based).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (1-based).",
+          "example": 1
+        }
+      },
+      {
+        "name": "count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20,
+          "description": "Results per page (1 - 100).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "rent_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "- Minimum monthly rent, in 10,000-yen units (万円).\n- `5` means 50,000 Yen"
+        },
+        "rent_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "- Maximum monthly rent, in 10,000-yen units (万円).\n- `5` means 50,000 Yen"
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum floor (exclusive) area, m²."
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum floor (exclusive) area, m²."
+        },
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        },
+        "city": {
+          "type": "string",
+          "description": "City/ward code: the 5-digit municipality code from `/cities` `city_code` (e.g. `13101` = Chiyoda). Comma-separate multiple values (e.g. `13101,13103`). A bare 3-digit ward code also works when `prefecture` is set (it is auto-prefixed).",
+          "example": "13101"
+        },
+        "station": {
+          "type": "string",
+          "description": "Station code (`E`); see `/railway-stations`. Comma-separate multiple values (e.g. `25620,40650`)."
+        },
+        "walk_time_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max walk-time from the nearest station, minutes.",
+          "example": 10
+        },
+        "building_age_max": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Max building age, years."
+        },
+        "query": {
+          "type": "string",
+          "description": "Free-text keyword (building name, address, …).",
+          "example": ""
+        },
+        "include_bus": {
+          "type": "boolean",
+          "description": "Include listings reached by bus + walk (not walk-only).",
+          "example": ""
+        },
+        "with_photo": {
+          "type": "boolean",
+          "description": "Only listings that have photos.",
+          "example": ""
+        },
+        "sort": {
+          "type": "string",
+          "enum": [
+            "recommended",
+            "price_low_to_high",
+            "price_high_to_low",
+            "newest"
+          ],
+          "description": "Sort order. One of: recommended, price_low_to_high, price_high_to_low, newest (default `recommended`).",
+          "example": "recommended"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Page number (1-based).",
+          "example": 1
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20,
+          "description": "Results per page (1 - 100).",
+          "example": 20
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_search-count",
+    "method": "GET",
+    "path": "/search-count",
+    "summary": "/search-count",
+    "description": "Per-ward / per-station match counts for a prefecture.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": true,
+        "description": "Property category. One of: new-condo, used-condo, new-house, used-house, land, rental.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "new-condo",
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land",
+            "rental"
+          ],
+          "description": "Property category. One of: new-condo, used-condo, new-house, used-house, land, rental.",
+          "example": "used-condo"
+        }
+      },
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": true,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      {
+        "name": "axis",
+        "in": "query",
+        "required": false,
+        "description": "Aggregation axis: `ward` (city/区) or `station`.",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "ward",
+            "station"
+          ],
+          "default": "ward",
+          "description": "Aggregation axis: `ward` (city/区) or `station`.",
+          "example": "ward"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "new-condo",
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land",
+            "rental"
+          ],
+          "description": "Property category. One of: new-condo, used-condo, new-house, used-house, land, rental.",
+          "example": "used-condo"
+        },
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        },
+        "axis": {
+          "type": "string",
+          "enum": [
+            "ward",
+            "station"
+          ],
+          "default": "ward",
+          "description": "Aggregation axis: `ward` (city/区) or `station`.",
+          "example": "ward"
+        }
+      },
+      "required": [
+        "category",
+        "prefecture"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_unified-search",
+    "method": "GET",
+    "path": "/unified-search",
+    "summary": "/unified-search",
+    "description": "Cross-type search via the unified matching engine.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Filter by property type. The unified matching engine covers: used-condo, new-house, used-house, land. Omit to search across all of them. (For new-condo use `/search-sale?category=new-condo`; for rentals use `/search-rentals`.)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Filter by property type. The unified matching engine covers: used-condo, new-house, used-house, land. Omit to search across all of them. (For new-condo use `/search-sale?category=new-condo`; for rentals use `/search-rentals`.)",
+          "example": "used-condo"
+        }
+      },
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": false,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City/ward code: 5-digit municipality code from `/cities` `city_code` (e.g. `13101`). Comma-separate multiple values (e.g. `13101,13103`).",
+        "schema": {
+          "type": "string",
+          "description": "City/ward code: 5-digit municipality code from `/cities` `city_code` (e.g. `13101`). Comma-separate multiple values (e.g. `13101,13103`).",
+          "example": "13101"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price, in 10,000-yen units (万円).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price, in 10,000-yen units (万円)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price, in 10,000-yen units (万円).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price, in 10,000-yen units (万円)."
+        }
+      },
+      {
+        "name": "area_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum floor area, m2.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum floor area, m2."
+        }
+      },
+      {
+        "name": "area_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum floor area, m2.",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum floor area, m2."
+        }
+      },
+      {
+        "name": "count",
+        "in": "query",
+        "required": false,
+        "description": "Results per page (1 - 100).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20,
+          "description": "Results per page (1 - 100).",
+          "example": 20
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Filter by property type. The unified matching engine covers: used-condo, new-house, used-house, land. Omit to search across all of them. (For new-condo use `/search-sale?category=new-condo`; for rentals use `/search-rentals`.)",
+          "example": "used-condo"
+        },
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        },
+        "city": {
+          "type": "string",
+          "description": "City/ward code: 5-digit municipality code from `/cities` `city_code` (e.g. `13101`). Comma-separate multiple values (e.g. `13101,13103`).",
+          "example": "13101"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price, in 10,000-yen units (万円)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price, in 10,000-yen units (万円)."
+        },
+        "area_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum floor area, m2."
+        },
+        "area_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum floor area, m2."
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20,
+          "description": "Results per page (1 - 100).",
+          "example": 20
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_unified-search-count",
+    "method": "GET",
+    "path": "/unified-search-count",
+    "summary": "/unified-search-count",
+    "description": "Hit count from the unified matching engine.",
+    "tags": [
+      "Search"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "category",
+        "in": "query",
+        "required": false,
+        "description": "Filter by property type. The unified matching engine covers: used-condo, new-house, used-house, land. Omit to search across all of them. (For new-condo use `/search-sale?category=new-condo`; for rentals use `/search-rentals`.)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Filter by property type. The unified matching engine covers: used-condo, new-house, used-house, land. Omit to search across all of them. (For new-condo use `/search-sale?category=new-condo`; for rentals use `/search-rentals`.)",
+          "example": "used-condo"
+        }
+      },
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": false,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      {
+        "name": "city",
+        "in": "query",
+        "required": false,
+        "description": "City/ward code: 5-digit municipality code from `/cities` `city_code` (e.g. `13101`). Comma-separate multiple values (e.g. `13101,13103`).",
+        "schema": {
+          "type": "string",
+          "description": "City/ward code: 5-digit municipality code from `/cities` `city_code` (e.g. `13101`). Comma-separate multiple values (e.g. `13101,13103`).",
+          "example": "13101"
+        }
+      },
+      {
+        "name": "price_min",
+        "in": "query",
+        "required": false,
+        "description": "Minimum price, in 10,000-yen units (万円).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price, in 10,000-yen units (万円)."
+        }
+      },
+      {
+        "name": "price_max",
+        "in": "query",
+        "required": false,
+        "description": "Maximum price, in 10,000-yen units (万円).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price, in 10,000-yen units (万円)."
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Filter by property type. The unified matching engine covers: used-condo, new-house, used-house, land. Omit to search across all of them. (For new-condo use `/search-sale?category=new-condo`; for rentals use `/search-rentals`.)",
+          "example": "used-condo"
+        },
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        },
+        "city": {
+          "type": "string",
+          "description": "City/ward code: 5-digit municipality code from `/cities` `city_code` (e.g. `13101`). Comma-separate multiple values (e.g. `13101,13103`).",
+          "example": "13101"
+        },
+        "price_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimum price, in 10,000-yen units (万円)."
+        },
+        "price_max": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximum price, in 10,000-yen units (万円)."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-details",
+    "method": "GET",
+    "path": "/property-details",
+    "summary": "/property-details",
+    "description": "Full detail for a buy/sell listing (used-condo / house / land).",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "type",
+        "in": "query",
+        "required": true,
+        "description": "Buy-property type. One of: used-condo, new-house, used-house, land (new-condo has its own `/new-condo-details` endpoint).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Buy-property type. One of: used-condo, new-house, used-house, land (new-condo has its own `/new-condo-details` endpoint).",
+          "example": "used-house"
+        }
+      },
+      {
+        "name": "project_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+          "example": "20759935"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Buy-property type. One of: used-condo, new-house, used-house, land (new-condo has its own `/new-condo-details` endpoint).",
+          "example": "used-house"
+        },
+        "project_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+          "example": "20759935"
+        }
+      },
+      "required": [
+        "type",
+        "project_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_rental-details",
+    "method": "GET",
+    "path": "/rental-details",
+    "summary": "/rental-details",
+    "description": "Full detail for a rental listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "bukken_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "bukken_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      },
+      "required": [
+        "bukken_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_new-condo-details",
+    "method": "GET",
+    "path": "/new-condo-details",
+    "summary": "/new-condo-details",
+    "description": "Full detail for a new-condo project.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "project_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+          "example": "67737032"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+          "example": "67737032"
+        }
+      },
+      "required": [
+        "project_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_property-by-url",
+    "method": "GET",
+    "path": "/property-by-url",
+    "summary": "/property-by-url",
+    "description": "Full property detail resolved from a SUUMO URL.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "A SUUMO property URL (rental `/chintai/bc_/` or a buy listing containing `nc_`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A SUUMO property URL (rental `/chintai/bc_/` or a buy listing containing `nc_`).",
+          "example": "https://suumo.jp/chintai/tokyo/sc_tachikawa/bc_100511105648/"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A SUUMO property URL (rental `/chintai/bc_/` or a buy listing containing `nc_`).",
+          "example": "https://suumo.jp/chintai/tokyo/sc_tachikawa/bc_100511105648/"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_parse-url",
+    "method": "GET",
+    "path": "/parse-url",
+    "summary": "/parse-url",
+    "description": "Inspect a SUUMO URL → kind + codes (no fetch).",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "url",
+        "in": "query",
+        "required": true,
+        "description": "Any SUUMO property URL.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Any SUUMO property URL.",
+          "example": "https://suumo.jp/chintai/bc_100508825933/"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Any SUUMO property URL.",
+          "example": "https://suumo.jp/chintai/bc_100508825933/"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_listing-overview",
+    "method": "GET",
+    "path": "/listing-overview",
+    "summary": "/listing-overview",
+    "description": "Bundle: rental detail + popularity + similar + agency in one call.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "bukken_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "bukken_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      },
+      "required": [
+        "bukken_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_popularity",
+    "method": "GET",
+    "path": "/popularity",
+    "summary": "/popularity",
+    "description": "Inquiry/popularity count for a rental listing.",
+    "tags": [
+      "Property Information"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "bukken_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "bukken_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      },
+      "required": [
+        "bukken_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-rentals",
+    "method": "GET",
+    "path": "/similar-rentals",
+    "summary": "/similar-rentals",
+    "description": "Listings similar to a given rental.",
+    "tags": [
+      "Recommendations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "bukken_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        }
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of similar listings to return (1-30).",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30,
+          "default": 10,
+          "description": "Number of similar listings to return (1-30).",
+          "example": 10
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "bukken_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO rental property code (`bukken_cd`). Get one from `/search-rentals`.",
+          "example": "100287338112"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30,
+          "default": 10,
+          "description": "Number of similar listings to return (1-30).",
+          "example": 10
+        }
+      },
+      "required": [
+        "bukken_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_similar-properties",
+    "method": "GET",
+    "path": "/similar-properties",
+    "summary": "/similar-properties",
+    "description": "Listings similar to a given buy/used-house property.",
+    "tags": [
+      "Recommendations"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "type",
+        "in": "query",
+        "required": true,
+        "description": "Buy-property type. One of: used-condo, new-house, used-house, land (new-condo has its own `/new-condo-details` endpoint).",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Buy-property type. One of: used-condo, new-house, used-house, land (new-condo has its own `/new-condo-details` endpoint).",
+          "example": "used-house"
+        }
+      },
+      {
+        "name": "project_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+          "example": "20759935"
+        }
+      },
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": false,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "used-condo",
+            "new-house",
+            "used-house",
+            "land"
+          ],
+          "description": "Buy-property type. One of: used-condo, new-house, used-house, land (new-condo has its own `/new-condo-details` endpoint).",
+          "example": "used-house"
+        },
+        "project_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO project code (`project_cd`). Get one from `/search-sale`.",
+          "example": "20759935"
+        },
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      "required": [
+        "type",
+        "project_cd"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_cities",
+    "method": "GET",
+    "path": "/cities",
+    "summary": "/cities",
+    "description": "City/ward list for a prefecture.",
+    "tags": [
+      "Discovery & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": true,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      "required": [
+        "prefecture"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_railway-stations",
+    "method": "GET",
+    "path": "/railway-stations",
+    "summary": "/railway-stations",
+    "description": "Railway line + station master for a prefecture.",
+    "tags": [
+      "Discovery & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "prefecture",
+        "in": "query",
+        "required": true,
+        "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "prefecture": {
+          "type": "string",
+          "pattern": "^\\d{1,2}$",
+          "description": "Prefecture code (2-digit JIS). e.g. 13=Tokyo, 27=Osaka, 14=Kanagawa, 01=Hokkaido, 40=Fukuoka, 23=Aichi. Get the full set from `/cities` / `/address-master`.",
+          "example": "13"
+        }
+      },
+      "required": [
+        "prefecture"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_address-master",
+    "method": "GET",
+    "path": "/address-master",
+    "summary": "/address-master",
+    "description": "Nationwide address/area master.",
+    "tags": [
+      "Discovery & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_postal-code",
+    "method": "GET",
+    "path": "/postal-code",
+    "summary": "/postal-code",
+    "description": "Postal code → address.",
+    "tags": [
+      "Discovery & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "zipcode",
+        "in": "query",
+        "required": true,
+        "description": "7-digit postal code, no hyphen (e.g. 1000001).",
+        "schema": {
+          "type": "string",
+          "pattern": "^\\d{7}$",
+          "description": "7-digit postal code, no hyphen (e.g. 1000001).",
+          "example": "1000001"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "zipcode": {
+          "type": "string",
+          "pattern": "^\\d{7}$",
+          "description": "7-digit postal code, no hyphen (e.g. 1000001).",
+          "example": "1000001"
+        }
+      },
+      "required": [
+        "zipcode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_commute-search",
+    "method": "GET",
+    "path": "/commute-search",
+    "summary": "/commute-search",
+    "description": "Stations reachable within N minutes / T transfers.",
+    "tags": [
+      "Discovery & Reference"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "station",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO station code (`eki_cd`). Get one from `/railway-stations` (e.g. 25620=Tokyo Station).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO station code (`eki_cd`). Get one from `/railway-stations` (e.g. 25620=Tokyo Station).",
+          "example": "25620"
+        }
+      },
+      {
+        "name": "max_minutes",
+        "in": "query",
+        "required": false,
+        "description": "Maximum commute time, minutes.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 180,
+          "default": 30,
+          "description": "Maximum commute time, minutes.",
+          "example": 30
+        }
+      },
+      {
+        "name": "max_transfers",
+        "in": "query",
+        "required": false,
+        "description": "Maximum number of transfers.",
+        "schema": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 5,
+          "default": 1,
+          "description": "Maximum number of transfers.",
+          "example": 1
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "station": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO station code (`eki_cd`). Get one from `/railway-stations` (e.g. 25620=Tokyo Station).",
+          "example": "25620"
+        },
+        "max_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 180,
+          "default": 30,
+          "description": "Maximum commute time, minutes.",
+          "example": 30
+        },
+        "max_transfers": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 5,
+          "default": 1,
+          "description": "Maximum number of transfers.",
+          "example": 1
+        }
+      },
+      "required": [
+        "station"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_nearby-facilities",
+    "method": "GET",
+    "path": "/nearby-facilities",
+    "summary": "/nearby-facilities",
+    "description": "Facility/POI points in a lat/lng bounding box (GeoJSON).",
+    "tags": [
+      "Neighborhood"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "north",
+        "in": "query",
+        "required": false,
+        "description": "Latitude (decimal degrees).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude (decimal degrees).",
+          "example": 35.7
+        }
+      },
+      {
+        "name": "south",
+        "in": "query",
+        "required": false,
+        "description": "Latitude (decimal degrees).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude (decimal degrees).",
+          "example": 35.66
+        }
+      },
+      {
+        "name": "east",
+        "in": "query",
+        "required": false,
+        "description": "Longitude (decimal degrees).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude (decimal degrees).",
+          "example": 139.78
+        }
+      },
+      {
+        "name": "west",
+        "in": "query",
+        "required": false,
+        "description": "Longitude (decimal degrees).",
+        "schema": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude (decimal degrees).",
+          "example": 139.74
+        }
+      },
+      {
+        "name": "categories",
+        "in": "query",
+        "required": false,
+        "description": "POI category code (e.g. 0501=clinics, 0505=drugstores). Comma-separate multiple values (e.g. `0501,0505`).",
+        "schema": {
+          "type": "string",
+          "description": "POI category code (e.g. 0501=clinics, 0505=drugstores). Comma-separate multiple values (e.g. `0501,0505`).",
+          "example": "0501"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "north": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude (decimal degrees).",
+          "example": 35.7
+        },
+        "south": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Latitude (decimal degrees).",
+          "example": 35.66
+        },
+        "east": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude (decimal degrees).",
+          "example": 139.78
+        },
+        "west": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Longitude (decimal degrees).",
+          "example": 139.74
+        },
+        "categories": {
+          "type": "string",
+          "description": "POI category code (e.g. 0501=clinics, 0505=drugstores). Comma-separate multiple values (e.g. `0501,0505`).",
+          "example": "0501"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "id": "_agency",
+    "method": "GET",
+    "path": "/agency",
+    "summary": "/agency",
+    "description": "Real-estate company / shop profile by company code.",
+    "tags": [
+      "Companies"
+    ],
+    "healthCheck": false,
+    "parameters": [
+      {
+        "name": "company_cd",
+        "in": "query",
+        "required": true,
+        "description": "SUUMO company code (`kaisha_cd`). Get one from a listing (`kaisha_cd`).",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO company code (`kaisha_cd`). Get one from a listing (`kaisha_cd`).",
+          "example": "141751"
+        }
+      }
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "company_cd": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SUUMO company code (`kaisha_cd`). Get one from a listing (`kaisha_cd`).",
+          "example": "141751"
+        }
+      },
+      "required": [
+        "company_cd"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

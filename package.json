@@ -1,0 +1,50 @@
+{
+  "name": "free-live-data-mcp",
+  "version": "0.1.0",
+  "description": "Discover free live-data APIs and query them from AI agents through MCP.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "free-live-data-mcp": "src/server.mjs"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "validate": "npm test && npm run check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "ajv": "8.20.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/happyendpointhq/free-live-data-mcp.git"
+  },
+  "homepage": "https://github.com/happyendpointhq/free-live-data-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/happyendpointhq/free-live-data-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "free-api",
+    "live-data",
+    "ai-agents",
+    "rapidapi",
+    "real-estate",
+    "ecommerce"
+  ],
+  "files": [
+    "src/",
+    "catalog.json",
+    "apis/",
+    "README.md",
+    "LICENSE",
+    "docs/",
+    "examples/"
+  ]
+}
