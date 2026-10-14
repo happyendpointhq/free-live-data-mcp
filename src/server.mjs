@@ -87,7 +87,7 @@ const result = (value) => ({
   ...(value.isError ? { isError: true } : {}),
 });
 const server = new Server(
-  { name: "free-live-data-mcp", version: "0.1.0" },
+  { name: "free-live-data-mcp", version: "0.1.1" },
   {
     capabilities: { tools: {} },
     instructions:

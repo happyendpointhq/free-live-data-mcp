@@ -1,6 +1,6 @@
 {
   "name": "free-live-data-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Discover free live-data APIs and query them from AI agents through MCP.",
   "type": "module",
   "license": "MIT",

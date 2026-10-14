@@ -57,7 +57,7 @@ Set `RAPIDAPI_KEY` in the environment available to Cursor. Its configuration int
 
 ## Run a pinned version without a clone
 
-After the `v0.1.0` GitHub tag is available, a compatible client can launch the GitHub package directly:
+A compatible client can launch the published `v0.1.1` GitHub source archive directly:
 
 ```json
 {
@@ -66,7 +66,9 @@ After the `v0.1.0` GitHub tag is available, a compatible client can launch the G
       "command": "npx",
       "args": [
         "--yes",
-        "--package=git+https://github.com/happyendpointhq/free-live-data-mcp.git#v0.1.0",
+        "--allow-remote=all",
+        "--ignore-scripts",
+        "--package=https://github.com/happyendpointhq/free-live-data-mcp/archive/refs/tags/v0.1.1.tar.gz",
         "free-live-data-mcp"
       ],
       "env": { "RAPIDAPI_KEY": "YOUR_RAPIDAPI_KEY" }
@@ -76,6 +78,8 @@ After the `v0.1.0` GitHub tag is available, a compatible client can launch the G
 ```
 
 This uses the GitHub source package. There is no separate npm-registry package or hosted HTTP endpoint in this release. Clients need permission to launch a local command; clients that only accept remote MCP URLs require a different deployment.
+
+npm 12 blocks remote source packages by default. `--allow-remote=all` explicitly permits this archive for the launch command; it does not change your global npm configuration. `--ignore-scripts` keeps package installation scripts disabled. See [npm's remote-package configuration](https://docs.npmjs.com/cli/using-npm/config/#allow-remote). The clone-based setup above remains available when your client or organization prohibits remote package installation.
 
 ## Try discovery first
 
